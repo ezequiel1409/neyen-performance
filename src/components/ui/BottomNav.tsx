@@ -74,3 +74,4 @@ export const BottomNav: React.FC<BottomNavProps> = ({ vistaActual, onCambiarVist
     </nav>
   );
 };
+

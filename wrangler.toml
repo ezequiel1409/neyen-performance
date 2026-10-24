@@ -1,0 +1,12 @@
+name = "neyen-performance"
+compatibility_date = "2024-10-01"
+pages_build_output_dir = "dist"
+
+# Configuración de Base de Datos SQL Serverless con Cloudflare D1
+# Para habilitarla, crea tu base de datos con:
+#   npx wrangler d1 create neyen-performance-db
+# Y luego reemplaza 'database_id' con el ID generado:
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "neyen-performance-db"
+# database_id = "tu-database-id-aqui"
