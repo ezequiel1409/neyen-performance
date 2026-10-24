@@ -6,25 +6,19 @@ import React, { useState } from 'react';
 import { useTraining } from '../../context/TrainingContext';
 import {
   Calendar,
-  ChevronLeft,
-  ChevronRight,
-  Clock,
-  Flag,
-  Flame,
   Layers,
-  Sparkles,
   Trophy,
 } from 'lucide-react';
 
 export const AnnualMacroTimelineView: React.FC = () => {
-  const { macrociclo, atletaActual } = useTraining();
+  const { atletaActual } = useTraining();
   const [mesoFiltro, setMesoFiltro] = useState<number | 'TODOS'>('TODOS');
 
   // Generamos las 52 semanas mapeadas a partir del 15/12/2025
   const semanasDelAnio = Array.from({ length: 52 }, (_, i) => {
     const numSemana = i + 1;
     const numMeso = Math.floor(i / 4) + 1; // 13 Mesos de 4 semanas
-    
+
     // Nombres temáticos de periodos
     let periodoNombre = 'Preparación Física General';
     let colorFase = 'bg-blue-500/20 text-blue-300 border-blue-500/40';
@@ -63,35 +57,42 @@ export const AnnualMacroTimelineView: React.FC = () => {
       colorFase,
       fechaString,
       evento,
-      rpeObjetivo: numSemana % 4 === 0 ? 5 : 7 + (numSemana % 3), // Semana 4 de cada meso es descarga
+      rpeObjetivo: numSemana % 4 === 0 ? 5 : 7 + (numSemana % 3),
     };
   });
 
-  const semanasFiltradas = mesoFiltro === 'TODOS'
-    ? semanasDelAnio
-    : semanasDelAnio.filter((s) => s.numMeso === mesoFiltro);
+  const semanasFiltradas =
+    mesoFiltro === 'TODOS'
+      ? semanasDelAnio
+      : semanasDelAnio.filter((s) => s.numMeso === mesoFiltro);
 
   return (
     <div className="space-y-6">
       {/* Cabecera de la Vista Anual */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
-            <Calendar className="h-6 w-6 text-blue-500" />
+          <h1 className="text-2xl font-black tracking-tight text-white flex items-center gap-2">
+            <Calendar className="h-6 w-6 text-blue-500" aria-hidden="true" />
             Macrociclo Anual: Periodización de 52 Semanas
           </h1>
-          <p className="text-sm text-slate-400">
-            Vista anual consolidada para <strong className="text-white">{atletaActual.nombreCompleto}</strong>: 13 mesociclos, competencias e hitos de evaluación física.
+          <p className="text-xs text-slate-400 mt-1">
+            Vista anual consolidada para <strong className="text-white">{atletaActual.nombreCompleto}</strong>:
+            13 mesociclos, competencias e hitos de evaluación física.
           </p>
         </div>
 
         {/* Selector de Mesociclo */}
         <div className="flex items-center gap-2">
-          <span className="text-xs text-slate-400">Filtrar Meso:</span>
+          <label htmlFor="select-filtro-mesociclo" className="text-xs text-slate-400 font-semibold shrink-0">
+            Filtrar Meso:
+          </label>
           <select
+            id="select-filtro-mesociclo"
             value={mesoFiltro}
-            onChange={(e) => setMesoFiltro(e.target.value === 'TODOS' ? 'TODOS' : parseInt(e.target.value))}
-            className="rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 text-xs font-semibold text-white cursor-pointer"
+            onChange={(e) =>
+              setMesoFiltro(e.target.value === 'TODOS' ? 'TODOS' : parseInt(e.target.value))
+            }
+            className="min-h-[44px] rounded-xl border border-slate-700 bg-slate-800 px-3.5 py-2 text-xs font-semibold text-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="TODOS">Ver las 52 Semanas (Año Completo)</option>
             {Array.from({ length: 13 }, (_, i) => (
@@ -101,45 +102,48 @@ export const AnnualMacroTimelineView: React.FC = () => {
             ))}
           </select>
         </div>
-      </div>
+      </header>
 
       {/* Resumen de Fases Anuales (Bloques de Temporada) */}
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-5 text-xs">
-        <div className="rounded-xl border border-blue-500/30 bg-blue-500/10 p-3">
-          <span className="font-bold text-blue-400">Mesos 1 - 3</span>
+      <section aria-label="Fases del macrociclo" className="grid grid-cols-2 gap-3 sm:grid-cols-5 text-xs">
+        <div className="rounded-xl border border-blue-500/30 bg-blue-500/10 p-3.5">
+          <span className="font-bold text-blue-400 block">Mesos 1 - 3</span>
           <p className="mt-1 font-semibold text-white">Adaptación & Hipertrofia</p>
-          <span className="text-[10px] text-slate-400">Volumen alto / 70-75% 1RM</span>
+          <span className="text-xs text-slate-400 block mt-0.5">Volumen alto / 70-75% 1RM</span>
         </div>
-        <div className="rounded-xl border border-indigo-500/30 bg-indigo-500/10 p-3">
-          <span className="font-bold text-indigo-400">Mesos 4 - 6</span>
+        <div className="rounded-xl border border-indigo-500/30 bg-indigo-500/10 p-3.5">
+          <span className="font-bold text-indigo-400 block">Mesos 4 - 6</span>
           <p className="mt-1 font-semibold text-white">Fuerza Máxima</p>
-          <span className="text-[10px] text-slate-400">Intensidad alta / 80-90% 1RM</span>
+          <span className="text-xs text-slate-400 block mt-0.5">Intensidad alta / 80-90% 1RM</span>
         </div>
-        <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-3">
-          <span className="font-bold text-amber-400">Mesos 7 - 9</span>
+        <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-3.5">
+          <span className="font-bold text-amber-400 block">Mesos 7 - 9</span>
           <p className="mt-1 font-semibold text-white">Conversión a Potencia</p>
-          <span className="text-[10px] text-slate-400">Velocidad / Pliometría</span>
+          <span className="text-xs text-slate-400 block mt-0.5">Velocidad / Pliometría</span>
         </div>
-        <div className="rounded-xl border border-rose-500/30 bg-rose-500/10 p-3">
-          <span className="font-bold text-rose-400">Mesos 10 - 12</span>
+        <div className="rounded-xl border border-rose-500/30 bg-rose-500/10 p-3.5">
+          <span className="font-bold text-rose-400 block">Mesos 10 - 12</span>
           <p className="mt-1 font-semibold text-white">Competitivo Oficial</p>
-          <span className="text-[10px] text-slate-400">Picos de forma & Tapering</span>
+          <span className="text-xs text-slate-400 block mt-0.5">Picos de forma & Tapering</span>
         </div>
-        <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3">
-          <span className="font-bold text-emerald-400">Meso 13</span>
+        <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3.5">
+          <span className="font-bold text-emerald-400 block">Meso 13</span>
           <p className="mt-1 font-semibold text-white">Transición / Descarga</p>
-          <span className="text-[10px] text-slate-400">Regeneración activa</span>
+          <span className="text-xs text-slate-400 block mt-0.5">Regeneración activa</span>
         </div>
-      </div>
+      </section>
 
       {/* Grid Calendario de las 52 Semanas */}
-      <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-5 space-y-4">
+      <section
+        aria-labelledby="titulo-cronograma-semanas"
+        className="rounded-2xl border border-slate-800 bg-slate-900/70 p-5 sm:p-6 space-y-4 shadow-xl"
+      >
         <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-          <h2 className="text-sm font-bold text-white flex items-center gap-2">
-            <Layers className="h-4 w-4 text-blue-400" />
+          <h2 id="titulo-cronograma-semanas" className="text-sm font-bold text-white flex items-center gap-2">
+            <Layers className="h-4 w-4 text-blue-400" aria-hidden="true" />
             Cronograma de Microciclos Semanales (2025 - 2026)
           </h2>
-          <span className="text-xs text-slate-400">
+          <span className="text-xs text-slate-400 font-semibold">
             Mostrando {semanasFiltradas.length} semanas
           </span>
         </div>
@@ -148,7 +152,7 @@ export const AnnualMacroTimelineView: React.FC = () => {
           {semanasFiltradas.map((sem) => (
             <div
               key={sem.numSemana}
-              className={`flex flex-col justify-between rounded-xl border p-3 transition hover:scale-105 ${
+              className={`flex flex-col justify-between rounded-xl border p-3.5 transition ${
                 sem.evento
                   ? 'border-amber-500/60 bg-amber-500/10 shadow-lg shadow-amber-500/10'
                   : sem.numSemana % 4 === 0
@@ -157,36 +161,38 @@ export const AnnualMacroTimelineView: React.FC = () => {
               }`}
             >
               <div>
-                <div className="flex items-center justify-between text-[10px]">
-                  <span className="font-bold text-slate-400">Micro #{sem.numSemana}</span>
-                  <span className="rounded bg-slate-800 px-1 py-0.2 text-slate-300">Meso {sem.numMeso}</span>
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-bold text-slate-300">Micro #{sem.numSemana}</span>
+                  <span className="rounded bg-slate-800 px-1.5 py-0.5 text-slate-300 font-semibold">
+                    M{sem.numMeso}
+                  </span>
                 </div>
 
-                <p className="mt-1 font-mono text-[11px] text-slate-300">{sem.fechaString}</p>
+                <p className="mt-1 font-mono text-xs text-slate-400">{sem.fechaString}</p>
 
                 {sem.evento ? (
-                  <div className="mt-2 rounded bg-amber-500/20 px-1.5 py-0.5 text-[10px] font-bold text-amber-300 flex items-center gap-1 border border-amber-500/40">
-                    <Trophy className="h-2.5 w-2.5 shrink-0" />
+                  <div className="mt-2 rounded-lg bg-amber-500/20 px-2 py-1 text-xs font-bold text-amber-300 flex items-center gap-1 border border-amber-500/40">
+                    <Trophy className="h-3 w-3 shrink-0" aria-hidden="true" />
                     <span className="truncate">{sem.evento}</span>
                   </div>
                 ) : sem.numSemana % 4 === 0 ? (
-                  <div className="mt-2 text-[10px] font-semibold text-emerald-400">
+                  <div className="mt-2 text-xs font-semibold text-emerald-400">
                     Descarga (-30%)
                   </div>
                 ) : (
-                  <div className="mt-2 text-[10px] text-slate-400">
+                  <div className="mt-2 text-xs text-slate-400 font-semibold">
                     RPE: {sem.rpeObjetivo}/10
                   </div>
                 )}
               </div>
 
-              <div className="mt-3 border-t border-slate-800/80 pt-1.5 text-[9px] text-slate-500 truncate">
+              <div className="mt-3 border-t border-slate-800/80 pt-1.5 text-xs text-slate-400 truncate">
                 {sem.periodoNombre}
               </div>
             </div>
           ))}
         </div>
-      </div>
+      </section>
     </div>
   );
 };

@@ -4,6 +4,7 @@
 
 import React, { useState } from 'react';
 import { Navbar } from './components/Navbar';
+import { BottomNav, VistaAlumno } from './components/ui/BottomNav';
 import { AnnualMacroTimelineView } from './components/coach/AnnualMacroTimelineView';
 import { AthleteProfileView } from './components/coach/AthleteProfileView';
 import { ExerciseBankView } from './components/coach/ExerciseBankView';
@@ -18,7 +19,7 @@ const MainLayout: React.FC = () => {
   const { rolActivo } = useTraining();
 
   const [vistaCoachActual, setVistaCoachActual] = useState<'EJERCICIOS' | 'ATLETAS' | 'PLANES' | 'ANUAL'>('EJERCICIOS');
-  const [vistaAlumnoActual, setVistaAlumnoActual] = useState<'RUTINA' | 'DASHBOARD' | 'FOTOS' | 'SUENIO'>('RUTINA');
+  const [vistaAlumnoActual, setVistaAlumnoActual] = useState<VistaAlumno>('RUTINA');
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-blue-600 selection:text-white">
@@ -30,8 +31,8 @@ const MainLayout: React.FC = () => {
         setVistaAlumnoActual={setVistaAlumnoActual}
       />
 
-      {/* Área de Contenido Principal */}
-      <main className="flex-1 px-4 py-6 sm:px-6 max-w-7xl mx-auto w-full">
+      {/* Área de Contenido Principal (con padding inferior en mobile para el BottomNav del alumno) */}
+      <main className={`flex-1 px-4 py-6 sm:px-6 max-w-7xl mx-auto w-full ${rolActivo === 'ALUMNO' ? 'pb-24 sm:pb-6' : ''}`}>
         {rolActivo === 'COACH' ? (
           <>
             {vistaCoachActual === 'EJERCICIOS' && <ExerciseBankView />}
@@ -49,8 +50,13 @@ const MainLayout: React.FC = () => {
         )}
       </main>
 
-      {/* Pie de página */}
-      <footer className="border-t border-slate-900 bg-slate-950 py-4 text-center text-xs text-slate-500">
+      {/* Barra inferior de navegación nativa para el Alumno en mobile */}
+      {rolActivo === 'ALUMNO' && (
+        <BottomNav vistaActual={vistaAlumnoActual} onCambiarVista={setVistaAlumnoActual} />
+      )}
+
+      {/* Pie de página (oculto en mobile para alumno para no chocar con el bottom nav) */}
+      <footer className={`border-t border-slate-900 bg-slate-950 py-4 text-center text-xs text-slate-500 ${rolActivo === 'ALUMNO' ? 'hidden sm:block' : 'block'}`}>
         <p>
           <strong>NEYEN Athletic Performance OS</strong> • Plataforma de Preparación Física Periodizada • Temporada 2025-2026
         </p>

@@ -71,6 +71,13 @@ interface TrainingContextType {
   // Fisiología Femenina
   reportarRetrasoMenstrual: (atletaId: string) => void;
   resetearRetrasoMenstrual: (atletaId: string) => void;
+  actualizarPreferenciasCiclo: (
+    atletaId: string,
+    preferencias: {
+      aplicarAjusteHormonalAutomatico?: boolean;
+      compartirCicloConCoach?: boolean;
+    }
+  ) => void;
 
   // MLP
   agregarFotoProgreso: (atletaId: string, urlFoto: string, tipoVista: 'FRENTE' | 'PERFIL' | 'ESPALDA', observaciones?: string) => void;
@@ -322,6 +329,29 @@ export const TrainingProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     );
   };
 
+  const actualizarPreferenciasCiclo = (
+    atletaId: string,
+    preferencias: {
+      aplicarAjusteHormonalAutomatico?: boolean;
+      compartirCicloConCoach?: boolean;
+    }
+  ) => {
+    setAtletas((prev) =>
+      prev.map((atleta) => {
+        if (atleta.identificadorAtleta === atletaId && atleta.datosCicloMenstrual) {
+          return {
+            ...atleta,
+            datosCicloMenstrual: {
+              ...atleta.datosCicloMenstrual,
+              ...preferencias,
+            },
+          };
+        }
+        return atleta;
+      })
+    );
+  };
+
   const agregarFotoProgreso = (
     atletaId: string,
     urlFoto: string,
@@ -400,6 +430,7 @@ export const TrainingProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         finalizarSesionEntrenamiento,
         reportarRetrasoMenstrual,
         resetearRetrasoMenstrual,
+        actualizarPreferenciasCiclo,
         agregarFotoProgreso,
         sincronizarSmartwatchMock,
       }}

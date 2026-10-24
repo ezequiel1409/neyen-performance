@@ -84,6 +84,8 @@ export interface DatosCicloMenstrual {
   diasDeRetraso?: number;
   fechaReporteRetraso?: string;
   historialRetrasosReportados?: Array<{ fechaReporte: string; diasDeRetraso: number }>;
+  aplicarAjusteHormonalAutomatico?: boolean;
+  compartirCicloConCoach?: boolean;
 }
 
 // --- MLP: FOTO DE PROGRESO CORPORAL ---
