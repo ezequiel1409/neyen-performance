@@ -16,7 +16,6 @@ import {
   Atleta,
   CategoriaEjercicio,
   Ejercicio,
-  EscalaEsfuerzoPercibidoSesion,
   FeedbackEntrenamiento,
   PlanMacrociclo,
   SesionCompletadaAtleta,
@@ -499,3 +498,4 @@ export const useTraining = () => {
   }
   return context;
 };
+

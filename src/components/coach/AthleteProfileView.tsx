@@ -5,19 +5,12 @@
 import React, { useState } from 'react';
 import { useTraining } from '../../context/TrainingContext';
 import {
-  Activity,
   AlertOctagon,
-  Calendar,
-  CheckCircle2,
-  Clock,
-  Dumbbell,
-  Heart,
   Plus,
   ShieldAlert,
-  Sparkles,
-  TrendingUp,
-  User,
   Zap,
+  Heart,
+  TrendingUp,
 } from 'lucide-react';
 import { calcularFaseCicloActual } from '../../utils/trainingMath';
 
@@ -422,3 +415,5 @@ export const AthleteProfileView: React.FC = () => {
     </div>
   );
 };
+
+
