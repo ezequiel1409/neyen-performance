@@ -9,6 +9,7 @@ import { AnnualMacroTimelineView } from './components/coach/AnnualMacroTimelineV
 import { AthleteProfileView } from './components/coach/AthleteProfileView';
 import { ExerciseBankView } from './components/coach/ExerciseBankView';
 import { PeriodizationPlannerView } from './components/coach/PeriodizationPlannerView';
+import { CoachNavSection, CoachSidebar } from './components/coach/CoachSidebar';
 import { AthleteAnnualProgressView } from './components/athlete/AthleteAnnualProgressView';
 import { AthleteGalleryMLP } from './components/athlete/AthleteGalleryMLP';
 import { AthleteHomeView } from './components/athlete/AthleteHomeView';
@@ -18,37 +19,63 @@ import { TrainingProvider, useTraining } from './context/TrainingContext';
 const MainLayout: React.FC = () => {
   const { rolActivo } = useTraining();
 
+  const [seccionCoach, setSeccionCoach] = useState<CoachNavSection>('BANCO_EJERCICIOS');
   const [vistaCoachActual, setVistaCoachActual] = useState<'EJERCICIOS' | 'ATLETAS' | 'PLANES' | 'ANUAL'>('EJERCICIOS');
   const [vistaAlumnoActual, setVistaAlumnoActual] = useState<VistaAlumno>('RUTINA');
+
+  const handleCambiarSeccionCoach = (s: CoachNavSection) => {
+    setSeccionCoach(s);
+    if (s === 'BANCO_EJERCICIOS') setVistaCoachActual('EJERCICIOS');
+    else if (s === 'ATLETAS' || s === 'RESUMEN' || s === 'ALERTAS') setVistaCoachActual('ATLETAS');
+    else if (s === 'PLANIFICADOR') setVistaCoachActual('PLANES');
+    else if (s === 'EVALUACIONES') setVistaCoachActual('ANUAL');
+  };
 
   return (
     <div className="min-h-screen bg-[var(--bg-app)] text-[var(--text-main)] flex flex-col font-sans selection:bg-[#E85938] selection:text-white transition-colors duration-200">
       {/* Barra de Navegación con Selector de Rol */}
       <Navbar
         vistaCoachActual={vistaCoachActual}
-        setVistaCoachActual={setVistaCoachActual}
+        setVistaCoachActual={(v) => {
+          setVistaCoachActual(v);
+          if (v === 'EJERCICIOS') setSeccionCoach('BANCO_EJERCICIOS');
+          else if (v === 'ATLETAS') setSeccionCoach('ATLETAS');
+          else if (v === 'PLANES') setSeccionCoach('PLANIFICADOR');
+          else if (v === 'ANUAL') setSeccionCoach('EVALUACIONES');
+        }}
         vistaAlumnoActual={vistaAlumnoActual}
         setVistaAlumnoActual={setVistaAlumnoActual}
       />
 
-      {/* Área de Contenido Principal (con padding inferior en mobile para el BottomNav del alumno) */}
-      <main className={`flex-1 px-4 py-6 sm:px-6 max-w-7xl mx-auto w-full ${rolActivo === 'ALUMNO' ? 'pb-24 sm:pb-6' : ''}`}>
-        {rolActivo === 'COACH' ? (
-          <>
-            {vistaCoachActual === 'EJERCICIOS' && <ExerciseBankView />}
-            {vistaCoachActual === 'ATLETAS' && <AthleteProfileView />}
-            {vistaCoachActual === 'PLANES' && <PeriodizationPlannerView />}
-            {vistaCoachActual === 'ANUAL' && <AnnualMacroTimelineView />}
-          </>
-        ) : (
-          <>
-            {vistaAlumnoActual === 'RUTINA' && <AthleteHomeView />}
-            {vistaAlumnoActual === 'DASHBOARD' && <AthleteAnnualProgressView />}
-            {vistaAlumnoActual === 'FOTOS' && <AthleteGalleryMLP />}
-            {vistaAlumnoActual === 'SUENIO' && <AthleteSleepWearableMLP />}
-          </>
-        )}
-      </main>
+      {/* Contenido Principal */}
+      {rolActivo === 'COACH' ? (
+        <div className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 flex">
+          {/* Sidebar lateral del Coach (visible en desktop como en los mockups) */}
+          <div className="hidden md:block">
+            <CoachSidebar
+              seccionActiva={seccionCoach}
+              onCambiarSeccion={handleCambiarSeccionCoach}
+            />
+          </div>
+
+          {/* Área de trabajo de la vista seleccionada */}
+          <main className="flex-1 min-w-0 py-6">
+            {seccionCoach === 'BANCO_EJERCICIOS' && <ExerciseBankView />}
+            {(seccionCoach === 'ATLETAS' || seccionCoach === 'RESUMEN' || seccionCoach === 'ALERTAS') && (
+              <AthleteProfileView />
+            )}
+            {seccionCoach === 'PLANIFICADOR' && <PeriodizationPlannerView />}
+            {seccionCoach === 'EVALUACIONES' && <AnnualMacroTimelineView />}
+          </main>
+        </div>
+      ) : (
+        <main className="flex-1 px-4 py-6 sm:px-6 max-w-7xl mx-auto w-full pb-24 sm:pb-6">
+          {vistaAlumnoActual === 'RUTINA' && <AthleteHomeView />}
+          {vistaAlumnoActual === 'DASHBOARD' && <AthleteAnnualProgressView />}
+          {vistaAlumnoActual === 'FOTOS' && <AthleteGalleryMLP />}
+          {vistaAlumnoActual === 'SUENIO' && <AthleteSleepWearableMLP />}
+        </main>
+      )}
 
       {/* Barra inferior de navegación nativa para el Alumno en mobile */}
       {rolActivo === 'ALUMNO' && (
