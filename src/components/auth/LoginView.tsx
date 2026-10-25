@@ -44,7 +44,7 @@ export const LoginView: React.FC = () => {
           </div>
 
           {/* Selector de Rol: Alumno vs Coach */}
-          <div className="grid grid-cols-2 gap-3 mb-8">
+          <div className="grid grid-cols-2 gap-3 mb-4">
             <button
               type="button"
               onClick={() => handleCambiarRol('ALUMNO')}
@@ -67,6 +67,12 @@ export const LoginView: React.FC = () => {
             >
               Coach
             </button>
+          </div>
+
+          {/* Tip de acceso rápido demo */}
+          <div className="mb-6 rounded-xl bg-[#E3EFE7] dark:bg-[#15332B] px-3.5 py-2 text-xs font-semibold text-[#2F6B4F] dark:text-[#A3D9BE] flex items-center gap-2">
+            <span>✨</span>
+            <span>Acceso demo listo: hacé clic directo en <strong>Ingresar</strong>.</span>
           </div>
 
           {/* Formulario */}
