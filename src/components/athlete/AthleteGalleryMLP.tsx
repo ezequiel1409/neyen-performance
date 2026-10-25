@@ -61,17 +61,17 @@ export const AthleteGalleryMLP: React.FC = () => {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <span className="rounded bg-purple-500/10 px-2.5 py-0.5 text-xs font-bold text-purple-400 border border-purple-500/30">
+            <span className="rounded-full bg-[#E1ECE5] dark:bg-[#1C4740] px-3 py-0.5 text-xs font-bold text-[#163832] dark:text-[#E1ECE5]">
               MLP PREVIEW
             </span>
-            <h1 className="text-2xl font-black tracking-tight text-white flex items-center gap-2">
-              <Camera className="h-6 w-6 text-purple-400" aria-hidden="true" />
+            <h1 className="text-2xl font-black tracking-tight text-[#163832] dark:text-white flex items-center gap-2">
+              <Camera className="h-6 w-6 text-[#E85938]" aria-hidden="true" />
               Galería de Fotos de Progreso Corporal
             </h1>
           </div>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-[#163832]/70 dark:text-[#9EB5B0] mt-1">
             Registro visual cronológico de postura y evolución muscular de{' '}
-            <strong className="text-white">{atletaActual.nombreCompleto}</strong>.
+            <strong className="text-[#163832] dark:text-white">{atletaActual.nombreCompleto}</strong>.
           </p>
         </div>
 

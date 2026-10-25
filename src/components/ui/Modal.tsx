@@ -106,7 +106,7 @@ export const Modal: React.FC<ModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto bg-black/85 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto bg-black/60 backdrop-blur-sm"
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-title"
@@ -120,19 +120,19 @@ export const Modal: React.FC<ModalProps> = ({
         tabIndex={-1}
         className={twMerge(
           clsx(
-            'w-full rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-2xl relative my-auto max-h-[90vh] flex flex-col',
+            'w-full rounded-2xl border-2 border-[#E5E2D5] dark:border-[#25524A] bg-[#FAF7EE] dark:bg-[#163630] text-[#163832] dark:text-[#FAF7EE] p-6 shadow-2xl relative my-auto max-h-[90vh] flex flex-col',
             maxWidthStyles[maxWidth]
           )
         )}
       >
         {/* Cabecera accesible */}
-        <div className="flex items-start justify-between border-b border-slate-800 pb-4 mb-4 gap-4">
+        <div className="flex items-start justify-between border-b-2 border-[#E5E2D5] dark:border-[#25524A] pb-4 mb-4 gap-4">
           <div className="space-y-1">
-            <h2 id="modal-title" className="text-lg font-black tracking-tight text-white">
+            <h2 id="modal-title" className="text-xl font-bold tracking-tight text-[#163832] dark:text-white">
               {title}
             </h2>
             {description && (
-              <p id="modal-description" className="text-xs text-slate-400">
+              <p id="modal-description" className="text-xs text-[#163832]/70 dark:text-[#9EB5B0]">
                 {description}
               </p>
             )}
@@ -142,9 +142,9 @@ export const Modal: React.FC<ModalProps> = ({
             <button
               onClick={onClose}
               aria-label="Cerrar modal"
-              className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/80 transition focus-visible:outline-2 focus-visible:outline-blue-500"
+              className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-2xl border-2 border-[#163832] dark:border-[#25524A] bg-transparent text-[#163832] dark:text-white hover:bg-[#E1ECE5]/40 transition focus-visible:outline-2 focus-visible:outline-[#E85938]"
             >
-              <X className="h-5 w-5" aria-hidden="true" />
+              <X className="h-5 w-5 stroke-[2.5]" aria-hidden="true" />
             </button>
           )}
         </div>
@@ -155,4 +155,3 @@ export const Modal: React.FC<ModalProps> = ({
     </div>
   );
 };
-

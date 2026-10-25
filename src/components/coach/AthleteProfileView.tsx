@@ -69,89 +69,93 @@ export const AthleteProfileView: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Banner del Atleta */}
-      <div className="rounded-2xl border border-slate-800 bg-gradient-to-r from-slate-900 via-slate-900 to-blue-950/40 p-6 shadow-xl">
+      <div className="rounded-2xl border-2 border-[#E5E2D5] dark:border-[#25524A] bg-white dark:bg-[#163630] p-6 shadow-sm">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-4">
             <img
               src={atletaActual.fotoPerfilUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200'}
               alt={atletaActual.nombreCompleto}
-              className="h-20 w-20 rounded-2xl object-cover border-2 border-blue-500 shadow-md shadow-blue-500/20"
+              className="h-20 w-20 rounded-2xl object-cover border-2 border-[#163832] dark:border-[#E85938] shadow-sm"
             />
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-2xl font-black text-white">{atletaActual.nombreCompleto}</h1>
-                <span className="rounded-full bg-blue-500/20 px-2.5 py-0.5 text-xs font-bold text-blue-400 border border-blue-500/40">
+                <h1 className="text-2xl font-black text-[#163832] dark:text-white">{atletaActual.nombreCompleto}</h1>
+                <span className="rounded-full bg-[#E1ECE5] dark:bg-[#1C4740] px-3 py-0.5 text-xs font-bold text-[#163832] dark:text-[#E1ECE5]">
                   {atletaActual.deportePracticado} • {atletaActual.posicionEnElCampoDeJuego}
                 </span>
               </div>
-              <p className="mt-1 text-xs text-slate-400">
+              <p className="mt-1 text-xs text-[#163832]/70 dark:text-[#9EB5B0]">
                 {atletaActual.edadCronologicaAnios} años • {atletaActual.alturaCentimetros} cm •{' '}
-                <span className="text-white font-semibold">{atletaActual.pesoCorporalKilogramos} kg</span> • Nivel:{' '}
-                <span className="text-emerald-400 font-semibold">{atletaActual.nivelRendimientoDeportivo}</span>
+                <span className="text-[#163832] dark:text-white font-semibold">{atletaActual.pesoCorporalKilogramos} kg</span> • Nivel:{' '}
+                <span className="text-emerald-600 dark:text-emerald-400 font-semibold">{atletaActual.nivelRendimientoDeportivo}</span>
               </p>
-              <p className="mt-1 text-xs text-slate-300 italic">"{atletaActual.objetivoPrincipalEntrenamiento}"</p>
+              <p className="mt-1 text-xs text-[#163832]/80 dark:text-[#9EB5B0] italic">&ldquo;{atletaActual.objetivoPrincipalEntrenamiento}&rdquo;</p>
             </div>
           </div>
 
           {/* Estado de Ciclo Menstrual / Alerta RED-S para Coach */}
           {infoCiclo && (
-            <div className="rounded-xl border border-slate-800 bg-slate-950/80 p-3 sm:text-right">
+            <div className="rounded-xl border-2 border-[#E5E2D5] dark:border-[#25524A] bg-[#FAF7EE] dark:bg-[#102824] p-3 sm:text-right">
               <div className="flex items-center gap-2 sm:justify-end">
                 <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: infoCiclo.colorHex }} />
-                <span className="text-xs font-bold uppercase tracking-wider text-white">
+                <span className="text-xs font-bold uppercase tracking-wider text-[#163832] dark:text-white">
                   Día {infoCiclo.diaActualDelCiclo} • {infoCiclo.nombreFaseLegible}
                 </span>
               </div>
               {atletaActual.datosCicloMenstrual?.enRetrasoMenstrual ? (
-                <div className="mt-1 flex items-center gap-1 rounded bg-rose-500/20 px-2 py-1 text-xs font-bold text-rose-300 border border-rose-500/40">
+                <div className="mt-1 flex items-center gap-1 rounded bg-[#E85938] px-2 py-1 text-xs font-bold text-[#112B26]">
                   <AlertOctagon className="h-3.5 w-3.5" />
                   <span>ALERTA RED-S: Retraso de {atletaActual.datosCicloMenstrual.diasDeRetraso} días</span>
                 </div>
               ) : (
-                <p className="mt-1 text-[11px] text-slate-400 max-w-xs">{infoCiclo.recomendacionDeportiva}</p>
+                <p className="mt-1 text-[11px] text-[#163832]/70 dark:text-[#9EB5B0] max-w-xs">{infoCiclo.recomendacionDeportiva}</p>
               )}
             </div>
           )}
         </div>
 
         {/* Tabs de la Ficha Técnica */}
-        <div className="mt-6 flex flex-wrap gap-2 border-t border-slate-800 pt-4">
+        <div className="mt-6 flex flex-wrap gap-2 border-t-2 border-[#E5E2D5] dark:border-[#25524A] pt-4">
           <button
             onClick={() => setTabActiva('FUERZA')}
-            className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition ${
-              tabActiva === 'FUERZA' ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-400 hover:text-white'
+            className={`rounded-xl px-4 py-2 text-xs font-bold transition min-h-[44px] ${
+              tabActiva === 'FUERZA'
+                ? 'bg-[#163832] dark:bg-[#E85938] text-white dark:text-[#112B26] shadow-sm'
+                : 'text-[#163832]/70 dark:text-[#9EB5B0] bg-[#E1ECE5]/40 hover:bg-[#E1ECE5]/80'
             }`}
           >
-            <Dumbbell className="h-3.5 w-3.5" />
-            Tests de Fuerza (1RM Epley / Brzycki)
+            Tests de Fuerza (1RM)
           </button>
           <button
             onClick={() => setTabActiva('FISICOS')}
-            className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition ${
-              tabActiva === 'FISICOS' ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-400 hover:text-white'
+            className={`rounded-xl px-4 py-2 text-xs font-bold transition min-h-[44px] ${
+              tabActiva === 'FISICOS'
+                ? 'bg-[#163832] dark:bg-[#E85938] text-white dark:text-[#112B26] shadow-sm'
+                : 'text-[#163832]/70 dark:text-[#9EB5B0] bg-[#E1ECE5]/40 hover:bg-[#E1ECE5]/80'
             }`}
           >
-            <Zap className="h-3.5 w-3.5" />
-            Capacidades Físicas (Salto & Sprint)
+            Capacidades Físicas (Salto/Velocidad)
           </button>
           <button
             onClick={() => setTabActiva('GENERAL')}
-            className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition ${
-              tabActiva === 'GENERAL' ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-400 hover:text-white'
+            className={`rounded-xl px-4 py-2 text-xs font-bold transition min-h-[44px] ${
+              tabActiva === 'GENERAL'
+                ? 'bg-[#163832] dark:bg-[#E85938] text-white dark:text-[#112B26] shadow-sm'
+                : 'text-[#163832]/70 dark:text-[#9EB5B0] bg-[#E1ECE5]/40 hover:bg-[#E1ECE5]/80'
             }`}
           >
-            <ShieldAlert className="h-3.5 w-3.5" />
-            Historial de Lesiones ({atletaActual.historialLesiones.length})
+            Historial Clínico & Lesiones
           </button>
           {atletaActual.generoAtleta === 'F' && (
             <button
               onClick={() => setTabActiva('CICLO')}
-              className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition ${
-                tabActiva === 'CICLO' ? 'bg-rose-600 text-white' : 'bg-slate-800 text-slate-400 hover:text-white'
+              className={`rounded-xl px-4 py-2 text-xs font-bold transition min-h-[44px] ${
+                tabActiva === 'CICLO'
+                  ? 'bg-[#163832] dark:bg-[#E85938] text-white dark:text-[#112B26] shadow-sm'
+                  : 'text-[#163832]/70 dark:text-[#9EB5B0] bg-[#E1ECE5]/40 hover:bg-[#E1ECE5]/80'
               }`}
             >
-              <Heart className="h-3.5 w-3.5" />
-              Ciclo Menstrual & RED-S
+              Fisiología Menstrual
             </button>
           )}
         </div>

@@ -141,11 +141,11 @@ export const ExerciseBankView: React.FC = () => {
       {/* Encabezado y acciones principales */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
-            <Dumbbell className="h-6 w-6 text-blue-500" />
+          <h1 className="text-2xl font-bold tracking-tight text-[#163832] dark:text-white flex items-center gap-2">
+            <Dumbbell className="h-6 w-6 text-[#E85938]" />
             Banco de Ejercicios
           </h1>
-          <p className="text-sm text-slate-400">
+          <p className="text-sm text-[#163832]/70 dark:text-[#9EB5B0]">
             Total control del catálogo: taxonomía, ratios de conversión de 1RM y tablas maestras personalizables.
           </p>
         </div>
@@ -153,16 +153,16 @@ export const ExerciseBankView: React.FC = () => {
         <div className="flex items-center gap-2">
           <button
             onClick={() => setModalMaestrosAbierto(true)}
-            className="flex items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-xs font-semibold text-slate-200 hover:bg-slate-700 transition"
+            className="flex items-center gap-1.5 rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-white dark:bg-[#163630] px-4 py-2.5 text-xs font-bold text-[#163832] dark:text-[#FAF7EE] hover:bg-[#E1ECE5]/40 transition min-h-[44px]"
           >
-            <Settings className="h-4 w-4 text-blue-400" />
+            <Settings className="h-4 w-4" />
             Gestionar Categorías & Equipos
           </button>
           <button
             onClick={abrirModalCrear}
-            className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2 text-xs font-semibold text-white shadow-lg shadow-blue-600/30 hover:bg-blue-500 transition"
+            className="flex items-center gap-1.5 rounded-xl bg-[#E85938] hover:bg-[#D74F30] px-5 py-2.5 text-xs font-extrabold text-[#112B26] shadow-md transition min-h-[44px]"
           >
-            <Plus className="h-4 w-4" />
+            <Plus className="h-4 w-4 stroke-[3]" />
             Nuevo Ejercicio
           </button>
         </div>

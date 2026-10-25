@@ -71,19 +71,19 @@ export const AnnualMacroTimelineView: React.FC = () => {
       {/* Cabecera de la Vista Anual */}
       <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-black tracking-tight text-white flex items-center gap-2">
-            <Calendar className="h-6 w-6 text-blue-500" aria-hidden="true" />
+          <h1 className="text-2xl font-black tracking-tight text-[#163832] dark:text-white flex items-center gap-2">
+            <Calendar className="h-6 w-6 text-[#E85938]" aria-hidden="true" />
             Macrociclo Anual: Periodización de 52 Semanas
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
-            Vista anual consolidada para <strong className="text-white">{atletaActual.nombreCompleto}</strong>:
+          <p className="text-xs text-[#163832]/70 dark:text-[#9EB5B0] mt-1">
+            Vista anual consolidada para <strong className="text-[#163832] dark:text-white">{atletaActual.nombreCompleto}</strong>:
             13 mesociclos, competencias e hitos de evaluación física.
           </p>
         </div>
 
         {/* Selector de Mesociclo */}
         <div className="flex items-center gap-2">
-          <label htmlFor="select-filtro-mesociclo" className="text-xs text-slate-400 font-semibold shrink-0">
+          <label htmlFor="select-filtro-mesociclo" className="text-xs text-[#163832]/70 dark:text-[#9EB5B0] font-semibold shrink-0">
             Filtrar Meso:
           </label>
           <select
@@ -92,7 +92,7 @@ export const AnnualMacroTimelineView: React.FC = () => {
             onChange={(e) =>
               setMesoFiltro(e.target.value === 'TODOS' ? 'TODOS' : parseInt(e.target.value))
             }
-            className="min-h-[44px] rounded-xl border border-slate-700 bg-slate-800 px-3.5 py-2 text-xs font-semibold text-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="min-h-[44px] rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-white dark:bg-[#163630] px-3.5 py-2 text-xs font-semibold text-[#163832] dark:text-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E85938]"
           >
             <option value="TODOS">Ver las 52 Semanas (Año Completo)</option>
             {Array.from({ length: 13 }, (_, i) => (

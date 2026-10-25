@@ -61,20 +61,20 @@ export const PeriodizationPlannerView: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Cabecera del Macrociclo */}
-      <header className="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 sm:p-6 shadow-xl">
+      <header className="rounded-2xl border-2 border-[#E5E2D5] dark:border-[#25524A] bg-white dark:bg-[#163630] p-5 sm:p-6 shadow-sm">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <div className="flex items-center gap-2">
-              <span className="rounded bg-amber-500/10 px-2.5 py-0.5 text-xs font-bold text-amber-400 border border-amber-500/30">
+              <span className="rounded-full bg-[#E1ECE5] dark:bg-[#1C4740] px-3 py-1 text-xs font-bold text-[#163832] dark:text-[#E1ECE5]">
                 MACROCICLO ANUAL
               </span>
-              <h1 className="text-xl font-black text-white">{macrociclo.nombreMacrociclo}</h1>
+              <h1 className="text-xl font-black text-[#163832] dark:text-white">{macrociclo.nombreMacrociclo}</h1>
             </div>
-            <p className="mt-1.5 text-sm text-slate-300 font-medium">
+            <p className="mt-1.5 text-sm text-[#163832]/80 dark:text-[#9EB5B0] font-medium">
               🎯 Objetivo General:{' '}
-              <span className="text-white italic">"{macrociclo.objetivoGeneralMacrociclo}"</span>
+              <span className="text-[#163832] dark:text-white italic">&ldquo;{macrociclo.objetivoGeneralMacrociclo}&rdquo;</span>
             </p>
-            <div className="mt-2 text-xs text-slate-400 flex flex-wrap items-center gap-4">
+            <div className="mt-2 text-xs text-[#163832]/70 dark:text-[#9EB5B0] flex flex-wrap items-center gap-4">
               <span>
                 📅 {macrociclo.fechaInicioMacrociclo} al {macrociclo.fechaFinMacrociclo}
               </span>
@@ -86,21 +86,21 @@ export const PeriodizationPlannerView: React.FC = () => {
             </div>
           </div>
 
-          <div className="rounded-xl border border-blue-500/30 bg-blue-500/10 p-3.5 text-right shrink-0">
-            <span className="text-xs font-bold text-blue-300 uppercase block">Atleta en Vista</span>
-            <p className="text-sm font-black text-white mt-0.5">{atletaActual.nombreCompleto}</p>
-            <span className="text-xs text-blue-400">Autocálculo activo para sus tests</span>
+          <div className="rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-[#FAF7EE] dark:bg-[#102824] p-3.5 text-right shrink-0">
+            <span className="text-xs font-bold text-[#163832] dark:text-[#E1ECE5] uppercase block">Atleta en Vista</span>
+            <p className="text-sm font-black text-[#163832] dark:text-white mt-0.5">{atletaActual.nombreCompleto}</p>
+            <span className="text-xs text-[#E85938] font-bold">Autocálculo activo para sus tests</span>
           </div>
         </div>
 
         {/* Demostración: Salto de Mesociclo */}
         {macrociclo.microciclosDirectos && macrociclo.microciclosDirectos.length > 0 && (
-          <div className="mt-4 flex items-center gap-2 rounded-xl border border-purple-500/30 bg-purple-500/10 p-3 text-xs text-purple-300">
-            <Sparkles className="h-4 w-4 text-purple-400 shrink-0" aria-hidden="true" />
+          <div className="mt-4 flex items-center gap-2 rounded-xl bg-[#E1ECE5] dark:bg-[#1C4740] p-3 text-xs text-[#163832] dark:text-[#E1ECE5]">
+            <Sparkles className="h-4 w-4 text-[#E85938] shrink-0" aria-hidden="true" />
             <span>
               <strong>Flexibilidad Jerárquica:</strong> Contiene{' '}
               {macrociclo.microciclosDirectos.length} microciclo(s) directo(s) que se saltan el
-              mesociclo (ej. "{macrociclo.microciclosDirectos[0].nombreMicrociclo}").
+              mesociclo (ej. &ldquo;{macrociclo.microciclosDirectos[0].nombreMicrociclo}&rdquo;).
             </span>
           </div>
         )}
