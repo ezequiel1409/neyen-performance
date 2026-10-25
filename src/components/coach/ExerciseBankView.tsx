@@ -138,7 +138,7 @@ export const ExerciseBankView: React.FC = () => {
         <button
           type="button"
           onClick={handleCrearNuevo}
-          className="flex items-center gap-1.5 rounded-2xl bg-[#E85938] hover:bg-[#D74F30] active:scale-[0.99] text-[#112B26] font-extrabold text-sm px-6 py-3.5 shadow-md transition self-start"
+          className="flex items-center gap-1.5 rounded-2xl bg-[#2F6B4F] hover:bg-[#265740] active:scale-[0.99] text-white font-extrabold text-sm px-6 py-3.5 shadow-md transition self-start"
         >
           <Plus className="h-4 w-4 stroke-[3]" />
           <span>Nuevo ejercicio</span>
@@ -153,7 +153,7 @@ export const ExerciseBankView: React.FC = () => {
             onClick={() => setTabCatalogo('EJERCICIOS')}
             className={`rounded-full px-6 py-2.5 text-sm font-bold transition select-none ${
               tabCatalogo === 'EJERCICIOS'
-                ? 'bg-[#1D4A41] dark:bg-[#E85938] text-white dark:text-[#112B26] shadow-sm'
+                ? 'bg-[#2F6B4F] text-white shadow-sm'
                 : 'border-2 border-[#163832] dark:border-[#25524A] text-[#163832] dark:text-white bg-transparent hover:bg-[#E1ECE5]/40'
             }`}
           >
@@ -164,7 +164,7 @@ export const ExerciseBankView: React.FC = () => {
             onClick={() => setTabCatalogo('CATEGORIAS')}
             className={`rounded-full px-6 py-2.5 text-sm font-bold transition select-none ${
               tabCatalogo === 'CATEGORIAS'
-                ? 'bg-[#1D4A41] dark:bg-[#E85938] text-white dark:text-[#112B26] shadow-sm'
+                ? 'bg-[#2F6B4F] text-white shadow-sm'
                 : 'border-2 border-[#163832] dark:border-[#25524A] text-[#163832] dark:text-white bg-transparent hover:bg-[#E1ECE5]/40'
             }`}
           >
@@ -175,7 +175,7 @@ export const ExerciseBankView: React.FC = () => {
             onClick={() => setTabCatalogo('EQUIPAMIENTO')}
             className={`rounded-full px-6 py-2.5 text-sm font-bold transition select-none ${
               tabCatalogo === 'EQUIPAMIENTO'
-                ? 'bg-[#1D4A41] dark:bg-[#E85938] text-white dark:text-[#112B26] shadow-sm'
+                ? 'bg-[#2F6B4F] text-white shadow-sm'
                 : 'border-2 border-[#163832] dark:border-[#25524A] text-[#163832] dark:text-white bg-transparent hover:bg-[#E1ECE5]/40'
             }`}
           >
@@ -210,7 +210,7 @@ export const ExerciseBankView: React.FC = () => {
                   value={terminoBusqueda}
                   onChange={(e) => setTerminoBusqueda(e.target.value)}
                   placeholder="Buscar ejercicio..."
-                  className="w-full rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-white dark:bg-[#102824] px-3.5 py-2.5 text-sm text-[#163832] dark:text-white placeholder-[#163832]/40 dark:placeholder-[#9EB5B0]/40 focus:outline-none focus:ring-2 focus:ring-[#E85938]"
+                  className="w-full rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-white dark:bg-[#102824] px-3.5 py-2.5 text-sm text-[#163832] dark:text-white placeholder-[#163832]/40 dark:placeholder-[#9EB5B0]/40 focus:outline-none focus:ring-2 focus:ring-[#1F5FA0]"
                 />
               </div>
 
@@ -221,7 +221,7 @@ export const ExerciseBankView: React.FC = () => {
                 <select
                   value={filtroCategoria}
                   onChange={(e) => setFiltroCategoria(e.target.value)}
-                  className="w-full rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-white dark:bg-[#102824] px-3.5 py-2.5 text-sm text-[#163832] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#E85938] cursor-pointer"
+                  className="w-full rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-white dark:bg-[#102824] px-3.5 py-2.5 text-sm text-[#163832] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#1F5FA0] cursor-pointer"
                 >
                   <option value="TODAS">Todas</option>
                   {categorias.map((c) => (
@@ -239,7 +239,7 @@ export const ExerciseBankView: React.FC = () => {
                 <select
                   value={filtroEquipamiento}
                   onChange={(e) => setFiltroEquipamiento(e.target.value)}
-                  className="w-full rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-white dark:bg-[#102824] px-3.5 py-2.5 text-sm text-[#163832] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#E85938] cursor-pointer"
+                  className="w-full rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-white dark:bg-[#102824] px-3.5 py-2.5 text-sm text-[#163832] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#1F5FA0] cursor-pointer"
                 >
                   <option value="TODOS">Todos</option>
                   {equipamientos.map((eq) => (
@@ -279,7 +279,7 @@ export const ExerciseBankView: React.FC = () => {
                         onClick={() => seleccionarParaEditar(ej)}
                         className={`cursor-pointer transition ${
                           isSelected
-                            ? 'border-2 border-[#163832] dark:border-[#E85938] bg-white dark:bg-[#163630] font-bold shadow-sm'
+                            ? 'border-2 border-[#163832] dark:border-[#2F6B4F] bg-white dark:bg-[#163630] font-bold shadow-sm'
                             : 'hover:bg-[#E1ECE5]/40 text-[#163832] dark:text-[#FAF7EE]'
                         }`}
                       >
@@ -326,7 +326,7 @@ export const ExerciseBankView: React.FC = () => {
                   value={nombreForm}
                   onChange={(e) => setNombreForm(e.target.value)}
                   placeholder="[Nombre del ejercicio]"
-                  className="w-full rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-white dark:bg-[#102824] px-3.5 py-2.5 text-sm text-[#163832] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#E85938]"
+                  className="w-full rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-white dark:bg-[#102824] px-3.5 py-2.5 text-sm text-[#163832] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#1F5FA0]"
                 />
               </div>
 
@@ -339,7 +339,7 @@ export const ExerciseBankView: React.FC = () => {
                   <select
                     value={categoriaForm}
                     onChange={(e) => setCategoriaForm(e.target.value)}
-                    className="w-full rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-white dark:bg-[#102824] px-3 py-2 text-xs text-[#163832] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#E85938] cursor-pointer"
+                    className="w-full rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-white dark:bg-[#102824] px-3 py-2 text-xs text-[#163832] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#1F5FA0] cursor-pointer"
                   >
                     {categorias.map((c) => (
                       <option key={c.identificadorCategoria} value={c.identificadorCategoria}>
@@ -356,7 +356,7 @@ export const ExerciseBankView: React.FC = () => {
                   <select
                     value={equipamientoForm}
                     onChange={(e) => setEquipamientoForm(e.target.value)}
-                    className="w-full rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-white dark:bg-[#102824] px-3 py-2 text-xs text-[#163832] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#E85938] cursor-pointer"
+                    className="w-full rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-white dark:bg-[#102824] px-3 py-2 text-xs text-[#163832] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#1F5FA0] cursor-pointer"
                   >
                     {equipamientos.map((eq) => (
                       <option key={eq.identificadorEquipamiento} value={eq.identificadorEquipamiento}>
@@ -384,7 +384,7 @@ export const ExerciseBankView: React.FC = () => {
                     <select
                       value={ejercicioBaseForm}
                       onChange={(e) => setEjercicioBaseForm(e.target.value)}
-                      className="w-full rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-white dark:bg-[#102824] px-2.5 py-2 text-xs text-[#163832] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#E85938] cursor-pointer"
+                      className="w-full rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-white dark:bg-[#102824] px-2.5 py-2 text-xs text-[#163832] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#1F5FA0] cursor-pointer"
                     >
                       {ejercicios.map((ej) => (
                         <option key={ej.identificadorEjercicio} value={ej.identificadorEjercicio}>
@@ -403,7 +403,7 @@ export const ExerciseBankView: React.FC = () => {
                       step="0.01"
                       value={ratioForm}
                       onChange={(e) => setRatioForm(parseFloat(e.target.value) || 1.0)}
-                      className="w-full rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-white dark:bg-[#102824] px-3 py-2 text-xs font-bold text-[#163832] dark:text-white text-center focus:outline-none focus:ring-2 focus:ring-[#E85938]"
+                      className="w-full rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-white dark:bg-[#102824] px-3 py-2 text-xs font-bold text-[#163832] dark:text-white text-center focus:outline-none focus:ring-2 focus:ring-[#1F5FA0]"
                     />
                   </div>
                 </div>
@@ -417,7 +417,7 @@ export const ExerciseBankView: React.FC = () => {
               <div className="flex items-center gap-3 pt-2">
                 <button
                   type="submit"
-                  className="rounded-2xl bg-[#E85938] hover:bg-[#D74F30] active:scale-[0.99] text-[#112B26] font-extrabold text-sm px-6 py-3 shadow-md transition"
+                  className="rounded-2xl bg-[#2F6B4F] hover:bg-[#265740] active:scale-[0.99] text-white font-extrabold text-sm px-6 py-3 shadow-md transition"
                 >
                   Guardar
                 </button>
@@ -457,7 +457,7 @@ export const ExerciseBankView: React.FC = () => {
                 });
                 setNuevaCatNombre('');
               }}
-              className="rounded-2xl bg-[#E85938] text-[#112B26] font-extrabold text-sm px-6 py-2.5 shadow-md"
+              className="rounded-2xl bg-[#2F6B4F] text-white font-extrabold text-sm px-6 py-2.5 shadow-md"
             >
               Agregar
             </button>
@@ -497,7 +497,7 @@ export const ExerciseBankView: React.FC = () => {
                 });
                 setNuevoEqNombre('');
               }}
-              className="rounded-2xl bg-[#E85938] text-[#112B26] font-extrabold text-sm px-6 py-2.5 shadow-md"
+              className="rounded-2xl bg-[#2F6B4F] text-white font-extrabold text-sm px-6 py-2.5 shadow-md"
             >
               Agregar
             </button>

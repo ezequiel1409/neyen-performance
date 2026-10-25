@@ -1,9 +1,11 @@
 // =====================================================================
 // NEYEN ATHLETIC - BARRA LATERAL DEL COACH (DESKTOP/TABLET SIDEBAR)
+// DISEÑO FIEL A BRANDING MOCKUPS (SALVIA #2F6B4F & BOSQUE #1D2B24)
 // =====================================================================
 
 import React from 'react';
-import { Activity } from 'lucide-react';
+import { NeyenLogo } from '../ui/NeyenLogo';
+import { useTraining } from '../../context/TrainingContext';
 
 export type CoachNavSection =
   | 'RESUMEN'
@@ -22,6 +24,8 @@ export const CoachSidebar: React.FC<CoachSidebarProps> = ({
   seccionActiva,
   onCambiarSeccion,
 }) => {
+  const { cerrarSesion } = useTraining();
+
   const items: Array<{ id: CoachNavSection; label: string }> = [
     { id: 'RESUMEN', label: 'Resumen' },
     { id: 'ATLETAS', label: 'Atletas' },
@@ -34,22 +38,12 @@ export const CoachSidebar: React.FC<CoachSidebarProps> = ({
   return (
     <aside
       aria-label="Navegación del Coach"
-      className="w-56 shrink-0 py-6 pr-6 flex flex-col justify-between"
+      className="w-56 shrink-0 py-8 pr-6 flex flex-col justify-between min-h-[calc(100vh-2rem)] select-none"
     >
       <div className="space-y-8">
-        {/* Logo NEYEN COACH */}
-        <div className="flex items-center gap-3 px-2">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#163832] dark:bg-[#E85938] shadow-sm">
-            <Activity className="h-5 w-5 text-white dark:text-[#112B26]" />
-          </div>
-          <div>
-            <span className="block text-lg font-black tracking-wider text-[#163832] dark:text-white leading-none">
-              NEYEN
-            </span>
-            <span className="block text-[10px] font-bold tracking-widest text-[#163832]/60 dark:text-[#9EB5B0] uppercase mt-0.5">
-              COACH
-            </span>
-          </div>
+        {/* Logo NEYEN COACH con Isotipo oficial */}
+        <div className="px-2">
+          <NeyenLogo size="md" subtitle="COACH" showSubtitle={true} />
         </div>
 
         {/* Lista de navegación vertical */}
@@ -61,10 +55,10 @@ export const CoachSidebar: React.FC<CoachSidebarProps> = ({
                 key={item.id}
                 type="button"
                 onClick={() => onCambiarSeccion(item.id)}
-                className={`text-left text-sm transition select-none min-h-[44px] flex items-center px-4 py-2.5 rounded-2xl ${
+                className={`text-left text-sm transition select-none min-h-[48px] flex items-center px-4 py-3 rounded-2xl ${
                   isActive
-                    ? 'bg-[#1D4A41] dark:bg-[#E85938] text-white dark:text-[#112B26] font-extrabold shadow-sm'
-                    : 'text-[#163832] dark:text-[#FAF7EE]/70 font-semibold hover:bg-[#E1ECE5]/40 dark:hover:bg-[#163630]/60'
+                    ? 'bg-[#2F6B4F] text-white font-extrabold shadow-sm'
+                    : 'text-[#1D2B24] dark:text-[#FAF7EE]/80 font-bold hover:bg-[#E3EFE7]/50 dark:hover:bg-[#15332B]/60'
                 }`}
               >
                 {item.label}
@@ -72,6 +66,17 @@ export const CoachSidebar: React.FC<CoachSidebarProps> = ({
             );
           })}
         </nav>
+      </div>
+
+      {/* Pie de navegación: Cerrar sesión */}
+      <div className="pt-6 border-t border-[#E5E2D5] dark:border-[#244E43] space-y-2">
+        <button
+          type="button"
+          onClick={cerrarSesion}
+          className="w-full text-left text-sm font-bold text-[#1D2B24] dark:text-[#FAF7EE]/80 hover:text-rose-600 dark:hover:text-rose-400 transition flex items-center px-4 py-3 rounded-2xl min-h-[48px]"
+        >
+          Cerrar sesión
+        </button>
       </div>
     </aside>
   );

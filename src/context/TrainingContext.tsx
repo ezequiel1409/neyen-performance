@@ -31,6 +31,12 @@ import {
 } from '../utils/trainingMath';
 
 interface TrainingContextType {
+  // Autenticación & Sesión de usuario
+  estaAutenticado: boolean;
+  usuarioEmail: string;
+  iniciarSesion: (rol: 'COACH' | 'ALUMNO', email?: string) => void;
+  cerrarSesion: () => void;
+
   // Rol activo
   rolActivo: 'COACH' | 'ALUMNO';
   setRolActivo: (rol: 'COACH' | 'ALUMNO') => void;
@@ -89,7 +95,49 @@ const TrainingContext = createContext<TrainingContextType | null>(null);
 const STORAGE_KEY = 'neyen_performance_state_v1';
 
 export const TrainingProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [rolActivo, setRolActivo] = useState<'COACH' | 'ALUMNO'>('COACH');
+  const [estaAutenticado, setEstaAutenticado] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem('neyen_auth_session') === 'true';
+    } catch {
+      return false;
+    }
+  });
+
+  const [usuarioEmail, setUsuarioEmail] = useState<string>(() => {
+    try {
+      return localStorage.getItem('neyen_auth_email') || 'alumno@neyen.com';
+    } catch {
+      return 'alumno@neyen.com';
+    }
+  });
+
+  const [rolActivo, setRolActivo] = useState<'COACH' | 'ALUMNO'>(() => {
+    try {
+      const saved = localStorage.getItem('neyen_auth_role');
+      return saved === 'COACH' || saved === 'ALUMNO' ? saved : 'ALUMNO';
+    } catch {
+      return 'ALUMNO';
+    }
+  });
+
+  const iniciarSesion = (rol: 'COACH' | 'ALUMNO', email?: string) => {
+    setRolActivo(rol);
+    if (email) setUsuarioEmail(email);
+    setEstaAutenticado(true);
+    try {
+      localStorage.setItem('neyen_auth_session', 'true');
+      localStorage.setItem('neyen_auth_role', rol);
+      if (email) localStorage.setItem('neyen_auth_email', email);
+    } catch {}
+  };
+
+  const cerrarSesion = () => {
+    setEstaAutenticado(false);
+    try {
+      localStorage.removeItem('neyen_auth_session');
+    } catch {}
+  };
+
   const [atletaSeleccionadoId, setAtletaSeleccionadoId] = useState<string>('AL0001');
 
   const [atletas, setAtletas] = useState<Atleta[]>([ATLETA_FEMENINA_DEMO, ATLETA_MASCULINO_DEMO]);
@@ -407,6 +455,10 @@ export const TrainingProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   return (
     <TrainingContext.Provider
       value={{
+        estaAutenticado,
+        usuarioEmail,
+        iniciarSesion,
+        cerrarSesion,
         rolActivo,
         setRolActivo,
         atletaSeleccionadoId,

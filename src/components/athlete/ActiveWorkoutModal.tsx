@@ -347,7 +347,7 @@ export const ActiveWorkoutModal: React.FC<ActiveWorkoutModalProps> = ({ sesion, 
                 rows={3}
                 value={comentariosAtleta}
                 onChange={(e) => setComentariosAtleta(e.target.value)}
-                className="w-full rounded-2xl border-2 border-[#163832] dark:border-[#25524A] bg-transparent p-3.5 text-sm text-[#163832] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#E85938]"
+                className="w-full rounded-2xl border-2 border-[#163832] dark:border-[#25524A] bg-transparent p-3.5 text-sm text-[#163832] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#1F5FA0]"
               />
             </div>
           </div>
@@ -357,7 +357,7 @@ export const ActiveWorkoutModal: React.FC<ActiveWorkoutModalProps> = ({ sesion, 
             <button
               type="button"
               onClick={handleEnviarFeedback}
-              className="w-full rounded-2xl bg-[#E85938] hover:bg-[#D74F30] active:scale-[0.99] text-[#112B26] font-extrabold text-base py-4 text-center shadow-md transition"
+              className="w-full rounded-2xl bg-[#2F6B4F] hover:bg-[#265740] active:scale-[0.99] text-white font-extrabold text-base py-4 text-center shadow-md transition"
             >
               Finalizar entrenamiento
             </button>
@@ -499,7 +499,7 @@ export const ActiveWorkoutModal: React.FC<ActiveWorkoutModalProps> = ({ sesion, 
                                   parseFloat(e.target.value) || 0
                                 )
                               }
-                              className="w-full rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-white dark:bg-[#102824] p-2.5 text-center font-bold text-xl text-[#163832] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#E85938]"
+                              className="w-full rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-white dark:bg-[#102824] p-2.5 text-center font-bold text-xl text-[#163832] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#1F5FA0]"
                               placeholder="00"
                             />
                           </div>
@@ -517,7 +517,7 @@ export const ActiveWorkoutModal: React.FC<ActiveWorkoutModalProps> = ({ sesion, 
                                   parseInt(e.target.value) || 0
                                 )
                               }
-                              className="w-full rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-white dark:bg-[#102824] p-2.5 text-center font-bold text-xl text-[#163832] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#E85938]"
+                              className="w-full rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-white dark:bg-[#102824] p-2.5 text-center font-bold text-xl text-[#163832] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#1F5FA0]"
                               placeholder="8"
                             />
                           </div>
@@ -536,7 +536,7 @@ export const ActiveWorkoutModal: React.FC<ActiveWorkoutModalProps> = ({ sesion, 
               <span className="font-bold text-[#163832] dark:text-white text-base">Descanso</span>
               <span className="text-xs text-[#163832]/70 dark:text-[#9EB5B0]">opcional</span>
               {descansoActivo && (
-                <span className="ml-2 font-mono font-bold text-sm text-[#E85938] animate-pulse">
+                <span className="ml-2 font-mono font-bold text-sm text-[#2F6B4F] animate-pulse">
                   {formatearTiempo(tiempoDescansoRestante)}
                 </span>
               )}
@@ -559,7 +559,7 @@ export const ActiveWorkoutModal: React.FC<ActiveWorkoutModalProps> = ({ sesion, 
           <button
             type="button"
             onClick={() => setModalFeedbackAbierto(true)}
-            className="w-full rounded-2xl bg-[#E85938] hover:bg-[#D74F30] active:scale-[0.99] text-[#112B26] font-extrabold text-base py-4 text-center shadow-md transition"
+            className="w-full rounded-2xl bg-[#2F6B4F] hover:bg-[#265740] active:scale-[0.99] text-white font-extrabold text-base py-4 text-center shadow-md transition"
           >
             Finalizar entrenamiento
           </button>

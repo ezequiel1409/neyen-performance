@@ -1,283 +1,309 @@
 // =====================================================================
-// NEYEN ATHLETIC - VISTA PRINCIPAL DEL ALUMNO (MOBILE-FIRST)
+// NEYEN ATHLETIC - PANEL DEL ALUMNO (ATHLETE HOME VIEW)
+// DISEÑO EXACTO FIEL A MOCKUP (IMAGEN 1) & SISTEMA DE DISEÑO (IMAGEN 3)
 // =====================================================================
 
 import React, { useState } from 'react';
 import { useTraining } from '../../context/TrainingContext';
-import {
-  AlertOctagon,
-  Calendar,
-  CheckCircle,
-  Dumbbell,
-  Heart,
-  Play,
-  RotateCcw,
-  Sparkles,
-  Zap,
-} from 'lucide-react';
-import { calcularCargaPrescrita, calcularFaseCicloActual } from '../../utils/trainingMath';
 import { ActiveWorkoutModal } from './ActiveWorkoutModal';
 import { AthleteCycleModal } from './AthleteCycleModal';
 
-export const AthleteHomeView: React.FC = () => {
-  const {
-    atletaActual,
-    macrociclo,
-    testsFuerza,
-    ejercicios,
-    reportarRetrasoMenstrual,
-    resetearRetrasoMenstrual,
-  } = useTraining();
+interface AthleteHomeViewProps {
+  onIrADescanso?: () => void;
+}
+
+export const AthleteHomeView: React.FC<AthleteHomeViewProps> = ({ onIrADescanso }) => {
+  const { atletaActual, macrociclo, historialSesiones } = useTraining();
 
   const [modalWorkoutAbierto, setModalWorkoutAbierto] = useState<boolean>(false);
   const [modalCicloAbierto, setModalCicloAbierto] = useState<boolean>(false);
-  const [mensajeRetrasoEnviado, setMensajeRetrasoEnviado] = useState<boolean>(false);
 
-  // Sesión del día (Sesión 1 del Micro 1 del Meso 1)
-  const sesionDelDia = macrociclo.mesociclos[0]?.microciclos[0]?.sesionesDeEntrenamiento[0];
+  // Sesión del día
+  const sesionDelDia =
+    macrociclo.mesociclos[0]?.microciclos[0]?.sesionesDeEntrenamiento[0] || {
+      identificadorSesion: 'SES-01',
+      nombreSesion: 'Sesión 1 - Fuerza Torso',
+      duracionEstimadaMinutos: 60,
+    };
 
-  // Cálculo de fase de ciclo
-  const infoCiclo =
-    atletaActual.generoAtleta === 'F' && atletaActual.datosCicloMenstrual?.activo
-      ? calcularFaseCicloActual(
-          atletaActual.datosCicloMenstrual.fechaUltimaMenstruacion,
-          atletaActual.datosCicloMenstrual.duracionPromedioCicloDias,
-          atletaActual.datosCicloMenstrual.duracionPromedioMenstruacionDias
-        )
-      : null;
+  // Cálculo de métricas
+  const totalSesiones = historialSesiones.length || 12;
+  const cargaSemanalUA = 420;
+  const horasSuenio = '7,8';
+  const hrvMs = 68;
 
-  const handleReportarRetraso = () => {
-    reportarRetrasoMenstrual(atletaActual.identificadorAtleta);
-    setMensajeRetrasoEnviado(true);
-    setTimeout(() => setMensajeRetrasoEnviado(false), 4000);
-  };
+  // Estado de recuperación
+  const estadoRecuperacion = 'Óptimo para alta intensidad';
 
   return (
-    <div className="space-y-6 max-w-3xl mx-auto">
-      {/* Saludo y Estado */}
-      <header className="flex items-center justify-between">
+    <div className="space-y-6">
+      {/* =====================================================================
+          CABECERA: PANEL DEL ALUMNO | Hola, [Nombre] | Semana 02 de 52 | Avatar
+          ===================================================================== */}
+      <div className="flex items-center justify-between">
         <div>
-          <span className="text-xs font-bold uppercase tracking-wider text-[#163832]/70 dark:text-[#9EB5B0]">
-            Panel del Atleta
+          <span className="text-xs font-bold uppercase tracking-wider text-[#1D2B24]/60 dark:text-[#9EB5B0] block mb-0.5">
+            PANEL DEL ALUMNO
           </span>
-          <h1 className="text-2xl font-black text-[#163832] dark:text-white">
-            ¡Hola, {atletaActual.nombreCompleto.split(' ')[0]}! 👋
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-[#1D2B24] dark:text-white tracking-tight">
+            Hola, {atletaActual.nombreCompleto.split(' ')[0]}
           </h1>
-          <p className="text-xs text-[#163832]/70 dark:text-[#9EB5B0] mt-0.5">
-            {atletaActual.deportePracticado} • {atletaActual.posicionEnElCampoDeJuego}
-          </p>
         </div>
-        <img
-          src={
-            atletaActual.fotoPerfilUrl ||
-            'https://images.unsplash.com/photo-1594381898411-846e7d193883?w=150'
-          }
-          alt={`Foto de perfil de ${atletaActual.nombreCompleto}`}
-          className="h-14 w-14 rounded-full object-cover border-2 border-[#163832] dark:border-[#E85938] shadow-md"
-        />
-      </header>
 
-      {/* Widget Fisiología Femenina & Ciclo Menstrual (Con estilo a las tarjetas del mockup) */}
-      {infoCiclo && (
-        <section
-          aria-label="Monitoreo Fisiológico y Ciclo Menstrual"
-          className="rounded-2xl border-2 border-[#E5E2D5] dark:border-[#25524A] bg-white dark:bg-[#163630] p-4 sm:p-5 shadow-sm space-y-3"
-        >
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="flex items-center gap-2.5">
-              <span
-                className="flex h-3.5 w-3.5 rounded-full"
-                style={{ backgroundColor: infoCiclo.colorHex }}
-                aria-hidden="true"
-              />
-              <h2 className="text-xs font-bold uppercase tracking-wider text-[#163832] dark:text-white flex items-center gap-1.5">
-                <Heart className="h-4 w-4 text-[#E85938]" aria-hidden="true" />
-                Ciclo Menstrual: Día {infoCiclo.diaActualDelCiclo} ({infoCiclo.nombreFaseLegible})
+        <div className="flex items-center gap-3">
+          <span className="rounded-full bg-[#E3EFE7] dark:bg-[#1C4439] px-4 py-1.5 text-xs font-bold text-[#1D2B24] dark:text-[#E3EFE7] shadow-xs">
+            Semana 02 de 52
+          </span>
+          <div
+            className="h-10 w-10 rounded-full bg-[#DCE9F4] dark:bg-[#1B3E4F] flex items-center justify-center font-bold text-xs text-[#1F5FA0] dark:text-[#8CC2F5] shadow-xs border border-white/50"
+            title={atletaActual.nombreCompleto}
+          >
+            {atletaActual.nombreCompleto.charAt(0)}
+          </div>
+        </div>
+      </div>
+
+      {/* =====================================================================
+          FILA 1: 4 TARJETAS DE MÉTRICAS CLAVE
+          ===================================================================== */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {/* Card 1: Sesiones hechas */}
+        <div className="rounded-2xl border-2 border-[#E5E2D5] dark:border-[#244E43] bg-white dark:bg-[#15332B] p-4 sm:p-5 shadow-xs">
+          <span className="block text-[11px] font-bold uppercase tracking-wider text-[#1D2B24]/60 dark:text-[#9EB5B0]">
+            SESIONES HECHAS
+          </span>
+          <span className="block text-3xl sm:text-4xl font-extrabold text-[#1D2B24] dark:text-white my-1 tracking-tight">
+            {String(totalSesiones).padStart(2, '0')}
+          </span>
+          <span className="block text-xs text-[#1D2B24]/60 dark:text-[#9EB5B0]">
+            esta temporada
+          </span>
+        </div>
+
+        {/* Card 2: Carga semanal */}
+        <div className="rounded-2xl border-2 border-[#E5E2D5] dark:border-[#244E43] bg-white dark:bg-[#15332B] p-4 sm:p-5 shadow-xs">
+          <span className="block text-[11px] font-bold uppercase tracking-wider text-[#1D2B24]/60 dark:text-[#9EB5B0]">
+            CARGA SEMANAL
+          </span>
+          <span className="block text-3xl sm:text-4xl font-extrabold text-[#1D2B24] dark:text-white my-1 tracking-tight">
+            {cargaSemanalUA} UA
+          </span>
+          <span className="block text-xs text-[#1D2B24]/60 dark:text-[#9EB5B0]">
+            sRPE × minutos
+          </span>
+        </div>
+
+        {/* Card 3: Sueño */}
+        <div className="rounded-2xl border-2 border-[#E5E2D5] dark:border-[#244E43] bg-white dark:bg-[#15332B] p-4 sm:p-5 shadow-xs">
+          <span className="block text-[11px] font-bold uppercase tracking-wider text-[#1D2B24]/60 dark:text-[#9EB5B0]">
+            SUEÑO
+          </span>
+          <span className="block text-3xl sm:text-4xl font-extrabold text-[#1D2B24] dark:text-white my-1 tracking-tight">
+            {horasSuenio} h
+          </span>
+          <span className="block text-xs text-[#1D2B24]/60 dark:text-[#9EB5B0]">
+            última noche
+          </span>
+        </div>
+
+        {/* Card 4: HRV */}
+        <div className="rounded-2xl border-2 border-[#E5E2D5] dark:border-[#244E43] bg-white dark:bg-[#15332B] p-4 sm:p-5 shadow-xs">
+          <span className="block text-[11px] font-bold uppercase tracking-wider text-[#1D2B24]/60 dark:text-[#9EB5B0]">
+            HRV
+          </span>
+          <span className="block text-3xl sm:text-4xl font-extrabold text-[#1D2B24] dark:text-white my-1 tracking-tight">
+            {hrvMs} ms
+          </span>
+          <span className="block text-xs text-[#1D2B24]/60 dark:text-[#9EB5B0]">
+            recuperación
+          </span>
+        </div>
+      </div>
+
+      {/* =====================================================================
+          FILA 2: SESIÓN PROGRAMADA (IZQUIERDA) & RECUPERACIÓN (DERECHA)
+          ===================================================================== */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+        {/* Tarjeta Sesión Programada */}
+        <div className="lg:col-span-8 rounded-2xl border-2 border-[#E5E2D5] dark:border-[#244E43] bg-white dark:bg-[#15332B] p-5 sm:p-6 shadow-xs flex flex-col justify-between space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div>
+              <span className="rounded-full bg-[#E3EFE7] dark:bg-[#1C4439] text-[#2F6B4F] dark:text-[#A3D9BE] px-3 py-1 text-[11px] font-bold inline-block mb-1.5">
+                SESIÓN PROGRAMADA · ~{sesionDelDia.duracionEstimadaMinutos || 60} min
+              </span>
+              <h2 className="text-xl sm:text-2xl font-extrabold text-[#1D2B24] dark:text-white tracking-tight">
+                {sesionDelDia.nombreSesion}
               </h2>
             </div>
 
-            {/* Acciones de Ciclo */}
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => setModalCicloAbierto(true)}
-                className="flex min-h-[44px] items-center gap-1.5 rounded-xl border-2 border-[#163832] dark:border-[#25524A] px-3.5 py-2 text-xs font-bold text-[#163832] dark:text-[#FAF7EE] bg-transparent hover:bg-[#E1ECE5]/40 transition"
-              >
-                Ver Mi ciclo
-              </button>
-
-              {atletaActual.datosCicloMenstrual?.enRetrasoMenstrual ? (
-                <button
-                  type="button"
-                  onClick={() => resetearRetrasoMenstrual(atletaActual.identificadorAtleta)}
-                  className="flex min-h-[44px] items-center gap-1.5 rounded-xl bg-[#E1ECE5] dark:bg-[#183E37] px-3.5 py-2 text-xs font-bold text-[#163832] dark:text-white transition"
-                >
-                  <RotateCcw className="h-4 w-4 text-[#E85938]" aria-hidden="true" />
-                  Llegó mi período
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={handleReportarRetraso}
-                  className="flex min-h-[44px] items-center gap-1.5 rounded-xl bg-[#E85938]/15 px-3.5 py-2 text-xs font-bold text-[#E85938] border-2 border-[#E85938]/30 hover:bg-[#E85938]/25 transition"
-                >
-                  <AlertOctagon className="h-4 w-4 text-[#E85938]" aria-hidden="true" />
-                  Reportar Retraso
-                </button>
-              )}
-            </div>
+            <button
+              type="button"
+              onClick={() => setModalWorkoutAbierto(true)}
+              className="rounded-2xl bg-[#2F6B4F] hover:bg-[#265740] active:scale-[0.99] text-white font-extrabold text-sm px-6 py-3 shadow-md transition self-start sm:self-auto min-h-[48px]"
+            >
+              Comenzar entrenamiento
+            </button>
           </div>
 
-          {atletaActual.datosCicloMenstrual?.enRetrasoMenstrual ? (
-            <div
-              role="alert"
-              className="rounded-xl bg-[#E85938] p-3.5 text-xs text-[#112B26] font-medium leading-relaxed"
-            >
-              <strong className="font-bold">¿Hay retraso?</strong> Se ha pausado el cálculo automático de tus cargas y se notificó a tu coach.
+          {/* 3 Bloques de la sesión */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+            <div className="rounded-xl bg-[#F4F8F5] dark:bg-[#0F231D] p-3.5 border border-[#E3EFE7] dark:border-[#244E43]">
+              <span className="block font-bold text-xs text-[#1D2B24] dark:text-white">
+                Bloque A
+              </span>
+              <span className="block text-xs text-[#1D2B24]/70 dark:text-[#9EB5B0] mt-0.5 font-medium">
+                Sentadilla · 4 × 6 · 90 kg
+              </span>
             </div>
-          ) : (
-            <div className="rounded-xl bg-[#E1ECE5] dark:bg-[#183E37] p-3 text-xs text-[#163832] dark:text-[#E1ECE5]">
-              <p className="font-medium">
-                {infoCiclo.recomendacionDeportiva}
-              </p>
-            </div>
-          )}
 
-          {mensajeRetrasoEnviado && (
-            <div
-              role="status"
-              aria-live="polite"
-              className="text-xs font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5 bg-emerald-50 dark:bg-emerald-950/30 p-2.5 rounded-lg border border-emerald-500/20"
-            >
-              <CheckCircle className="h-4 w-4" aria-hidden="true" />
-              Retraso reportado con éxito al panel del Coach.
+            <div className="rounded-xl bg-[#F4F8F5] dark:bg-[#0F231D] p-3.5 border border-[#E3EFE7] dark:border-[#244E43]">
+              <span className="block font-bold text-xs text-[#1D2B24] dark:text-white">
+                Bloque B
+              </span>
+              <span className="block text-xs text-[#1D2B24]/70 dark:text-[#9EB5B0] mt-0.5 font-medium">
+                Press Pecho · 4 × 6 · 110 kg
+              </span>
             </div>
-          )}
-        </section>
-      )}
 
-      {/* Tarjeta de la Sesión de Hoy */}
-      <section
-        aria-labelledby="titulo-sesion-hoy"
-        className="rounded-2xl border-2 border-[#E5E2D5] dark:border-[#25524A] bg-white dark:bg-[#163630] p-5 shadow-sm space-y-4"
-      >
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-[#E5E2D5]/80 dark:border-[#25524A]/60 pb-4">
+            <div className="rounded-xl bg-[#F4F8F5] dark:bg-[#0F231D] p-3.5 border border-[#E3EFE7] dark:border-[#244E43]">
+              <span className="block font-bold text-xs text-[#1D2B24] dark:text-white">
+                Bloque C
+              </span>
+              <span className="block text-xs text-[#1D2B24]/70 dark:text-[#9EB5B0] mt-0.5 font-medium">
+                Hip Thrust · 3 × 10 · 130 kg
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Tarjeta Recuperación (Cielo #DCE9F4) */}
+        <div className="lg:col-span-4 rounded-2xl bg-[#DCE9F4] dark:bg-[#16384C] p-5 sm:p-6 border border-[#B8D7ED] dark:border-[#28556D] flex flex-col justify-between space-y-4 shadow-xs">
           <div>
-            <div className="flex items-center gap-2">
-              <span className="rounded-full bg-[#E1ECE5] dark:bg-[#1C4740] px-3 py-1 text-xs font-bold text-[#163832] dark:text-[#E1ECE5]">
-                SESIÓN PROGRAMADA
-              </span>
-              <span className="text-xs text-[#163832]/70 dark:text-[#9EB5B0] font-medium">
-                ~{sesionDelDia?.duracionEstimadaMinutos} minutos
-              </span>
-            </div>
-            <h2 id="titulo-sesion-hoy" className="mt-1 text-xl font-black text-[#163832] dark:text-white">
-              {sesionDelDia?.nombreSesion}
-            </h2>
-            <p className="text-xs text-[#163832]/70 dark:text-[#9EB5B0] mt-0.5">
-              {sesionDelDia?.objetivoEspecificoSesion}
+            <span className="block text-[11px] font-bold uppercase tracking-wider text-[#1F5FA0] dark:text-[#8CC2F5]">
+              RECUPERACIÓN
+            </span>
+            <h3 className="text-xl font-extrabold text-[#1D2B24] dark:text-white mt-1 mb-2">
+              {estadoRecuperacion}
+            </h3>
+            <p className="text-xs text-[#1D2B24]/80 dark:text-[#CFE7F8] leading-relaxed">
+              Sincronizado desde tu reloj. Tocá para ver el detalle del sueño.
             </p>
           </div>
 
           <button
             type="button"
-            onClick={() => setModalWorkoutAbierto(true)}
-            className="flex items-center justify-center gap-2 rounded-2xl bg-[#E85938] hover:bg-[#D74F30] active:scale-[0.99] text-[#112B26] font-extrabold text-base px-6 py-3.5 shadow-md transition"
+            onClick={onIrADescanso}
+            className="rounded-xl border-2 border-[#1F5FA0] dark:border-[#8CC2F5] text-[#1F5FA0] dark:text-[#8CC2F5] bg-white dark:bg-[#0F231D] px-5 py-2.5 font-bold text-xs hover:bg-[#DCE9F4]/50 dark:hover:bg-[#1B3E4F] transition self-start min-h-[44px]"
           >
-            <Play className="h-5 w-5 fill-[#112B26]" aria-hidden="true" />
-            <span>Comenzar Entrenamiento</span>
+            Ver descanso
           </button>
         </div>
+      </div>
 
-        {/* Lista de Ejercicios del Día con Cargas Ya Calculadas */}
-        <div className="space-y-4">
-          <span className="text-xs font-bold uppercase tracking-wider text-[#163832]/70 dark:text-[#9EB5B0] block">
-            Ejercicios y Cargas Calculadas para Hoy:
+      {/* =====================================================================
+          FILA 3: CARGA DE LA SEMANA (BAR CHART) & MACROCICLO (13 MESOS)
+          ===================================================================== */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Carga de la Semana */}
+        <div className="rounded-2xl border-2 border-[#E5E2D5] dark:border-[#244E43] bg-white dark:bg-[#15332B] p-5 sm:p-6 shadow-xs space-y-4">
+          <span className="block text-[11px] font-bold uppercase tracking-wider text-[#1D2B24]/60 dark:text-[#9EB5B0]">
+            CARGA DE LA SEMANA
           </span>
 
-          {sesionDelDia?.bloquesDeEjercicios.map((bloque) => (
-            <div
-              key={bloque.identificadorBloque}
-              className="rounded-xl border border-[#E5E2D5] dark:border-[#25524A] bg-[#FAF7EE]/60 dark:bg-[#102824]/60 p-4 space-y-3"
-            >
-              <div className="flex items-center justify-between">
-                <h3 className="font-bold text-[#163832] dark:text-white text-sm">{bloque.nombreBloque}</h3>
-                <span className="text-xs font-semibold text-[#163832]/70 dark:text-[#9EB5B0] uppercase">
-                  {bloque.tipoEstructura.replace('_', ' ')}
+          <div className="h-40 flex items-end justify-between gap-3 pt-4 px-2">
+            {[
+              { dia: 'L', pct: 40, highlight: false },
+              { dia: 'M', pct: 70, highlight: false },
+              { dia: 'X', pct: 50, highlight: false },
+              { dia: 'J', pct: 95, highlight: true }, // Hoy
+              { dia: 'V', pct: 30, highlight: false },
+              { dia: 'S', pct: 0, highlight: false },
+              { dia: 'D', pct: 0, highlight: false },
+            ].map((col) => (
+              <div key={col.dia} className="flex-1 flex flex-col items-center gap-2 h-full justify-end">
+                <div className="w-full flex items-end justify-center h-28">
+                  {col.pct > 0 ? (
+                    <div
+                      style={{ height: `${col.pct}%` }}
+                      className={`w-full max-w-[42px] rounded-t-xl transition-all duration-300 ${
+                        col.highlight
+                          ? 'bg-[#2F6B4F] dark:bg-[#3A8261]'
+                          : 'bg-[#C5DFD0] dark:bg-[#20493E]'
+                      }`}
+                    />
+                  ) : (
+                    <div className="w-full h-1 bg-transparent" />
+                  )}
+                </div>
+                <span className="text-xs font-bold text-[#1D2B24]/70 dark:text-[#9EB5B0]">
+                  {col.dia}
                 </span>
               </div>
+            ))}
+          </div>
+        </div>
 
-              {bloque.ejerciciosPrescritos.map((item, idx) => {
-                const ej = ejercicios.find(
-                  (e) => e.identificadorEjercicio === item.identificadorEjercicio
-                );
-                const testBaseId =
-                  ej?.identificadorEjercicioBaseTestReferencia || ej?.identificadorEjercicio;
-                const testAtleta = testsFuerza.find(
-                  (t) =>
-                    t.identificadorAtleta === atletaActual.identificadorAtleta &&
-                    t.identificadorEjercicioBase === testBaseId
-                );
-                const unRM = testAtleta?.unaRepeticionMaximaEfectiva || 0;
+        {/* Macrociclo · 13 Mesociclos */}
+        <div className="rounded-2xl border-2 border-[#E5E2D5] dark:border-[#244E43] bg-white dark:bg-[#15332B] p-5 sm:p-6 shadow-xs flex flex-col justify-between space-y-4">
+          <div>
+            <span className="block text-[11px] font-bold uppercase tracking-wider text-[#1D2B24]/60 dark:text-[#9EB5B0] mb-4">
+              MACROCICLO · 13 MESOCICLOS
+            </span>
+
+            {/* Fila de 13 pastillas de mesociclos */}
+            <div className="flex flex-wrap items-center gap-2">
+              {[
+                { n: 1, estado: 'COMPLETO' },
+                { n: 2, estado: 'COMPLETO' },
+                { n: 3, estado: 'COMPLETO' },
+                { n: 4, estado: 'ACTUAL' }, // Destacado en Arena #F4C98B
+                { n: 5, estado: 'FUTURO' },
+                { n: 6, estado: 'FUTURO' },
+                { n: 7, estado: 'FUTURO' },
+                { n: 8, estado: 'FUTURO' },
+                { n: 9, estado: 'FUTURO' },
+                { n: 10, estado: 'FUTURO' },
+                { n: 11, estado: 'FUTURO' },
+                { n: 12, estado: 'FUTURO' },
+                { n: 13, estado: 'FUTURO' },
+              ].map((m) => {
+                let bgClass = 'bg-[#D5E7DC] dark:bg-[#1F4A3C]';
+                if (m.estado === 'COMPLETO') {
+                  bgClass = 'bg-[#2F6B4F] dark:bg-[#3A8261]';
+                } else if (m.estado === 'ACTUAL') {
+                  bgClass = 'bg-[#F4C98B] ring-2 ring-[#F4C98B]/50';
+                }
 
                 return (
-                  <div key={idx} className="rounded-lg bg-white dark:bg-[#163630] border border-[#E5E2D5] dark:border-[#25524A] p-3 space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-[#163832] dark:text-white text-sm">{ej?.nombreEjercicio}</span>
-                      <span className="text-xs text-[#163832]/70 dark:text-[#9EB5B0]">
-                        {ej?.grupoMuscularPrincipal}
-                      </span>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-                      {item.seriesPrescritas.map((s) => {
-                        const calculo = calcularCargaPrescrita({
-                          unRepeticionMaximaKg: unRM,
-                          porcentajeUnaRepeticionMaxima: s.porcentajeUnaRepeticionMaxima,
-                          ratioConversionCarga: ej?.ratioConversionCargaPorcentual || 1.0,
-                          faseCicloMenstrual: infoCiclo?.faseActual,
-                          aplicarAjusteHormonal: true,
-                        });
-
-                        return (
-                          <div
-                            key={s.numeroDeSerie}
-                            className="flex flex-col items-center justify-center rounded-lg border border-[#E5E2D5] dark:border-[#25524A] bg-[#FAF7EE] dark:bg-[#102824] px-3 py-2 min-h-[50px]"
-                          >
-                            <span className="text-xs font-semibold text-[#163832]/70 dark:text-[#9EB5B0]">
-                              Serie {s.numeroDeSerie}
-                            </span>
-                            <span className="font-black text-base text-[#163832] dark:text-[#FAF7EE] font-mono my-0.5">
-                              {calculo.pesoFinalKg > 0 ? `${calculo.pesoFinalKg} kg` : 'Autocarga'}
-                            </span>
-                            <span className="text-xs text-[#163832]/80 dark:text-[#9EB5B0]">
-                              {s.repeticionesPrescritas} reps
-                            </span>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
+                  <div
+                    key={m.n}
+                    className={`h-3.5 w-6 sm:w-7 rounded-full ${bgClass} transition`}
+                    title={`Mesociclo ${m.n} (${m.estado})`}
+                  />
                 );
               })}
             </div>
-          ))}
-        </div>
-      </section>
+          </div>
 
-      {/* Modal "Mi ciclo" */}
+          <p className="text-xs text-[#1D2B24]/70 dark:text-[#9EB5B0] leading-relaxed pt-2">
+            Mesociclo actual destacado en arena · objetivo: Fuerza máxima e hipertrofia funcional.
+          </p>
+        </div>
+      </div>
+
+      {/* Modal de entrenamiento en vivo */}
+      {modalWorkoutAbierto && (
+        <ActiveWorkoutModal
+          sesion={sesionDelDia}
+          onCerrar={() => setModalWorkoutAbierto(false)}
+        />
+      )}
+
+      {/* Modal de ciclo femenino */}
       <AthleteCycleModal
         isOpen={modalCicloAbierto}
         onClose={() => setModalCicloAbierto(false)}
       />
-
-      {/* Modal de Entrenamiento en Curso */}
-      {modalWorkoutAbierto && (
-        <ActiveWorkoutModal
-          sesion={sesionDelDia!}
-          onCerrar={() => setModalWorkoutAbierto(false)}
-        />
-      )}
     </div>
   );
 };

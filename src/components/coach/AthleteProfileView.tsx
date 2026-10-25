@@ -75,7 +75,7 @@ export const AthleteProfileView: React.FC = () => {
             <img
               src={atletaActual.fotoPerfilUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200'}
               alt={atletaActual.nombreCompleto}
-              className="h-20 w-20 rounded-2xl object-cover border-2 border-[#163832] dark:border-[#E85938] shadow-sm"
+              className="h-20 w-20 rounded-2xl object-cover border-2 border-[#163832] dark:border-[#2F6B4F] shadow-sm"
             />
             <div>
               <div className="flex items-center gap-2">
@@ -120,7 +120,7 @@ export const AthleteProfileView: React.FC = () => {
             onClick={() => setTabActiva('FUERZA')}
             className={`rounded-xl px-4 py-2 text-xs font-bold transition min-h-[44px] ${
               tabActiva === 'FUERZA'
-                ? 'bg-[#163832] dark:bg-[#E85938] text-white dark:text-[#112B26] shadow-sm'
+                ? 'bg-[#2F6B4F] text-white shadow-sm'
                 : 'text-[#163832]/70 dark:text-[#9EB5B0] bg-[#E1ECE5]/40 hover:bg-[#E1ECE5]/80'
             }`}
           >
@@ -130,7 +130,7 @@ export const AthleteProfileView: React.FC = () => {
             onClick={() => setTabActiva('FISICOS')}
             className={`rounded-xl px-4 py-2 text-xs font-bold transition min-h-[44px] ${
               tabActiva === 'FISICOS'
-                ? 'bg-[#163832] dark:bg-[#E85938] text-white dark:text-[#112B26] shadow-sm'
+                ? 'bg-[#2F6B4F] text-white shadow-sm'
                 : 'text-[#163832]/70 dark:text-[#9EB5B0] bg-[#E1ECE5]/40 hover:bg-[#E1ECE5]/80'
             }`}
           >
@@ -140,7 +140,7 @@ export const AthleteProfileView: React.FC = () => {
             onClick={() => setTabActiva('GENERAL')}
             className={`rounded-xl px-4 py-2 text-xs font-bold transition min-h-[44px] ${
               tabActiva === 'GENERAL'
-                ? 'bg-[#163832] dark:bg-[#E85938] text-white dark:text-[#112B26] shadow-sm'
+                ? 'bg-[#2F6B4F] text-white shadow-sm'
                 : 'text-[#163832]/70 dark:text-[#9EB5B0] bg-[#E1ECE5]/40 hover:bg-[#E1ECE5]/80'
             }`}
           >
@@ -151,7 +151,7 @@ export const AthleteProfileView: React.FC = () => {
               onClick={() => setTabActiva('CICLO')}
               className={`rounded-xl px-4 py-2 text-xs font-bold transition min-h-[44px] ${
                 tabActiva === 'CICLO'
-                  ? 'bg-[#163832] dark:bg-[#E85938] text-white dark:text-[#112B26] shadow-sm'
+                  ? 'bg-[#2F6B4F] text-white shadow-sm'
                   : 'text-[#163832]/70 dark:text-[#9EB5B0] bg-[#E1ECE5]/40 hover:bg-[#E1ECE5]/80'
               }`}
             >

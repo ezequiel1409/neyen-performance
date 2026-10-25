@@ -99,7 +99,7 @@ export const AthleteCycleModal: React.FC<AthleteCycleModalProps> = ({ isOpen, on
                 onClick={handleToggleCompartir}
                 className={`relative inline-flex h-8 w-14 shrink-0 cursor-pointer rounded-full p-1 transition-colors duration-200 ease-in-out ${
                   compartirConCoach
-                    ? 'bg-[#163832] dark:bg-[#E85938]'
+                    ? 'bg-[#2F6B4F]'
                     : 'bg-slate-300 dark:bg-slate-700'
                 }`}
               >
@@ -139,7 +139,7 @@ export const AthleteCycleModal: React.FC<AthleteCycleModalProps> = ({ isOpen, on
                 value={fechaFUM}
                 onChange={(e) => setFechaFUM(e.target.value)}
                 placeholder="[dd/mm/aaaa]"
-                className="w-full rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-transparent px-4 py-3 text-base text-[#163832] dark:text-white placeholder:text-[#163832]/40 dark:placeholder:text-[#9EB5B0]/40 focus:outline-none focus:ring-2 focus:ring-[#E85938]"
+                className="w-full rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-transparent px-4 py-3 text-base text-[#163832] dark:text-white placeholder:text-[#163832]/40 dark:placeholder:text-[#9EB5B0]/40 focus:outline-none focus:ring-2 focus:ring-[#1F5FA0]"
               />
             </div>
 
@@ -151,13 +151,13 @@ export const AthleteCycleModal: React.FC<AthleteCycleModalProps> = ({ isOpen, on
                 type="number"
                 value={duracionCiclo}
                 onChange={(e) => setDuracionCiclo(parseInt(e.target.value) || 28)}
-                className="w-full rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-transparent px-4 py-3 text-base text-[#163832] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#E85938]"
+                className="w-full rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-transparent px-4 py-3 text-base text-[#163832] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#1F5FA0]"
               />
             </div>
           </div>
 
           {/* Banner de alerta: ¿Hay retraso? */}
-          <div className="rounded-2xl bg-[#E85938] p-4 text-[#112B26] leading-relaxed shadow-sm">
+          <div className="rounded-2xl bg-[#F4C98B] p-4 text-[#1D2B24] leading-relaxed shadow-sm">
             <strong className="font-bold">¿Hay retraso?</strong> Si lo reportás, se pausa el cálculo automático de tus cargas y se avisa a tu coach.
           </div>
         </div>
@@ -167,7 +167,7 @@ export const AthleteCycleModal: React.FC<AthleteCycleModalProps> = ({ isOpen, on
           <button
             type="button"
             onClick={handleReportarRetraso}
-            className="w-full rounded-2xl bg-[#E85938] hover:bg-[#D74F30] active:scale-[0.99] text-[#112B26] font-extrabold text-base py-4 text-center shadow-md transition"
+            className="w-full rounded-2xl bg-[#2F6B4F] hover:bg-[#265740] active:scale-[0.99] text-white font-extrabold text-base py-4 text-center shadow-md transition"
           >
             Reportar retraso
           </button>

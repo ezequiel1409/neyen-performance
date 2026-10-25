@@ -3,45 +3,57 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
+  /* Paleta oficial NEYEN - Educación física, tonos suaves */
+  --color-salvia: #2F6B4F;
+  --color-menta: #E3EFE7;
+  --color-cielo: #DCE9F4;
+  --color-arena: #F4C98B;
+  --color-azul-foco: #1F5FA0;
+  --color-bosque: #1D2B24;
+
   --bg-app: #FAF7EE;
-  --text-main: #163832;
+  --text-main: #1D2B24;
   --text-muted: #49655F;
   --card-bg: #FFFFFF;
   --card-border: #E5E2D5;
-  --border-strong: #163832;
-  --banner-bg: #E1ECE5;
-  --accent-coral: #E85938;
-  --accent-coral-hover: #D74F30;
-  --coral-text: #112B26;
-  --selected-fill: #1D4A41;
+  --border-strong: #1D2B24;
+  --banner-bg: #E3EFE7;
+  
+  --primary: #2F6B4F;
+  --primary-hover: #265740;
+  --accent-arena: #F4C98B;
+  
+  --selected-fill: #2F6B4F;
   --selected-text: #FFFFFF;
 }
 
 .dark {
-  --bg-app: #0E2420;
+  --bg-app: #0F231D;
   --text-main: #FAF7EE;
   --text-muted: #9EB5B0;
-  --card-bg: #163630;
-  --card-border: #25524A;
-  --border-strong: #25524A;
-  --banner-bg: #1C4740;
-  --accent-coral: #E85938;
-  --accent-coral-hover: #D74F30;
-  --coral-text: #112B26;
-  --selected-fill: #E85938;
-  --selected-text: #112B26;
+  --card-bg: #15332B;
+  --card-border: #244E43;
+  --border-strong: #244E43;
+  --banner-bg: #1C4439;
+  
+  --primary: #2F6B4F;
+  --primary-hover: #3A8261;
+  --accent-arena: #F4C98B;
+  
+  --selected-fill: #2F6B4F;
+  --selected-text: #FFFFFF;
 }
 
 @layer base {
-  body {
+  html, body {
     background-color: var(--bg-app);
     color: var(--text-main);
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
 
   /* Indicador global de foco accesible (WCAG 2.2 AA - Criterio 2.4.7 / 2.4.11) */
   :focus-visible {
-    outline: 2px solid var(--accent-coral);
+    outline: 2px solid var(--color-azul-foco);
     outline-offset: 2px;
   }
 
@@ -57,4 +69,3 @@
     }
   }
 }
-

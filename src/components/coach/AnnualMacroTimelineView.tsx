@@ -72,7 +72,7 @@ export const AnnualMacroTimelineView: React.FC = () => {
       <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-black tracking-tight text-[#163832] dark:text-white flex items-center gap-2">
-            <Calendar className="h-6 w-6 text-[#E85938]" aria-hidden="true" />
+            <Calendar className="h-6 w-6 text-[#2F6B4F]" aria-hidden="true" />
             Macrociclo Anual: Periodización de 52 Semanas
           </h1>
           <p className="text-xs text-[#163832]/70 dark:text-[#9EB5B0] mt-1">
@@ -92,7 +92,7 @@ export const AnnualMacroTimelineView: React.FC = () => {
             onChange={(e) =>
               setMesoFiltro(e.target.value === 'TODOS' ? 'TODOS' : parseInt(e.target.value))
             }
-            className="min-h-[44px] rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-white dark:bg-[#163630] px-3.5 py-2 text-xs font-semibold text-[#163832] dark:text-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E85938]"
+            className="min-h-[44px] rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-white dark:bg-[#163630] px-3.5 py-2 text-xs font-semibold text-[#163832] dark:text-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#1F5FA0]"
           >
             <option value="TODOS">Ver las 52 Semanas (Año Completo)</option>
             {Array.from({ length: 13 }, (_, i) => (

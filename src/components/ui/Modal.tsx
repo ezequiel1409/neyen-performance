@@ -142,7 +142,7 @@ export const Modal: React.FC<ModalProps> = ({
             <button
               onClick={onClose}
               aria-label="Cerrar modal"
-              className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-2xl border-2 border-[#163832] dark:border-[#25524A] bg-transparent text-[#163832] dark:text-white hover:bg-[#E1ECE5]/40 transition focus-visible:outline-2 focus-visible:outline-[#E85938]"
+              className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-2xl border-2 border-[#1D2B24] dark:border-[#244E43] bg-transparent text-[#1D2B24] dark:text-white hover:bg-[#E3EFE7]/40 transition focus-visible:outline-2 focus-visible:outline-[#1F5FA0]"
             >
               <X className="h-5 w-5 stroke-[2.5]" aria-hidden="true" />
             </button>

@@ -61,7 +61,7 @@ export const AthleteAnnualProgressView: React.FC = () => {
       {/* Cabecera */}
       <header>
         <h1 className="text-2xl font-black tracking-tight text-[#163832] dark:text-white flex items-center gap-2">
-          <TrendingUp className="h-6 w-6 text-[#E85938]" aria-hidden="true" />
+          <TrendingUp className="h-6 w-6 text-[#2F6B4F]" aria-hidden="true" />
           Mi Progreso Anual & Cargas de Entrenamiento
         </h1>
         <p className="text-xs text-[#163832]/70 dark:text-[#9EB5B0] mt-1">
@@ -74,10 +74,10 @@ export const AthleteAnnualProgressView: React.FC = () => {
       <section aria-label="Métricas clave de rendimiento" className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <div className="rounded-2xl border-2 border-[#E5E2D5] dark:border-[#25524A] bg-white dark:bg-[#163630] p-4 shadow-sm">
           <span className="text-xs text-[#163832]/80 dark:text-[#9EB5B0] font-semibold flex items-center gap-1.5">
-            <Flame className="h-4 w-4 text-[#E85938] shrink-0" aria-hidden="true" />
+            <Flame className="h-4 w-4 text-[#2F6B4F] shrink-0" aria-hidden="true" />
             Carga Acumulada
           </span>
-          <p className="mt-2 text-2xl font-black text-[#E85938] font-mono">
+          <p className="mt-2 text-2xl font-black text-[#2F6B4F] font-mono">
             {cargaTotalAcumuladaUA} UA
           </p>
           <span className="text-xs text-[#163832]/60 dark:text-[#9EB5B0]/70">sRPE × Duración</span>

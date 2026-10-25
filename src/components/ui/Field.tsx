@@ -36,11 +36,11 @@ export const Field: React.FC<FieldProps> = ({
     .join(' ');
 
   const defaultInputStyles =
-    'w-full min-h-[44px] rounded-xl border-2 bg-white dark:bg-[#102824] px-3.5 py-2.5 text-sm text-[#163832] dark:text-white placeholder-[#163832]/40 dark:placeholder-[#9EB5B0]/40 focus:outline-none focus:ring-2 focus:ring-[#E85938] focus:border-transparent transition disabled:opacity-50 disabled:cursor-not-allowed';
+    'w-full min-h-[44px] rounded-xl border-2 bg-white dark:bg-[#102824] px-3.5 py-2.5 text-sm text-[#1D2B24] dark:text-white placeholder-[#1D2B24]/40 dark:placeholder-[#9EB5B0]/40 focus:outline-none focus:ring-2 focus:ring-[#1F5FA0] focus:border-transparent transition disabled:opacity-50 disabled:cursor-not-allowed';
 
   const borderStyles = error
     ? 'border-rose-500 focus:ring-rose-500'
-    : 'border-[#163832] dark:border-[#25524A] hover:border-[#163832]';
+    : 'border-[#1D2B24] dark:border-[#244E43] hover:border-[#1D2B24]';
 
   return (
     <div className={twMerge('space-y-1.5', className)}>

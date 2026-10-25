@@ -44,7 +44,7 @@ export const AthleteSleepWearableMLP: React.FC = () => {
               MLP PREVIEW
             </span>
             <h1 className="text-2xl font-black tracking-tight text-[#163832] dark:text-white flex items-center gap-2">
-              <Moon className="h-6 w-6 text-[#E85938]" aria-hidden="true" />
+              <Moon className="h-6 w-6 text-[#2F6B4F]" aria-hidden="true" />
               Monitoreo de Descanso & Wearables
             </h1>
           </div>

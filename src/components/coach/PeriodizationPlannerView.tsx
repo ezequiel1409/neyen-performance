@@ -99,7 +99,7 @@ export const PeriodizationPlannerView: React.FC = () => {
             onClick={() => setSubVista('EDITOR_SESION')}
             className={`rounded-full px-5 py-2 text-xs font-bold transition select-none ${
               subVista === 'EDITOR_SESION'
-                ? 'bg-[#1D4A41] dark:bg-[#E85938] text-white dark:text-[#112B26] shadow-sm'
+                ? 'bg-[#2F6B4F] text-white shadow-sm'
                 : 'border-2 border-[#163832] dark:border-[#25524A] text-[#163832] dark:text-white bg-transparent hover:bg-[#E1ECE5]/40'
             }`}
           >
@@ -110,7 +110,7 @@ export const PeriodizationPlannerView: React.FC = () => {
             onClick={() => setSubVista('ESTRUCTURA_PLAN')}
             className={`rounded-full px-5 py-2 text-xs font-bold transition select-none ${
               subVista === 'ESTRUCTURA_PLAN'
-                ? 'bg-[#1D4A41] dark:bg-[#E85938] text-white dark:text-[#112B26] shadow-sm'
+                ? 'bg-[#2F6B4F] text-white shadow-sm'
                 : 'border-2 border-[#163832] dark:border-[#25524A] text-[#163832] dark:text-white bg-transparent hover:bg-[#E1ECE5]/40'
             }`}
           >
@@ -170,7 +170,7 @@ export const PeriodizationPlannerView: React.FC = () => {
               <button
                 type="button"
                 onClick={handleGuardarSesion}
-                className="rounded-xl bg-[#E85938] hover:bg-[#D74F30] active:scale-[0.99] text-[#112B26] font-extrabold text-xs px-6 py-3 shadow-md transition min-h-[44px]"
+                className="rounded-xl bg-[#2F6B4F] hover:bg-[#265740] active:scale-[0.99] text-white font-extrabold text-xs px-6 py-3 shadow-md transition min-h-[44px]"
               >
                 Guardar sesión
               </button>
@@ -188,7 +188,7 @@ export const PeriodizationPlannerView: React.FC = () => {
                 value={nombreSesion}
                 onChange={(e) => setNombreSesion(e.target.value)}
                 placeholder="[Sesión]"
-                className="w-full rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-white dark:bg-[#102824] px-3.5 py-2.5 text-sm font-bold text-[#163832] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#E85938]"
+                className="w-full rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-white dark:bg-[#102824] px-3.5 py-2.5 text-sm font-bold text-[#163832] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#1F5FA0]"
               />
             </div>
 
@@ -201,7 +201,7 @@ export const PeriodizationPlannerView: React.FC = () => {
                 value={duracionMinutos}
                 onChange={(e) => setDuracionMinutos(parseInt(e.target.value) || 0)}
                 placeholder="00"
-                className="w-full rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-white dark:bg-[#102824] px-3.5 py-2.5 text-sm font-bold text-[#163832] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#E85938]"
+                className="w-full rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-white dark:bg-[#102824] px-3.5 py-2.5 text-sm font-bold text-[#163832] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#1F5FA0]"
               />
             </div>
 
@@ -214,7 +214,7 @@ export const PeriodizationPlannerView: React.FC = () => {
                 value={rpeObjetivo}
                 onChange={(e) => setRpeObjetivo(parseInt(e.target.value) || 0)}
                 placeholder="0"
-                className="w-full rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-white dark:bg-[#102824] px-3.5 py-2.5 text-sm font-bold text-[#163832] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#E85938]"
+                className="w-full rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-white dark:bg-[#102824] px-3.5 py-2.5 text-sm font-bold text-[#163832] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#1F5FA0]"
               />
             </div>
           </div>
@@ -352,7 +352,7 @@ export const PeriodizationPlannerView: React.FC = () => {
             <button
               type="button"
               onClick={handleCrearPlan}
-              className="rounded-2xl bg-[#E85938] hover:bg-[#D74F30] active:scale-[0.99] text-[#112B26] font-extrabold text-sm px-7 py-3.5 shadow-md transition self-start"
+              className="rounded-2xl bg-[#2F6B4F] hover:bg-[#265740] active:scale-[0.99] text-white font-extrabold text-sm px-7 py-3.5 shadow-md transition self-start"
             >
               Crear plan
             </button>
@@ -375,7 +375,7 @@ export const PeriodizationPlannerView: React.FC = () => {
                   value={nombreMacrociclo}
                   onChange={(e) => setNombreMacrociclo(e.target.value)}
                   placeholder="[Temporada 2025-2026]"
-                  className="w-full rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-white dark:bg-[#102824] px-3.5 py-2.5 text-sm font-semibold text-[#163832] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#E85938]"
+                  className="w-full rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-white dark:bg-[#102824] px-3.5 py-2.5 text-sm font-semibold text-[#163832] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#1F5FA0]"
                 />
               </div>
 
@@ -387,7 +387,7 @@ export const PeriodizationPlannerView: React.FC = () => {
                   rows={4}
                   value={objetivoGeneral}
                   onChange={(e) => setObjetivoGeneral(e.target.value)}
-                  className="w-full rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-white dark:bg-[#102824] p-3 text-sm text-[#163832] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#E85938]"
+                  className="w-full rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-white dark:bg-[#102824] p-3 text-sm text-[#163832] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#1F5FA0]"
                 />
               </div>
 
@@ -399,7 +399,7 @@ export const PeriodizationPlannerView: React.FC = () => {
                   type="number"
                   value={duracionSemanas}
                   onChange={(e) => setDuracionSemanas(parseInt(e.target.value) || 52)}
-                  className="w-full rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-white dark:bg-[#102824] px-3.5 py-2.5 text-sm font-semibold text-[#163832] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#E85938]"
+                  className="w-full rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-white dark:bg-[#102824] px-3.5 py-2.5 text-sm font-semibold text-[#163832] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#1F5FA0]"
                 />
               </div>
 
@@ -413,7 +413,7 @@ export const PeriodizationPlannerView: React.FC = () => {
                     onClick={() => setUsarMesociclos(!usarMesociclos)}
                     className={`relative inline-flex h-8 w-14 shrink-0 cursor-pointer rounded-full p-1 transition-colors duration-200 ease-in-out ${
                       usarMesociclos
-                        ? 'bg-[#163832] dark:bg-[#E85938]'
+                        ? 'bg-[#163832] dark:bg-[#2F6B4F]'
                         : 'bg-slate-300 dark:bg-slate-700'
                     }`}
                   >
