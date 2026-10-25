@@ -22,7 +22,7 @@ const MainLayout: React.FC = () => {
   const [vistaAlumnoActual, setVistaAlumnoActual] = useState<VistaAlumno>('RUTINA');
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-blue-600 selection:text-white">
+    <div className="min-h-screen bg-[var(--bg-app)] text-[var(--text-main)] flex flex-col font-sans selection:bg-[#E85938] selection:text-white transition-colors duration-200">
       {/* Barra de Navegación con Selector de Rol */}
       <Navbar
         vistaCoachActual={vistaCoachActual}
@@ -56,7 +56,7 @@ const MainLayout: React.FC = () => {
       )}
 
       {/* Pie de página (oculto en mobile para alumno para no chocar con el bottom nav) */}
-      <footer className={`border-t border-slate-900 bg-slate-950 py-4 text-center text-xs text-slate-500 ${rolActivo === 'ALUMNO' ? 'hidden sm:block' : 'block'}`}>
+      <footer className={`border-t-2 border-[#E5E2D5] dark:border-[#25524A] bg-[#FAF7EE] dark:bg-[#0E2420] py-4 text-center text-xs text-[#163832]/60 dark:text-[#9EB5B0] ${rolActivo === 'ALUMNO' ? 'hidden sm:block' : 'block'}`}>
         <p>
           <strong>NEYEN Athletic Performance OS</strong> • Plataforma de Preparación Física Periodizada • Temporada 2025-2026
         </p>

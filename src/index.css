@@ -1,15 +1,47 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --bg-app: #FAF7EE;
+  --text-main: #163832;
+  --text-muted: #49655F;
+  --card-bg: #FFFFFF;
+  --card-border: #E5E2D5;
+  --border-strong: #163832;
+  --banner-bg: #E1ECE5;
+  --accent-coral: #E85938;
+  --accent-coral-hover: #D74F30;
+  --coral-text: #112B26;
+  --selected-fill: #1D4A41;
+  --selected-text: #FFFFFF;
+}
+
+.dark {
+  --bg-app: #0E2420;
+  --text-main: #FAF7EE;
+  --text-muted: #9EB5B0;
+  --card-bg: #163630;
+  --card-border: #25524A;
+  --border-strong: #25524A;
+  --banner-bg: #1C4740;
+  --accent-coral: #E85938;
+  --accent-coral-hover: #D74F30;
+  --coral-text: #112B26;
+  --selected-fill: #E85938;
+  --selected-text: #112B26;
+}
+
 @layer base {
   body {
-    background-color: #0b0f19;
-    color: #f3f4f6;
+    background-color: var(--bg-app);
+    color: var(--text-main);
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   }
 
   /* Indicador global de foco accesible (WCAG 2.2 AA - Criterio 2.4.7 / 2.4.11) */
   :focus-visible {
-    outline: 2px solid #3b82f6;
+    outline: 2px solid var(--accent-coral);
     outline-offset: 2px;
   }
 
@@ -25,3 +57,4 @@
     }
   }
 }
+

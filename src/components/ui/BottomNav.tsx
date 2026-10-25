@@ -39,7 +39,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({ vistaActual, onCambiarVist
   return (
     <nav
       aria-label="Navegación de alumno"
-      className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-800 bg-slate-950/95 backdrop-blur-lg sm:hidden safe-area-pb"
+      className="fixed bottom-0 left-0 right-0 z-40 border-t-2 border-[#E5E2D5] dark:border-[#25524A] bg-[#FAF7EE]/95 dark:bg-[#0E2420]/95 backdrop-blur-lg sm:hidden safe-area-pb"
     >
       <div className="grid grid-cols-4 h-16">
         {tabs.map((tab) => {
@@ -53,19 +53,19 @@ export const BottomNav: React.FC<BottomNavProps> = ({ vistaActual, onCambiarVist
               aria-current={isActive ? 'page' : undefined}
               className={`flex flex-col items-center justify-center min-h-[48px] w-full transition select-none ${
                 isActive
-                  ? 'text-emerald-400 font-bold'
-                  : 'text-slate-400 hover:text-slate-200 font-medium'
+                  ? 'text-[#E85938] font-bold'
+                  : 'text-[#163832]/60 dark:text-[#9EB5B0] hover:text-[#163832] dark:hover:text-white font-medium'
               }`}
             >
               <div className="relative">
                 <Icon
-                  className={`h-5 w-5 transition ${isActive ? 'scale-110 text-emerald-400' : ''}`}
+                  className={`h-5 w-5 transition ${isActive ? 'scale-110 text-[#E85938]' : ''}`}
                   aria-hidden="true"
                 />
               </div>
               <span className="text-[11px] mt-1 tracking-tight">{tab.label}</span>
               {isActive && (
-                <span className="absolute bottom-1 h-1 w-8 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50" />
+                <span className="absolute bottom-1 h-1 w-8 rounded-full bg-[#E85938] shadow-sm shadow-[#E85938]/50" />
               )}
             </button>
           );
@@ -74,4 +74,3 @@ export const BottomNav: React.FC<BottomNavProps> = ({ vistaActual, onCambiarVist
     </nav>
   );
 };
-

@@ -60,11 +60,11 @@ export const AthleteAnnualProgressView: React.FC = () => {
     <div className="space-y-6 max-w-4xl mx-auto">
       {/* Cabecera */}
       <header>
-        <h1 className="text-2xl font-black tracking-tight text-white flex items-center gap-2">
-          <TrendingUp className="h-6 w-6 text-emerald-400" aria-hidden="true" />
+        <h1 className="text-2xl font-black tracking-tight text-[#163832] dark:text-white flex items-center gap-2">
+          <TrendingUp className="h-6 w-6 text-[#E85938]" aria-hidden="true" />
           Mi Progreso Anual & Cargas de Entrenamiento
         </h1>
-        <p className="text-xs text-slate-400 mt-1">
+        <p className="text-xs text-[#163832]/70 dark:text-[#9EB5B0] mt-1">
           Evolución de fuerza máxima evaluada (1RM), carga interna de Foster acumulada e historial
           de sesiones.
         </p>
@@ -72,54 +72,54 @@ export const AthleteAnnualProgressView: React.FC = () => {
 
       {/* Tarjetas de Métricas Clave Honestadas */}
       <section aria-label="Métricas clave de rendimiento" className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4 shadow-sm">
-          <span className="text-xs text-slate-400 font-semibold flex items-center gap-1.5">
-            <Flame className="h-4 w-4 text-amber-400 shrink-0" aria-hidden="true" />
+        <div className="rounded-2xl border-2 border-[#E5E2D5] dark:border-[#25524A] bg-white dark:bg-[#163630] p-4 shadow-sm">
+          <span className="text-xs text-[#163832]/80 dark:text-[#9EB5B0] font-semibold flex items-center gap-1.5">
+            <Flame className="h-4 w-4 text-[#E85938] shrink-0" aria-hidden="true" />
             Carga Acumulada
           </span>
-          <p className="mt-2 text-2xl font-black text-amber-400 font-mono">
+          <p className="mt-2 text-2xl font-black text-[#E85938] font-mono">
             {cargaTotalAcumuladaUA} UA
           </p>
-          <span className="text-xs text-slate-400">sRPE × Duración</span>
+          <span className="text-xs text-[#163832]/60 dark:text-[#9EB5B0]/70">sRPE × Duración</span>
         </div>
 
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4 shadow-sm">
-          <span className="text-xs text-slate-400 font-semibold flex items-center gap-1.5">
-            <CheckCircle className="h-4 w-4 text-emerald-400 shrink-0" aria-hidden="true" />
+        <div className="rounded-2xl border-2 border-[#E5E2D5] dark:border-[#25524A] bg-white dark:bg-[#163630] p-4 shadow-sm">
+          <span className="text-xs text-[#163832]/80 dark:text-[#9EB5B0] font-semibold flex items-center gap-1.5">
+            <CheckCircle className="h-4 w-4 text-emerald-600 dark:text-emerald-400 shrink-0" aria-hidden="true" />
             Sesiones Hechas
           </span>
-          <p className="mt-2 text-2xl font-black text-emerald-400 font-mono">
+          <p className="mt-2 text-2xl font-black text-emerald-600 dark:text-emerald-400 font-mono">
             {sesionesAtleta.length}
           </p>
-          <span className="text-xs text-slate-400">
+          <span className="text-xs text-[#163832]/60 dark:text-[#9EB5B0]/70">
             {sesionesAtleta.length > 0
               ? `${porcentajeAdherencia}% adherencia de fase`
               : 'Inicio de temporada'}
           </span>
         </div>
 
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4 shadow-sm">
-          <span className="text-xs text-slate-400 font-semibold flex items-center gap-1.5">
-            <Dumbbell className="h-4 w-4 text-blue-400 shrink-0" aria-hidden="true" />
+        <div className="rounded-2xl border-2 border-[#E5E2D5] dark:border-[#25524A] bg-white dark:bg-[#163630] p-4 shadow-sm">
+          <span className="text-xs text-[#163832]/80 dark:text-[#9EB5B0] font-semibold flex items-center gap-1.5">
+            <Dumbbell className="h-4 w-4 text-[#163832] dark:text-[#FAF7EE] shrink-0" aria-hidden="true" />
             1RM Sentadilla
           </span>
-          <p className="mt-2 text-2xl font-black text-blue-400 font-mono">
+          <p className="mt-2 text-2xl font-black text-[#163832] dark:text-[#FAF7EE] font-mono">
             {testSentadilla ? `${testSentadilla.unaRepeticionMaximaEfectiva} kg` : 'Sin test'}
           </p>
-          <span className="text-xs text-slate-400">
+          <span className="text-xs text-[#163832]/60 dark:text-[#9EB5B0]/70">
             {testSentadilla ? `Test: ${testSentadilla.fechaEvaluacion}` : 'Pendiente de evaluación'}
           </span>
         </div>
 
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4 shadow-sm">
-          <span className="text-xs text-slate-400 font-semibold flex items-center gap-1.5">
-            <Zap className="h-4 w-4 text-purple-400 shrink-0" aria-hidden="true" />
+        <div className="rounded-2xl border-2 border-[#E5E2D5] dark:border-[#25524A] bg-white dark:bg-[#163630] p-4 shadow-sm">
+          <span className="text-xs text-[#163832]/80 dark:text-[#9EB5B0] font-semibold flex items-center gap-1.5">
+            <Zap className="h-4 w-4 text-amber-500 shrink-0" aria-hidden="true" />
             1RM Peso Muerto
           </span>
-          <p className="mt-2 text-2xl font-black text-purple-400 font-mono">
+          <p className="mt-2 text-2xl font-black text-amber-500 font-mono">
             {testPesoMuerto ? `${testPesoMuerto.unaRepeticionMaximaEfectiva} kg` : 'Sin test'}
           </p>
-          <span className="text-xs text-slate-400">
+          <span className="text-xs text-[#163832]/60 dark:text-[#9EB5B0]/70">
             {testPesoMuerto ? `Test: ${testPesoMuerto.fechaEvaluacion}` : 'Pendiente de evaluación'}
           </span>
         </div>
