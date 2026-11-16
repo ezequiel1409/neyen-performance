@@ -6,7 +6,7 @@
 import React, { useState } from 'react';
 import { useTraining } from '../../context/TrainingContext';
 import { Ejercicio } from '../../types';
-import { Plus } from 'lucide-react';
+import { IconInterface } from '../ui/icons/IconInterface';
 import { ExerciseFiltersBar } from './exercise-bank/ExerciseFiltersBar';
 import { ExerciseTable } from './exercise-bank/ExerciseTable';
 import { ExerciseEditorPanel } from './exercise-bank/ExerciseEditorPanel';
@@ -124,14 +124,14 @@ export const ExerciseBankView: React.FC = () => {
   const unRMEstimado = Math.round(unRMBase * ratioForm);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       {/* Cabecera: Subtítulo, Título y Botón + Nuevo ejercicio */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <span className="text-xs font-semibold text-[#163832]/60 dark:text-[#9EB5B0] block">
+          <span className="text-xs font-bold text-[var(--mut)] block">
             Gestión del catálogo
           </span>
-          <h1 className="text-3xl font-bold tracking-tight text-[#163832] dark:text-white mt-0.5">
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight mt-0.5">
             Banco de ejercicios
           </h1>
         </div>
@@ -139,23 +139,23 @@ export const ExerciseBankView: React.FC = () => {
         <button
           type="button"
           onClick={handleCrearNuevo}
-          className="flex items-center gap-1.5 rounded-2xl bg-[#2F6B4F] hover:bg-[#265740] active:scale-[0.99] text-white font-extrabold text-sm px-6 py-3.5 shadow-md transition self-start"
+          className="flex items-center gap-1.5 rounded-xl bg-[var(--navbg)] text-[var(--navon)] hover:opacity-95 font-extrabold text-xs sm:text-sm px-5 py-2.5 shadow-2xs transition self-start cursor-pointer"
         >
-          <Plus className="h-4 w-4 stroke-[3]" />
+          <IconInterface name="plus" size={16} strokeWidth={2.5} />
           <span>Nuevo ejercicio</span>
         </button>
       </div>
 
       {/* Pestañas: Ejercicios, Categorías, Equipamiento */}
       <div className="space-y-2">
-        <div className="flex flex-wrap gap-2.5">
+        <div className="flex flex-wrap gap-2">
           <button
             type="button"
             onClick={() => setTabCatalogo('EJERCICIOS')}
-            className={`rounded-full px-6 py-2.5 text-sm font-bold transition select-none ${
+            className={`rounded-full px-5 py-2 text-xs font-bold transition select-none cursor-pointer ${
               tabCatalogo === 'EJERCICIOS'
-                ? 'bg-[#2F6B4F] text-white shadow-sm'
-                : 'border-2 border-[#163832] dark:border-[#25524A] text-[#163832] dark:text-white bg-transparent hover:bg-[#E1ECE5]/40'
+                ? 'bg-[var(--navbg)] text-[var(--navon)] shadow-xs'
+                : 'border border-[var(--bord)] text-[var(--mut)] hover:bg-[var(--surf)]'
             }`}
           >
             Ejercicios
@@ -163,10 +163,10 @@ export const ExerciseBankView: React.FC = () => {
           <button
             type="button"
             onClick={() => setTabCatalogo('CATEGORIAS')}
-            className={`rounded-full px-6 py-2.5 text-sm font-bold transition select-none ${
+            className={`rounded-full px-5 py-2 text-xs font-bold transition select-none cursor-pointer ${
               tabCatalogo === 'CATEGORIAS'
-                ? 'bg-[#2F6B4F] text-white shadow-sm'
-                : 'border-2 border-[#163832] dark:border-[#25524A] text-[#163832] dark:text-white bg-transparent hover:bg-[#E1ECE5]/40'
+                ? 'bg-[var(--navbg)] text-[var(--navon)] shadow-xs'
+                : 'border border-[var(--bord)] text-[var(--mut)] hover:bg-[var(--surf)]'
             }`}
           >
             Categorías
@@ -174,17 +174,17 @@ export const ExerciseBankView: React.FC = () => {
           <button
             type="button"
             onClick={() => setTabCatalogo('EQUIPAMIENTO')}
-            className={`rounded-full px-6 py-2.5 text-sm font-bold transition select-none ${
+            className={`rounded-full px-5 py-2 text-xs font-bold transition select-none cursor-pointer ${
               tabCatalogo === 'EQUIPAMIENTO'
-                ? 'bg-[#2F6B4F] text-white shadow-sm'
-                : 'border-2 border-[#163832] dark:border-[#25524A] text-[#163832] dark:text-white bg-transparent hover:bg-[#E1ECE5]/40'
+                ? 'bg-[var(--navbg)] text-[var(--navon)] shadow-xs'
+                : 'border border-[var(--bord)] text-[var(--mut)] hover:bg-[var(--surf)]'
             }`}
           >
             Equipamiento
           </button>
         </div>
 
-        <p className="text-xs text-[#163832]/70 dark:text-[#9EB5B0] font-medium pt-1">
+        <p className="text-xs text-[var(--mut)] pt-0.5">
           Las categorías y los tipos de equipamiento los define cada coach, según su club o gimnasio.
         </p>
       </div>

@@ -22,18 +22,18 @@ export const ExerciseTable: React.FC<ExerciseTableProps> = ({
   onSeleccionarEjercicio,
 }) => {
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto bg-[var(--surf)] border border-[var(--bord)] rounded-2xl p-2">
       <table className="w-full text-left text-xs">
         <thead>
-          <tr className="border-b border-[#E5E2D5] dark:border-[#25524A] text-[#163832]/60 dark:text-[#9EB5B0] font-bold uppercase tracking-wider">
-            <th className="py-3 px-3">EJERCICIO</th>
-            <th className="py-3 px-3">CATEGORÍA</th>
-            <th className="py-3 px-3">EQUIPAMIENTO</th>
-            <th className="py-3 px-3">TEST BASE</th>
-            <th className="py-3 px-3 text-right">RATIO</th>
+          <tr className="border-b border-[var(--bord)] text-[var(--mut)] font-bold uppercase tracking-wider text-[11px]">
+            <th className="py-2.5 px-3">EJERCICIO</th>
+            <th className="py-2.5 px-3">CATEGORÍA</th>
+            <th className="py-2.5 px-3">EQUIPAMIENTO</th>
+            <th className="py-2.5 px-3">TEST BASE</th>
+            <th className="py-2.5 px-3 text-right">RATIO</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-[#E5E2D5]/70 dark:divide-[#25524A]/50">
+        <tbody className="divide-y divide-[var(--bord)]">
           {ejercicios.map((ej) => {
             const cat = categorias.find((c) => c.identificadorCategoria === ej.identificadorCategoria);
             const eq = equipamientos.find((e) => e.identificadorEquipamiento === ej.identificadorEquipamiento);
@@ -49,23 +49,23 @@ export const ExerciseTable: React.FC<ExerciseTableProps> = ({
                 onClick={() => onSeleccionarEjercicio(ej)}
                 className={`cursor-pointer transition ${
                   isSelected
-                    ? 'border-2 border-[#163832] dark:border-[#2F6B4F] bg-white dark:bg-[#163630] font-bold shadow-sm'
-                    : 'hover:bg-[#E1ECE5]/40 text-[#163832] dark:text-[#FAF7EE]'
+                    ? 'bg-[var(--bg)] font-bold shadow-2xs'
+                    : 'hover:bg-[var(--bg)]/50 text-[var(--txt)]'
                 }`}
               >
-                <td className="py-3.5 px-3 font-bold text-[#163832] dark:text-white">
+                <td className="py-3 px-3 font-bold text-[var(--txt)]">
                   {ej.nombreEjercicio}
                 </td>
-                <td className="py-3.5 px-3 text-[#163832]/80 dark:text-[#9EB5B0]">
+                <td className="py-3 px-3 text-[var(--mut)]">
                   {cat?.nombreCategoria || '[Categoría]'}
                 </td>
-                <td className="py-3.5 px-3 text-[#163832]/80 dark:text-[#9EB5B0]">
+                <td className="py-3 px-3 text-[var(--mut)]">
                   {eq?.nombreEquipamiento || '[Equipamiento]'}
                 </td>
-                <td className="py-3.5 px-3 text-[#163832]/80 dark:text-[#9EB5B0]">
+                <td className="py-3 px-3 text-[var(--mut)]">
                   {ejBase ? `[${ejBase.nombreEjercicio}]` : '—'}
                 </td>
-                <td className="py-3.5 px-3 text-right font-mono font-bold text-[#163832] dark:text-white">
+                <td className="py-3 px-3 text-right font-mono font-bold text-[var(--txt)]">
                   {ej.ratioConversionCargaPorcentual
                     ? ej.ratioConversionCargaPorcentual.toFixed(2).replace('.', ',')
                     : '—'}

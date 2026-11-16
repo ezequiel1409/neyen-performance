@@ -30,7 +30,7 @@ export const ExerciseFiltersBar: React.FC<ExerciseFiltersBarProps> = ({
   return (
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
       <div>
-        <label className="block text-xs font-bold text-[#163832] dark:text-[#9EB5B0] mb-1">
+        <label className="block text-xs font-bold text-[var(--mut)] mb-1">
           Buscar
         </label>
         <input
@@ -38,18 +38,18 @@ export const ExerciseFiltersBar: React.FC<ExerciseFiltersBarProps> = ({
           value={terminoBusqueda}
           onChange={(e) => setTerminoBusqueda(e.target.value)}
           placeholder="Buscar ejercicio..."
-          className="w-full rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-white dark:bg-[#102824] px-3.5 py-2.5 text-sm text-[#163832] dark:text-white placeholder-[#163832]/40 dark:placeholder-[#9EB5B0]/40 focus:outline-none focus:ring-2 focus:ring-[#1F5FA0]"
+          className="w-full rounded-xl border-2 border-[var(--bord)] bg-[var(--bg)] px-3.5 py-2.5 text-sm text-[var(--txt)] placeholder-[var(--mut)]/50 focus:border-[var(--link)] outline-hidden"
         />
       </div>
 
       <div>
-        <label className="block text-xs font-bold text-[#163832] dark:text-[#9EB5B0] mb-1">
+        <label className="block text-xs font-bold text-[var(--mut)] mb-1">
           Categoría
         </label>
         <select
           value={filtroCategoria}
           onChange={(e) => setFiltroCategoria(e.target.value)}
-          className="w-full rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-white dark:bg-[#102824] px-3.5 py-2.5 text-sm text-[#163832] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#1F5FA0] cursor-pointer"
+          className="w-full rounded-xl border-2 border-[var(--bord)] bg-[var(--bg)] px-3.5 py-2.5 text-sm text-[var(--txt)] focus:border-[var(--link)] outline-hidden cursor-pointer"
         >
           <option value="TODAS">Todas</option>
           {categorias.map((c) => (
@@ -61,13 +61,13 @@ export const ExerciseFiltersBar: React.FC<ExerciseFiltersBarProps> = ({
       </div>
 
       <div>
-        <label className="block text-xs font-bold text-[#163832] dark:text-[#9EB5B0] mb-1">
+        <label className="block text-xs font-bold text-[var(--mut)] mb-1">
           Equipamiento
         </label>
         <select
           value={filtroEquipamiento}
           onChange={(e) => setFiltroEquipamiento(e.target.value)}
-          className="w-full rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-white dark:bg-[#102824] px-3.5 py-2.5 text-sm text-[#163832] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#1F5FA0] cursor-pointer"
+          className="w-full rounded-xl border-2 border-[var(--bord)] bg-[var(--bg)] px-3.5 py-2.5 text-sm text-[var(--txt)] focus:border-[var(--link)] outline-hidden cursor-pointer"
         >
           <option value="TODOS">Todos</option>
           {equipamientos.map((eq) => (
