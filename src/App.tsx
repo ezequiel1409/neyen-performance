@@ -10,6 +10,8 @@ import { AthleteProfileView } from './components/coach/AthleteProfileView';
 import { ExerciseBankView } from './components/coach/ExerciseBankView';
 import { PeriodizationPlannerView } from './components/coach/PeriodizationPlannerView';
 import { CoachNavSection, CoachSidebar } from './components/coach/CoachSidebar';
+import { CoachDashboardView } from './components/coach/CoachDashboardView';
+import { LoadControlACWRView } from './components/coach/LoadControlACWRView';
 import { AthleteSidebar } from './components/athlete/AthleteSidebar';
 import { AthleteTodayView } from './components/athlete/AthleteTodayView';
 import { AthleteWellnessView } from './components/athlete/AthleteWellnessView';
@@ -27,7 +29,7 @@ import { TrainingProvider, useTraining } from './context/TrainingContext';
 const MainLayout: React.FC = () => {
   const { estaAutenticado, rolActivo, setRolActivo, cerrarSesion, macrociclo } = useTraining();
 
-  const [seccionCoach, setSeccionCoach] = useState<CoachNavSection>('BANCO_EJERCICIOS');
+  const [seccionCoach, setSeccionCoach] = useState<CoachNavSection>('RESUMEN');
   const [vistaAlumnoActual, setVistaAlumnoActual] = useState<VistaAlumno>('HOY');
   const [workoutActivo, setWorkoutActivo] = useState<boolean>(false);
 
@@ -91,7 +93,7 @@ const MainLayout: React.FC = () => {
             type="button"
             onClick={() => setRolActivo(rolActivo === 'COACH' ? 'ALUMNO' : 'COACH')}
             aria-label="Cambiar de rol"
-            className="px-2.5 py-1.5 rounded-xl border border-[var(--bord)] bg-[var(--bg)] text-[var(--txt)] text-xs font-bold"
+            className="px-2.5 py-1.5 rounded-xl border border-[var(--bord)] bg-[var(--bg)] text-[var(--txt)] text-xs font-bold cursor-pointer"
           >
             {rolActivo === 'COACH' ? 'Ver Alumno' : 'Ver Coach'}
           </button>
@@ -126,9 +128,11 @@ const MainLayout: React.FC = () => {
       {rolActivo === 'COACH' && (
         <div className="md:hidden overflow-x-auto bg-[var(--surf)] border-b border-[var(--bord)] px-3 py-2 flex gap-1.5 scrollbar-none">
           {[
-            { id: 'BANCO_EJERCICIOS', label: 'Banco' },
-            { id: 'PLANIFICADOR', label: 'Planificador' },
+            { id: 'RESUMEN', label: 'Resumen' },
             { id: 'ATLETAS', label: 'Atletas' },
+            { id: 'PLANIFICADOR', label: 'Planner' },
+            { id: 'CONTROL_CARGA', label: 'Carga' },
+            { id: 'BANCO_EJERCICIOS', label: 'Banco' },
             { id: 'EVALUACIONES', label: 'Evaluaciones' },
           ].map((item) => (
             <button
@@ -203,19 +207,36 @@ const MainLayout: React.FC = () => {
             </button>
           </div>
 
-          {/* VISTAS DE COACH */}
+          {/* VISTAS DE COACH (CATÁLOGO NEYIMA COACH) */}
           {rolActivo === 'COACH' && (
             <>
+              {seccionCoach === 'RESUMEN' && (
+                <CoachDashboardView
+                  onAbrirPlanificador={() => setSeccionCoach('PLANIFICADOR')}
+                  onVerAlertas={() => setSeccionCoach('ALERTAS')}
+                  onSeleccionarAtleta={() => setSeccionCoach('ATLETAS')}
+                />
+              )}
+
+              {seccionCoach === 'CONTROL_CARGA' && (
+                <LoadControlACWRView
+                  onVerTodasLasSesiones={() => setSeccionCoach('PLANIFICADOR')}
+                />
+              )}
+
               {seccionCoach === 'BANCO_EJERCICIOS' && <ExerciseBankView />}
-              {(seccionCoach === 'ATLETAS' || seccionCoach === 'RESUMEN' || seccionCoach === 'ALERTAS') && (
+
+              {(seccionCoach === 'ATLETAS' || seccionCoach === 'ALERTAS') && (
                 <AthleteProfileView />
               )}
+
               {seccionCoach === 'PLANIFICADOR' && <PeriodizationPlannerView />}
+
               {seccionCoach === 'EVALUACIONES' && <AnnualMacroTimelineView />}
             </>
           )}
 
-          {/* VISTAS DE ALUMNO (CATÁLOGO NEYIMA) */}
+          {/* VISTAS DE ALUMNO (CATÁLOGO NEYIMA ALUMNO) */}
           {rolActivo === 'ALUMNO' && (
             <>
               {(vistaAlumnoActual === 'HOY' || vistaAlumnoActual === 'RUTINA') && (
