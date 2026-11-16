@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
-import { X } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { IconInterface } from './icons/IconInterface';
 
 export interface ModalProps {
   isOpen: boolean;
@@ -120,19 +120,19 @@ export const Modal: React.FC<ModalProps> = ({
         tabIndex={-1}
         className={twMerge(
           clsx(
-            'w-full rounded-2xl border-2 border-[#E5E2D5] dark:border-[#25524A] bg-[#FAF7EE] dark:bg-[#163630] text-[#163832] dark:text-[#FAF7EE] p-6 shadow-2xl relative my-auto max-h-[90vh] flex flex-col',
+            'w-full rounded-2xl border border-[var(--bord)] bg-[var(--surf)] text-[var(--txt)] p-6 shadow-2xl relative my-auto max-h-[90vh] flex flex-col',
             maxWidthStyles[maxWidth]
           )
         )}
       >
         {/* Cabecera accesible */}
-        <div className="flex items-start justify-between border-b-2 border-[#E5E2D5] dark:border-[#25524A] pb-4 mb-4 gap-4">
+        <div className="flex items-start justify-between border-b border-[var(--bord)] pb-4 mb-4 gap-4">
           <div className="space-y-1">
-            <h2 id="modal-title" className="text-xl font-bold tracking-tight text-[#163832] dark:text-white">
+            <h2 id="modal-title" className="text-xl font-extrabold tracking-tight text-[var(--txt)]">
               {title}
             </h2>
             {description && (
-              <p id="modal-description" className="text-xs text-[#163832]/70 dark:text-[#9EB5B0]">
+              <p id="modal-description" className="text-xs text-[var(--mut)]">
                 {description}
               </p>
             )}
@@ -142,9 +142,9 @@ export const Modal: React.FC<ModalProps> = ({
             <button
               onClick={onClose}
               aria-label="Cerrar modal"
-              className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-2xl border-2 border-[#1D2B24] dark:border-[#244E43] bg-transparent text-[#1D2B24] dark:text-white hover:bg-[#E3EFE7]/40 transition focus-visible:outline-2 focus-visible:outline-[#1F5FA0]"
+              className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl border border-[var(--bord)] bg-transparent text-[var(--txt)] hover:bg-[var(--bg)] transition cursor-pointer"
             >
-              <X className="h-5 w-5 stroke-[2.5]" aria-hidden="true" />
+              <IconInterface name="x" size={20} strokeWidth={2.2} aria-hidden="true" />
             </button>
           )}
         </div>

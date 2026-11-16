@@ -1,21 +1,12 @@
 // =====================================================================
-// NEYEN ATHLETIC - BARRA DE NAVEGACIÓN SUPERIOR (LIGHT & DARK THEME)
+// NEYIMA ATHLETIC - BARRA DE NAVEGACIÓN SUPERIOR (LIGHT & DARK THEME)
 // =====================================================================
 
 import React, { useEffect, useState } from 'react';
 import { useTraining } from '../context/TrainingContext';
-import {
-  Activity,
-  AlertTriangle,
-  Award,
-  Calendar,
-  Dumbbell,
-  Moon,
-  Sparkles,
-  Sun,
-  User,
-  Users,
-} from 'lucide-react';
+import { NeyimaLogo } from './ui/NeyimaLogo';
+import { IndicatorStatus } from './ui/IndicatorStatus';
+import { IconInterface } from './ui/icons/IconInterface';
 
 interface NavbarProps {
   vistaCoachActual: 'EJERCICIOS' | 'ATLETAS' | 'PLANES' | 'ANUAL';
@@ -41,16 +32,18 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   // Control de Tema (Claro / Oscuro)
   const [isDark, setIsDark] = useState<boolean>(() => {
-    return document.documentElement.classList.contains('dark');
+    return typeof document !== 'undefined' && document.documentElement.classList.contains('dark');
   });
 
   useEffect(() => {
     const saved = localStorage.getItem('neyen_theme');
     if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
       document.documentElement.classList.add('dark');
+      document.documentElement.setAttribute('data-theme', 'dark');
       setIsDark(true);
     } else {
       document.documentElement.classList.remove('dark');
+      document.documentElement.setAttribute('data-theme', 'light');
       setIsDark(false);
     }
   }, []);
@@ -60,9 +53,11 @@ export const Navbar: React.FC<NavbarProps> = ({
     setIsDark(next);
     if (next) {
       document.documentElement.classList.add('dark');
+      document.documentElement.setAttribute('data-theme', 'dark');
       localStorage.setItem('neyen_theme', 'dark');
     } else {
       document.documentElement.classList.remove('dark');
+      document.documentElement.setAttribute('data-theme', 'light');
       localStorage.setItem('neyen_theme', 'light');
     }
   };
@@ -71,52 +66,38 @@ export const Navbar: React.FC<NavbarProps> = ({
     atletaActual.generoAtleta === 'F' && atletaActual.datosCicloMenstrual?.enRetrasoMenstrual;
 
   return (
-    <header className="sticky top-0 z-40 border-b-2 border-[#E5E2D5] dark:border-[#25524A] bg-[#FAF7EE]/95 dark:bg-[#0E2420]/95 backdrop-blur-md">
+    <header className="sticky top-0 z-40 border-b border-[var(--bord)] bg-[var(--surf)]/95 backdrop-blur-md transition-colors">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2.5 sm:px-6">
-        {/* Marca y Logotipo */}
+        {/* Marca y Logotipo Oficial NEYIMA */}
         <div className="flex items-center gap-3">
-          <div
-            className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#163832] dark:bg-[#E85938] shadow-md transition"
-            aria-hidden="true"
-          >
-            <Activity className="h-6 w-6 text-white dark:text-[#112B26]" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="text-xl font-black tracking-wider text-[#163832] dark:text-white">
-                NEYEN
-              </span>
-              <span className="rounded-full bg-[#E1ECE5] dark:bg-[#1C4740] px-2.5 py-0.5 text-xs font-bold uppercase tracking-widest text-[#163832] dark:text-[#E1ECE5]">
-                Performance OS
-              </span>
-            </div>
-            <p className="hidden text-xs text-[#163832]/70 dark:text-[#9EB5B0] sm:block">
-              Preparación Física Periodizada & Rendimiento
-            </p>
-          </div>
+          <NeyimaLogo
+            variant="emblema"
+            size="md"
+            roleTag={rolActivo === 'COACH' ? 'COACH' : 'ALUMNO'}
+          />
         </div>
 
         {/* Zona de Contexto: Atleta, Selector de Rol & Botón de Tema */}
         <div className="flex items-center gap-2 sm:gap-3">
           {/* Selector de Atleta (Solo Coach) */}
           {rolActivo === 'COACH' ? (
-            <div className="flex items-center gap-2 rounded-xl border-2 border-[#E5E2D5] dark:border-[#25524A] bg-white dark:bg-[#163630] px-3 py-1.5 text-xs text-[#163832] dark:text-white min-h-[44px]">
-              <label htmlFor="selector-atleta-activo" className="flex items-center gap-1.5 cursor-pointer">
-                <User className="h-4 w-4 text-[#E85938] shrink-0" aria-hidden="true" />
-                <span className="hidden sm:inline">Atleta:</span>
+            <div className="flex items-center gap-2 rounded-xl border border-[var(--bord)] bg-[var(--bg)] px-3 py-1.5 text-xs text-[var(--txt)] min-h-[44px]">
+              <label htmlFor="selector-atleta-activo" className="flex items-center gap-1.5 cursor-pointer text-[var(--mut)]">
+                <IconInterface name="users" size={16} aria-hidden="true" />
+                <span className="hidden sm:inline font-bold">Atleta:</span>
               </label>
               <select
                 id="selector-atleta-activo"
                 aria-label="Seleccionar atleta para gestionar"
                 value={atletaSeleccionadoId}
                 onChange={(e) => setAtletaSeleccionadoId(e.target.value)}
-                className="bg-transparent font-bold text-[#163832] dark:text-white cursor-pointer focus:outline-none rounded px-1 min-h-[36px]"
+                className="bg-transparent font-bold text-[var(--txt)] cursor-pointer focus:outline-none rounded px-1 min-h-[36px]"
               >
                 {atletas.map((atleta) => (
                   <option
                     key={atleta.identificadorAtleta}
                     value={atleta.identificadorAtleta}
-                    className="bg-white dark:bg-[#163630] text-[#163832] dark:text-white"
+                    className="bg-[var(--surf)] text-[var(--txt)]"
                   >
                     {atleta.nombreCompleto} ({atleta.deportePracticado})
                   </option>
@@ -124,21 +105,18 @@ export const Navbar: React.FC<NavbarProps> = ({
               </select>
 
               {tieneAlertaRetraso && (
-                <span
-                  role="status"
-                  aria-live="polite"
-                  className="flex items-center gap-1 rounded-full bg-[#E85938] px-2.5 py-1 text-xs font-bold text-[#112B26]"
-                >
-                  <AlertTriangle className="h-3.5 w-3.5" aria-hidden="true" />
-                  <span>Retraso</span>
-                </span>
+                <IndicatorStatus
+                  status="warn"
+                  label="Retraso"
+                  size="sm"
+                />
               )}
             </div>
           ) : (
-            <div className="hidden sm:flex items-center gap-2 rounded-xl border-2 border-[#E5E2D5] dark:border-[#25524A] bg-white dark:bg-[#163630] px-3 py-1.5 text-xs text-[#163832] dark:text-white min-h-[44px]">
-              <User className="h-4 w-4 text-[#E85938]" aria-hidden="true" />
-              <span className="font-bold text-[#163832] dark:text-white">{atletaActual.nombreCompleto}</span>
-              <span className="text-xs text-[#163832]/70 dark:text-[#9EB5B0]">({atletaActual.deportePracticado})</span>
+            <div className="hidden sm:flex items-center gap-2 rounded-xl border border-[var(--bord)] bg-[var(--bg)] px-3 py-1.5 text-xs text-[var(--txt)] min-h-[44px]">
+              <IconInterface name="users" size={16} className="text-[var(--mut)]" aria-hidden="true" />
+              <span className="font-bold text-[var(--txt)]">{atletaActual.nombreCompleto}</span>
+              <span className="text-xs text-[var(--mut)]">({atletaActual.deportePracticado})</span>
             </div>
           )}
 
@@ -146,32 +124,32 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div
             role="group"
             aria-label="Selector de rol de usuario"
-            className="flex rounded-xl border-2 border-[#E5E2D5] dark:border-[#25524A] bg-white dark:bg-[#163630] p-1 min-h-[44px] items-center"
+            className="flex rounded-xl border border-[var(--bord)] bg-[var(--bg)] p-1 min-h-[44px] items-center"
           >
             <button
               type="button"
               onClick={() => setRolActivo('COACH')}
               aria-pressed={rolActivo === 'COACH'}
-              className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold transition min-h-[36px] ${
+              className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold transition min-h-[36px] cursor-pointer ${
                 rolActivo === 'COACH'
-                  ? 'bg-[#163832] text-white shadow-sm'
-                  : 'text-[#163832]/70 dark:text-[#9EB5B0] hover:text-[#163832] dark:hover:text-white'
+                  ? 'bg-[var(--navbg)] text-[var(--navon)] shadow-xs'
+                  : 'text-[var(--mut)] hover:text-[var(--txt)]'
               }`}
             >
-              <Users className="h-3.5 w-3.5" aria-hidden="true" />
+              <IconInterface name="users" size={14} aria-hidden="true" />
               <span>Coach</span>
             </button>
             <button
               type="button"
               onClick={() => setRolActivo('ALUMNO')}
               aria-pressed={rolActivo === 'ALUMNO'}
-              className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold transition min-h-[36px] ${
+              className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold transition min-h-[36px] cursor-pointer ${
                 rolActivo === 'ALUMNO'
-                  ? 'bg-[#E85938] text-[#112B26] shadow-sm font-extrabold'
-                  : 'text-[#163832]/70 dark:text-[#9EB5B0] hover:text-[#163832] dark:hover:text-white'
+                  ? 'bg-[var(--navbg)] text-[var(--navon)] shadow-xs font-extrabold'
+                  : 'text-[var(--mut)] hover:text-[var(--txt)]'
               }`}
             >
-              <User className="h-3.5 w-3.5" aria-hidden="true" />
+              <IconInterface name="heart" size={14} aria-hidden="true" />
               <span>Alumno</span>
             </button>
           </div>
@@ -181,12 +159,12 @@ export const Navbar: React.FC<NavbarProps> = ({
             type="button"
             onClick={toggleTheme}
             aria-label={isDark ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'}
-            className="flex h-11 w-11 items-center justify-center rounded-xl border-2 border-[#E5E2D5] dark:border-[#25524A] bg-white dark:bg-[#163630] text-[#163832] dark:text-[#FAF7EE] hover:bg-[#E1ECE5]/40 active:scale-95 transition"
+            className="flex h-11 w-11 items-center justify-center rounded-xl border border-[var(--bord)] bg-[var(--bg)] text-[var(--txt)] hover:bg-[var(--surf)] active:scale-95 transition cursor-pointer"
           >
             {isDark ? (
-              <Sun className="h-5 w-5 text-amber-400 stroke-[2.5]" aria-hidden="true" />
+              <IconInterface name="star" size={18} strokeWidth={2.2} aria-hidden="true" />
             ) : (
-              <Moon className="h-5 w-5 text-[#163832] stroke-[2.5]" aria-hidden="true" />
+              <IconInterface name="moon" size={18} strokeWidth={2.2} aria-hidden="true" />
             )}
           </button>
         </div>
@@ -195,7 +173,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       {/* Navegación secundaria (Pestañas) */}
       <nav
         aria-label="Vistas de sección"
-        className={`border-t-2 border-[#E5E2D5] dark:border-[#25524A] bg-[#FAF7EE]/60 dark:bg-[#0E2420]/60 px-4 sm:px-6 ${
+        className={`border-t border-[var(--bord)] bg-[var(--surf)] px-4 sm:px-6 ${
           rolActivo === 'ALUMNO' ? 'hidden sm:block' : 'block'
         }`}
       >
@@ -209,13 +187,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                 role="tab"
                 aria-selected={vistaCoachActual === 'EJERCICIOS'}
                 onClick={() => setVistaCoachActual('EJERCICIOS')}
-                className={`flex items-center gap-2 rounded-xl px-3.5 py-2 text-xs font-bold transition min-h-[44px] whitespace-nowrap ${
+                className={`flex items-center gap-2 rounded-xl px-3.5 py-2 text-xs font-bold transition min-h-[44px] whitespace-nowrap cursor-pointer ${
                   vistaCoachActual === 'EJERCICIOS'
-                    ? 'bg-[#E1ECE5] dark:bg-[#1C4740] text-[#163832] dark:text-[#FAF7EE] border-2 border-[#163832] dark:border-[#25524A]'
-                    : 'text-[#163832]/70 dark:text-[#9EB5B0] hover:bg-[#E1ECE5]/40'
+                    ? 'bg-[var(--okbg)] text-[var(--oktx)] border border-[var(--bord)] shadow-xs'
+                    : 'text-[var(--mut)] hover:text-[var(--txt)] hover:bg-[var(--bg)]'
                 }`}
               >
-                <Dumbbell className="h-4 w-4" aria-hidden="true" />
+                <IconInterface name="dumbbell" size={16} aria-hidden="true" />
                 <span>Banco de Ejercicios</span>
               </button>
 
@@ -223,13 +201,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                 role="tab"
                 aria-selected={vistaCoachActual === 'ATLETAS'}
                 onClick={() => setVistaCoachActual('ATLETAS')}
-                className={`flex items-center gap-2 rounded-xl px-3.5 py-2 text-xs font-bold transition min-h-[44px] whitespace-nowrap ${
+                className={`flex items-center gap-2 rounded-xl px-3.5 py-2 text-xs font-bold transition min-h-[44px] whitespace-nowrap cursor-pointer ${
                   vistaCoachActual === 'ATLETAS'
-                    ? 'bg-[#E1ECE5] dark:bg-[#1C4740] text-[#163832] dark:text-[#FAF7EE] border-2 border-[#163832] dark:border-[#25524A]'
-                    : 'text-[#163832]/70 dark:text-[#9EB5B0] hover:bg-[#E1ECE5]/40'
+                    ? 'bg-[var(--okbg)] text-[var(--oktx)] border border-[var(--bord)] shadow-xs'
+                    : 'text-[var(--mut)] hover:text-[var(--txt)] hover:bg-[var(--bg)]'
                 }`}
               >
-                <Users className="h-4 w-4" aria-hidden="true" />
+                <IconInterface name="users" size={16} aria-hidden="true" />
                 <span>Ficha Técnica & Tests 1RM</span>
               </button>
 
@@ -237,13 +215,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                 role="tab"
                 aria-selected={vistaCoachActual === 'PLANES'}
                 onClick={() => setVistaCoachActual('PLANES')}
-                className={`flex items-center gap-2 rounded-xl px-3.5 py-2 text-xs font-bold transition min-h-[44px] whitespace-nowrap ${
+                className={`flex items-center gap-2 rounded-xl px-3.5 py-2 text-xs font-bold transition min-h-[44px] whitespace-nowrap cursor-pointer ${
                   vistaCoachActual === 'PLANES'
-                    ? 'bg-[#E1ECE5] dark:bg-[#1C4740] text-[#163832] dark:text-[#FAF7EE] border-2 border-[#163832] dark:border-[#25524A]'
-                    : 'text-[#163832]/70 dark:text-[#9EB5B0] hover:bg-[#E1ECE5]/40'
+                    ? 'bg-[var(--okbg)] text-[var(--oktx)] border border-[var(--bord)] shadow-xs'
+                    : 'text-[var(--mut)] hover:text-[var(--txt)] hover:bg-[var(--bg)]'
                 }`}
               >
-                <Award className="h-4 w-4" aria-hidden="true" />
+                <IconInterface name="clipboard" size={16} aria-hidden="true" />
                 <span>Planificador (Meso / Sesiones)</span>
               </button>
 
@@ -251,13 +229,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                 role="tab"
                 aria-selected={vistaCoachActual === 'ANUAL'}
                 onClick={() => setVistaCoachActual('ANUAL')}
-                className={`flex items-center gap-2 rounded-xl px-3.5 py-2 text-xs font-bold transition min-h-[44px] whitespace-nowrap ${
+                className={`flex items-center gap-2 rounded-xl px-3.5 py-2 text-xs font-bold transition min-h-[44px] whitespace-nowrap cursor-pointer ${
                   vistaCoachActual === 'ANUAL'
-                    ? 'bg-[#E1ECE5] dark:bg-[#1C4740] text-[#163832] dark:text-[#FAF7EE] border-2 border-[#163832] dark:border-[#25524A]'
-                    : 'text-[#163832]/70 dark:text-[#9EB5B0] hover:bg-[#E1ECE5]/40'
+                    ? 'bg-[var(--okbg)] text-[var(--oktx)] border border-[var(--bord)] shadow-xs'
+                    : 'text-[var(--mut)] hover:text-[var(--txt)] hover:bg-[var(--bg)]'
                 }`}
               >
-                <Calendar className="h-4 w-4" aria-hidden="true" />
+                <IconInterface name="calendar" size={16} aria-hidden="true" />
                 <span>Macrociclo Anual (52 Semanas)</span>
               </button>
             </>
@@ -267,13 +245,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                 role="tab"
                 aria-selected={vistaAlumnoActual === 'RUTINA'}
                 onClick={() => setVistaAlumnoActual('RUTINA')}
-                className={`flex items-center gap-2 rounded-xl px-3.5 py-2 text-xs font-bold transition min-h-[44px] whitespace-nowrap ${
+                className={`flex items-center gap-2 rounded-xl px-3.5 py-2 text-xs font-bold transition min-h-[44px] whitespace-nowrap cursor-pointer ${
                   vistaAlumnoActual === 'RUTINA'
-                    ? 'bg-[#E1ECE5] dark:bg-[#1C4740] text-[#163832] dark:text-[#FAF7EE] border-2 border-[#163832] dark:border-[#25524A]'
-                    : 'text-[#163832]/70 dark:text-[#9EB5B0] hover:bg-[#E1ECE5]/40'
+                    ? 'bg-[var(--okbg)] text-[var(--oktx)] border border-[var(--bord)] shadow-xs'
+                    : 'text-[var(--mut)] hover:text-[var(--txt)] hover:bg-[var(--bg)]'
                 }`}
               >
-                <Dumbbell className="h-4 w-4" aria-hidden="true" />
+                <IconInterface name="dumbbell" size={16} aria-hidden="true" />
                 <span>Mi Sesión de Hoy</span>
               </button>
 
@@ -281,13 +259,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                 role="tab"
                 aria-selected={vistaAlumnoActual === 'DASHBOARD'}
                 onClick={() => setVistaAlumnoActual('DASHBOARD')}
-                className={`flex items-center gap-2 rounded-xl px-3.5 py-2 text-xs font-bold transition min-h-[44px] whitespace-nowrap ${
+                className={`flex items-center gap-2 rounded-xl px-3.5 py-2 text-xs font-bold transition min-h-[44px] whitespace-nowrap cursor-pointer ${
                   vistaAlumnoActual === 'DASHBOARD'
-                    ? 'bg-[#E1ECE5] dark:bg-[#1C4740] text-[#163832] dark:text-[#FAF7EE] border-2 border-[#163832] dark:border-[#25524A]'
-                    : 'text-[#163832]/70 dark:text-[#9EB5B0] hover:bg-[#E1ECE5]/40'
+                    ? 'bg-[var(--okbg)] text-[var(--oktx)] border border-[var(--bord)] shadow-xs'
+                    : 'text-[var(--mut)] hover:text-[var(--txt)] hover:bg-[var(--bg)]'
                 }`}
               >
-                <Award className="h-4 w-4" aria-hidden="true" />
+                <IconInterface name="trend" size={16} aria-hidden="true" />
                 <span>Mis Tests & Progreso Anual</span>
               </button>
 
@@ -295,13 +273,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                 role="tab"
                 aria-selected={vistaAlumnoActual === 'FOTOS'}
                 onClick={() => setVistaAlumnoActual('FOTOS')}
-                className={`flex items-center gap-2 rounded-xl px-3.5 py-2 text-xs font-bold transition min-h-[44px] whitespace-nowrap ${
+                className={`flex items-center gap-2 rounded-xl px-3.5 py-2 text-xs font-bold transition min-h-[44px] whitespace-nowrap cursor-pointer ${
                   vistaAlumnoActual === 'FOTOS'
-                    ? 'bg-[#E1ECE5] dark:bg-[#1C4740] text-[#163832] dark:text-[#FAF7EE] border-2 border-[#163832] dark:border-[#25524A]'
-                    : 'text-[#163832]/70 dark:text-[#9EB5B0] hover:bg-[#E1ECE5]/40'
+                    ? 'bg-[var(--okbg)] text-[var(--oktx)] border border-[var(--bord)] shadow-xs'
+                    : 'text-[var(--mut)] hover:text-[var(--txt)] hover:bg-[var(--bg)]'
                 }`}
               >
-                <Sparkles className="h-4 w-4" aria-hidden="true" />
+                <IconInterface name="camera" size={16} aria-hidden="true" />
                 <span>Galería de Fotos (MLP)</span>
               </button>
 
@@ -309,13 +287,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                 role="tab"
                 aria-selected={vistaAlumnoActual === 'SUENIO'}
                 onClick={() => setVistaAlumnoActual('SUENIO')}
-                className={`flex items-center gap-2 rounded-xl px-3.5 py-2 text-xs font-bold transition min-h-[44px] whitespace-nowrap ${
+                className={`flex items-center gap-2 rounded-xl px-3.5 py-2 text-xs font-bold transition min-h-[44px] whitespace-nowrap cursor-pointer ${
                   vistaAlumnoActual === 'SUENIO'
-                    ? 'bg-[#E1ECE5] dark:bg-[#1C4740] text-[#163832] dark:text-[#FAF7EE] border-2 border-[#163832] dark:border-[#25524A]'
-                    : 'text-[#163832]/70 dark:text-[#9EB5B0] hover:bg-[#E1ECE5]/40'
+                    ? 'bg-[var(--okbg)] text-[var(--oktx)] border border-[var(--bord)] shadow-xs'
+                    : 'text-[var(--mut)] hover:text-[var(--txt)] hover:bg-[var(--bg)]'
                 }`}
               >
-                <Moon className="h-4 w-4" aria-hidden="true" />
+                <IconInterface name="moon" size={16} aria-hidden="true" />
                 <span>Descanso & Smartwatch</span>
               </button>
             </>

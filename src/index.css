@@ -1,59 +1,253 @@
 @import "tailwindcss";
 
-@custom-variant dark (&:where(.dark, .dark *));
+@custom-variant dark (&:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *));
 
-:root {
-  /* Paleta oficial NEYEN - Educación física, tonos suaves */
-  --color-salvia: #2F6B4F;
-  --color-menta: #E3EFE7;
-  --color-cielo: #DCE9F4;
-  --color-arena: #F4C98B;
-  --color-azul-foco: #1F5FA0;
-  --color-bosque: #1D2B24;
-
-  --bg-app: #FAF7EE;
-  --text-main: #1D2B24;
-  --text-muted: #49655F;
-  --card-bg: #FFFFFF;
-  --card-border: #E5E2D5;
-  --border-strong: #1D2B24;
-  --banner-bg: #E3EFE7;
-  
-  --primary: #2F6B4F;
-  --primary-hover: #265740;
-  --accent-arena: #F4C98B;
-  
-  --selected-fill: #2F6B4F;
-  --selected-text: #FFFFFF;
+/* ==========================================================================
+   TIPOGRAFÍA OFICIAL NEYIMA (Plus Jakarta Sans)
+   ========================================================================== */
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url("/fonts/plus-jakarta-sans-latin-400-normal.woff2") format("woff2");
 }
 
-.dark {
-  --bg-app: #0F231D;
-  --text-main: #FAF7EE;
-  --text-muted: #9EB5B0;
-  --card-bg: #15332B;
-  --card-border: #244E43;
-  --border-strong: #244E43;
-  --banner-bg: #1C4439;
-  
-  --primary: #2F6B4F;
-  --primary-hover: #3A8261;
-  --accent-arena: #F4C98B;
-  
-  --selected-fill: #2F6B4F;
-  --selected-text: #FFFFFF;
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  src: url("/fonts/plus-jakarta-sans-latin-500-normal.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  src: url("/fonts/plus-jakarta-sans-latin-700-normal.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+  src: url("/fonts/plus-jakarta-sans-latin-800-normal.woff2") format("woff2");
+}
+
+/* ==========================================================================
+   TOKENS OFICIALES NEYIMA - Modo Claro por defecto
+   ========================================================================== */
+:root {
+  /* Marca fundamental */
+  --rojo: #F92424;
+  --burdeos: #3C0016;
+  --arena: #D1C0A5;
+  --tinta: #1F0009;
+
+  /* Superficies y textos modo claro */
+  --bg: #F1EADD;
+  --surf: #FAF6EE;
+  --bord: #D1C0A5;
+  --txt: #3C0016;
+  --mut: #6A3B49;
+  --navbg: #3C0016;
+  --navon: #F1EADD;
+  --link: #3C0016;
+  --acc: #B80F0F;
+  --okbg: #E6D7BE;
+  --oktx: #3C0016;
+  --done: #3C0016;
+  --todo: #8F7A5E;
+  --field: #6A3B49;
+  --focus: #3C0016;
+
+  /* 5 Estados del sistema (Modo Claro) */
+  --estado-ok-fondo: #DCEBDD;
+  --estado-ok-texto: #1B5A37;
+  --estado-warn-fondo: #F6E3B4;
+  --estado-warn-texto: #6B4500;
+  --estado-proc-fondo: #DCE6F2;
+  --estado-proc-texto: #1D3F66;
+  --estado-neu-fondo: #E6D7BE;
+  --estado-neu-texto: #3C0016;
+  --estado-bad-fondo: #F6D5D2;
+  --estado-bad-texto: #9B1111;
+
+  /* Aliases semánticos para compatibilidad con código existente */
+  --bg-app: var(--bg);
+  --card-bg: var(--surf);
+  --card-border: var(--bord);
+  --border-strong: var(--burdeos);
+  --text-main: var(--txt);
+  --text-muted: var(--mut);
+  --primary: var(--burdeos);
+  --primary-hover: var(--acc);
+  --accent-arena: var(--arena);
+  --accent-rojo: var(--rojo);
+  --banner-bg: var(--surf);
+  --selected-fill: var(--burdeos);
+  --selected-text: var(--navon);
+}
+
+/* ==========================================================================
+   TOKENS OFICIALES NEYIMA - Modo Oscuro
+   ========================================================================== */
+.dark,
+[data-theme="dark"],
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #3C0016;
+    --surf: #4D0E26;
+    --bord: #7A3A52;
+    --txt: #F1EADD;
+    --mut: #D9CBB5;
+    --navbg: #F1EADD;
+    --navon: #3C0016;
+    --link: #F1EADD;
+    --acc: #FF8A7A;
+    --okbg: #6B1D3C;
+    --oktx: #F1EADD;
+    --done: #F1EADD;
+    --todo: #B08495;
+    --field: #C9A8B0;
+    --focus: #F1EADD;
+
+    /* 5 Estados del sistema (Modo Oscuro) */
+    --estado-ok-fondo: #1F4A33;
+    --estado-ok-texto: #BFE8CF;
+    --estado-warn-fondo: #5A4210;
+    --estado-warn-texto: #FFE2A0;
+    --estado-proc-fondo: #1E3A5F;
+    --estado-proc-texto: #CFE1F7;
+    --estado-neu-fondo: #6B1D3C;
+    --estado-neu-texto: #F1EADD;
+    --estado-bad-fondo: #6A1520;
+    --estado-bad-texto: #FFC9C4;
+
+    /* Aliases en modo oscuro */
+    --bg-app: var(--bg);
+    --card-bg: var(--surf);
+    --card-border: var(--bord);
+    --border-strong: var(--bord);
+    --text-main: var(--txt);
+    --text-muted: var(--mut);
+    --primary: var(--surf);
+    --primary-hover: var(--bord);
+    --accent-arena: var(--arena);
+    --accent-rojo: var(--rojo);
+    --banner-bg: var(--surf);
+    --selected-fill: var(--navbg);
+    --selected-text: var(--navon);
+  }
+}
+
+.dark,
+[data-theme="dark"] {
+  --bg: #3C0016;
+  --surf: #4D0E26;
+  --bord: #7A3A52;
+  --txt: #F1EADD;
+  --mut: #D9CBB5;
+  --navbg: #F1EADD;
+  --navon: #3C0016;
+  --link: #F1EADD;
+  --acc: #FF8A7A;
+  --okbg: #6B1D3C;
+  --oktx: #F1EADD;
+  --done: #F1EADD;
+  --todo: #B08495;
+  --field: #C9A8B0;
+  --focus: #F1EADD;
+
+  /* 5 Estados del sistema (Modo Oscuro) */
+  --estado-ok-fondo: #1F4A33;
+  --estado-ok-texto: #BFE8CF;
+  --estado-warn-fondo: #5A4210;
+  --estado-warn-texto: #FFE2A0;
+  --estado-proc-fondo: #1E3A5F;
+  --estado-proc-texto: #CFE1F7;
+  --estado-neu-fondo: #6B1D3C;
+  --estado-neu-texto: #F1EADD;
+  --estado-bad-fondo: #6A1520;
+  --estado-bad-texto: #FFC9C4;
+
+  --bg-app: var(--bg);
+  --card-bg: var(--surf);
+  --card-border: var(--bord);
+  --border-strong: var(--bord);
+  --text-main: var(--txt);
+  --text-muted: var(--mut);
+  --primary: var(--surf);
+  --primary-hover: var(--bord);
+  --accent-arena: var(--arena);
+  --accent-rojo: var(--rojo);
+  --banner-bg: var(--surf);
+  --selected-fill: var(--navbg);
+  --selected-text: var(--navon);
+}
+
+[data-theme="light"] {
+  --bg: #F1EADD;
+  --surf: #FAF6EE;
+  --bord: #D1C0A5;
+  --txt: #3C0016;
+  --mut: #6A3B49;
+  --navbg: #3C0016;
+  --navon: #F1EADD;
+  --link: #3C0016;
+  --acc: #B80F0F;
+  --okbg: #E6D7BE;
+  --oktx: #3C0016;
+  --done: #3C0016;
+  --todo: #8F7A5E;
+  --field: #6A3B49;
+  --focus: #3C0016;
+
+  --estado-ok-fondo: #DCEBDD;
+  --estado-ok-texto: #1B5A37;
+  --estado-warn-fondo: #F6E3B4;
+  --estado-warn-texto: #6B4500;
+  --estado-proc-fondo: #DCE6F2;
+  --estado-proc-texto: #1D3F66;
+  --estado-neu-fondo: #E6D7BE;
+  --estado-neu-texto: #3C0016;
+  --estado-bad-fondo: #F6D5D2;
+  --estado-bad-texto: #9B1111;
+
+  --bg-app: var(--bg);
+  --card-bg: var(--surf);
+  --card-border: var(--bord);
+  --border-strong: var(--burdeos);
+  --text-main: var(--txt);
+  --text-muted: var(--mut);
+  --primary: var(--burdeos);
+  --primary-hover: var(--acc);
+  --accent-arena: var(--arena);
+  --accent-rojo: var(--rojo);
+  --banner-bg: var(--surf);
+  --selected-fill: var(--burdeos);
+  --selected-text: var(--navon);
 }
 
 @layer base {
   html, body {
-    background-color: var(--bg-app);
-    color: var(--text-main);
+    background-color: var(--bg);
+    color: var(--txt);
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    margin: 0;
+    min-height: 100vh;
   }
 
-  /* Indicador global de foco accesible (WCAG 2.2 AA - Criterio 2.4.7 / 2.4.11) */
+  * {
+    box-sizing: border-box;
+  }
+
+  /* Indicador global de foco accesible WCAG 2.2 AA (Criterio 2.4.7 / 2.4.11) */
   :focus-visible {
-    outline: 2px solid var(--color-azul-foco);
+    outline: 3px solid var(--focus);
     outline-offset: 2px;
   }
 
