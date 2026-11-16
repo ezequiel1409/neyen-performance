@@ -1,5 +1,5 @@
 // =====================================================================
-// NEYEN ATHLETIC - MODAL DE ENTRENAMIENTO ACTIVO Y FEEDBACK sRPE
+// NEYIMA ATHLETIC - MODAL DE ENTRENAMIENTO ACTIVO v2
 // ORQUESTADOR MODULAR (< 200 LÍNEAS) - SRP & CLEAN ARCHITECTURE
 // =====================================================================
 
@@ -13,6 +13,7 @@ import { SerieRealData, WorkoutBlockItem } from './workout/WorkoutBlockItem';
 import { RestTimerCard } from './workout/RestTimerCard';
 import { WorkoutExitConfirmModal } from './workout/WorkoutExitConfirmModal';
 import { WorkoutExerciseChangeModal } from './workout/WorkoutExerciseChangeModal';
+import { Button } from '../ui/Button';
 
 interface ActiveWorkoutModalProps {
   sesion: SesionEntrenamiento;
@@ -87,7 +88,7 @@ export const ActiveWorkoutModal: React.FC<ActiveWorkoutModalProps> = ({ sesion, 
   const [zonaDolorSeleccionada, setZonaDolorSeleccionada] = useState<string>('Ninguno');
   const [comentariosAtleta, setComentariosAtleta] = useState<string>('');
 
-  // 5. Estado de series reales registradas (Draft en localStorage)
+  // 5. Estado de series reales registradas
   const [seriesReales, setSeriesReales] = useState<Record<string, SerieRealData>>(() => {
     try {
       const borrador = localStorage.getItem(`neyen_active_session_${sesion.identificadorSesion}`);
@@ -105,22 +106,6 @@ export const ActiveWorkoutModal: React.FC<ActiveWorkoutModalProps> = ({ sesion, 
       );
     } catch {}
   }, [seriesReales, sesion.identificadorSesion]);
-
-  // Screen Wake Lock API
-  useEffect(() => {
-    let wakeLockSentinel: any = null;
-    const activarWakeLock = async () => {
-      if ('wakeLock' in navigator) {
-        try {
-          wakeLockSentinel = await (navigator as any).wakeLock.request('screen');
-        } catch {}
-      }
-    };
-    activarWakeLock();
-    return () => {
-      if (wakeLockSentinel) wakeLockSentinel.release().catch(() => {});
-    };
-  }, []);
 
   const handleActualizarSerie = (serieKey: string, campo: 'pesoKg' | 'reps', valor: number) => {
     setSeriesReales((prev) => {
@@ -195,10 +180,10 @@ export const ActiveWorkoutModal: React.FC<ActiveWorkoutModalProps> = ({ sesion, 
       role="dialog"
       aria-modal="true"
       aria-label={`Entrenamiento activo: ${sesion.nombreSesion}`}
-      className="fixed inset-0 z-50 flex flex-col bg-[#FAF7EE] dark:bg-[#0E2420] text-[#163832] dark:text-[#FAF7EE] overflow-y-auto"
+      className="fixed inset-0 z-50 flex flex-col bg-[var(--bg)] text-[var(--txt)] overflow-y-auto"
     >
       <div className="w-full max-w-md mx-auto p-4 sm:p-6 flex flex-col min-h-screen justify-between space-y-4">
-        <div className="space-y-4">
+        <div className="space-y-3.5">
           <WorkoutHeader
             nombreSesion={sesion.nombreSesion}
             duracionEstimadaMinutos={sesion.duracionEstimadaMinutos}
@@ -207,8 +192,11 @@ export const ActiveWorkoutModal: React.FC<ActiveWorkoutModalProps> = ({ sesion, 
             onSolicitarCierre={() => setMostrarConfirmacionCierre(true)}
           />
 
-          <div className="rounded-2xl bg-[#E1ECE5] dark:bg-[#1C4740] p-4 text-xs font-medium text-[#163832] dark:text-[#E1ECE5] leading-relaxed shadow-sm">
-            Tus kilos ya están calculados según tu 1RM. Solo tocá &quot;Cambiar&quot; si hoy levantás otro peso.
+          <div className="rounded-xl bg-[var(--okbg)] text-[var(--oktx)] p-3 text-xs font-semibold leading-relaxed shadow-xs">
+            Tus kilos ya están calculados según tu 1RM. Solo tocá &quot;Cambiar&quot; si hoy levantás otro peso.{' '}
+            {infoCiclo?.faseActual === 'LUTEA' && (
+              <b>Ajuste de fase lútea tardía: −7,5 %.</b>
+            )}
           </div>
 
           {sesion.bloquesDeEjercicios.map((bloque, bIdx) => (
@@ -233,17 +221,19 @@ export const ActiveWorkoutModal: React.FC<ActiveWorkoutModalProps> = ({ sesion, 
           />
         </div>
 
-        <div className="space-y-3 pt-3 pb-2">
-          <p className="text-center text-xs text-[#163832]/70 dark:text-[#9EB5B0]">
+        <div className="space-y-2 pt-3 pb-4">
+          <p className="text-center text-xs text-[var(--mut)]">
             La pantalla se mantiene encendida durante la sesión
           </p>
-          <button
-            type="button"
+          <Button
+            variant="primary"
+            size="lg"
+            fullWidth
             onClick={() => setModalFeedbackAbierto(true)}
-            className="w-full rounded-2xl bg-[#2F6B4F] hover:bg-[#265740] active:scale-[0.99] text-white font-extrabold text-base py-4 text-center shadow-md transition"
+            className="text-base font-extrabold shadow-md min-h-[52px]"
           >
             Finalizar entrenamiento
-          </button>
+          </Button>
         </div>
       </div>
 

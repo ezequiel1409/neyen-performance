@@ -1,6 +1,6 @@
 // =====================================================================
-// NEYEN ATHLETIC PERFORMANCE OS - APLICACIÓN PRINCIPAL
-// SIN NAVBAR SUPERIOR REDUNDANTE · INTEGRACIÓN CON LOGIN Y SIDEBARS
+// NEYIMA ATHLETIC PERFORMANCE OS - APLICACIÓN PRINCIPAL
+// INTEGRACIÓN NATIVA CON DESIGN SYSTEM Y VISTAS DE PERFIL
 // =====================================================================
 
 import React, { useState, useEffect } from 'react';
@@ -11,20 +11,25 @@ import { ExerciseBankView } from './components/coach/ExerciseBankView';
 import { PeriodizationPlannerView } from './components/coach/PeriodizationPlannerView';
 import { CoachNavSection, CoachSidebar } from './components/coach/CoachSidebar';
 import { AthleteSidebar } from './components/athlete/AthleteSidebar';
+import { AthleteTodayView } from './components/athlete/AthleteTodayView';
+import { AthleteWellnessView } from './components/athlete/AthleteWellnessView';
+import { AthleteCycleView } from './components/athlete/AthleteCycleView';
+import { AthleteHistoryView } from './components/athlete/AthleteHistoryView';
 import { AthleteAnnualProgressView } from './components/athlete/AthleteAnnualProgressView';
 import { AthleteGalleryMLP } from './components/athlete/AthleteGalleryMLP';
-import { AthleteHomeView } from './components/athlete/AthleteHomeView';
 import { AthleteSleepWearableMLP } from './components/athlete/AthleteSleepWearableMLP';
+import { ActiveWorkoutModal } from './components/athlete/ActiveWorkoutModal';
 import { LoginView } from './components/auth/LoginView';
-import { NeyenLogo } from './components/ui/NeyenLogo';
+import { NeyimaLogo } from './components/ui/NeyimaLogo';
+import { IconInterface } from './components/ui/icons/IconInterface';
 import { TrainingProvider, useTraining } from './context/TrainingContext';
-import { Sun, Moon, LogOut } from 'lucide-react';
 
 const MainLayout: React.FC = () => {
-  const { estaAutenticado, rolActivo, cerrarSesion } = useTraining();
+  const { estaAutenticado, rolActivo, setRolActivo, cerrarSesion, macrociclo } = useTraining();
 
   const [seccionCoach, setSeccionCoach] = useState<CoachNavSection>('BANCO_EJERCICIOS');
-  const [vistaAlumnoActual, setVistaAlumnoActual] = useState<VistaAlumno>('RUTINA');
+  const [vistaAlumnoActual, setVistaAlumnoActual] = useState<VistaAlumno>('HOY');
+  const [workoutActivo, setWorkoutActivo] = useState<boolean>(false);
 
   // Control de Modo Oscuro instantáneo
   const [esModoOscuro, setEsModoOscuro] = useState<boolean>(() => {
@@ -40,11 +45,13 @@ const MainLayout: React.FC = () => {
   useEffect(() => {
     if (esModoOscuro) {
       document.documentElement.classList.add('dark');
+      document.documentElement.setAttribute('data-theme', 'dark');
       try {
         localStorage.setItem('theme', 'dark');
       } catch {}
     } else {
       document.documentElement.classList.remove('dark');
+      document.documentElement.setAttribute('data-theme', 'light');
       try {
         localStorage.setItem('theme', 'light');
       } catch {}
@@ -55,28 +62,52 @@ const MainLayout: React.FC = () => {
     setEsModoOscuro((prev) => !prev);
   };
 
-  // Si no está autenticado, renderizar la pantalla de Login oficial (Imagen 2)
+  // Sesión del día para el modal activo
+  const sesionDelDia =
+    macrociclo.mesociclos[0]?.microciclos[0]?.sesionesDeEntrenamiento[0] || {
+      identificadorSesion: 'SES-01',
+      nombreSesion: 'Sesión 1 – Lunes | Tren superior (Empuje)',
+      duracionEstimadaMinutos: 60,
+      esfuerzoPercibidoObjetivoDeLaSesion: 8,
+      bloquesDeEjercicios: [],
+    };
+
+  // Si no está autenticado, renderizar la pantalla de Login
   if (!estaAutenticado) {
     return <LoginView />;
   }
 
   return (
-    <div className="min-h-screen bg-[var(--bg-app)] text-[var(--text-main)] flex flex-col font-sans selection:bg-[#2F6B4F] selection:text-white transition-colors duration-200">
+    <div className="min-h-screen bg-[var(--bg)] text-[var(--txt)] flex flex-col font-sans transition-colors duration-200">
       {/* =====================================================================
           HEADER MÓVIL COMPACTO (SÓLO VISIBLE EN DISPOSITIVOS MÓVILES < MD)
           ===================================================================== */}
-      <header className="md:hidden flex items-center justify-between px-4 py-3 bg-white dark:bg-[#15332B] border-b-2 border-[#E5E2D5] dark:border-[#244E43] sticky top-0 z-30">
-        <NeyenLogo size="sm" showSubtitle={false} />
+      <header className="md:hidden flex items-center justify-between px-4 py-2.5 bg-[var(--surf)] border-b border-[var(--bord)] sticky top-0 z-30">
+        <NeyimaLogo size="sm" variant="emblema" roleTag={rolActivo === 'COACH' ? 'COACH' : 'ALUMNO'} />
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
+          {/* Switch rápido de Rol para pruebas de UI */}
+          <button
+            type="button"
+            onClick={() => setRolActivo(rolActivo === 'COACH' ? 'ALUMNO' : 'COACH')}
+            aria-label="Cambiar de rol"
+            className="px-2.5 py-1.5 rounded-xl border border-[var(--bord)] bg-[var(--bg)] text-[var(--txt)] text-xs font-bold"
+          >
+            {rolActivo === 'COACH' ? 'Ver Alumno' : 'Ver Coach'}
+          </button>
+
           {/* Toggle de tema */}
           <button
             type="button"
             onClick={alternarTema}
             aria-label={esModoOscuro ? 'Activar tema claro' : 'Activar tema oscuro'}
-            className="p-2 rounded-xl border border-slate-200 dark:border-[#244E43] text-[#1D2B24] dark:text-[#FAF7EE] hover:bg-[#E3EFE7]/50"
+            className="p-2 rounded-xl border border-[var(--bord)] text-[var(--txt)] hover:bg-[var(--bg)] cursor-pointer"
           >
-            {esModoOscuro ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            {esModoOscuro ? (
+              <IconInterface name="star" size={16} strokeWidth={2.2} />
+            ) : (
+              <IconInterface name="moon" size={16} strokeWidth={2.2} />
+            )}
           </button>
 
           {/* Cerrar sesión */}
@@ -84,16 +115,16 @@ const MainLayout: React.FC = () => {
             type="button"
             onClick={cerrarSesion}
             aria-label="Cerrar sesión"
-            className="p-2 rounded-xl text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30"
+            className="p-2 rounded-xl text-[var(--acc)] hover:bg-[var(--bg)] cursor-pointer"
           >
-            <LogOut className="h-4 w-4" />
+            <IconInterface name="logout" size={16} strokeWidth={2.2} />
           </button>
         </div>
       </header>
 
       {/* Selector móvil de secciones para Coach (sólo en móviles < md) */}
       {rolActivo === 'COACH' && (
-        <div className="md:hidden overflow-x-auto bg-white dark:bg-[#15332B] border-b border-[#E5E2D5] dark:border-[#244E43] px-3 py-2 flex gap-1.5 scrollbar-none">
+        <div className="md:hidden overflow-x-auto bg-[var(--surf)] border-b border-[var(--bord)] px-3 py-2 flex gap-1.5 scrollbar-none">
           {[
             { id: 'BANCO_EJERCICIOS', label: 'Banco' },
             { id: 'PLANIFICADOR', label: 'Planificador' },
@@ -104,10 +135,10 @@ const MainLayout: React.FC = () => {
               key={item.id}
               type="button"
               onClick={() => setSeccionCoach(item.id as CoachNavSection)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 cursor-pointer ${
                 seccionCoach === item.id
-                  ? 'bg-[#2F6B4F] text-white'
-                  : 'text-[#1D2B24]/70 dark:text-[#9EB5B0]'
+                  ? 'bg-[var(--navbg)] text-[var(--navon)]'
+                  : 'text-[var(--mut)]'
               }`}
             >
               {item.label}
@@ -137,26 +168,35 @@ const MainLayout: React.FC = () => {
 
         {/* ÁREA DE CONTENIDO DE LA PANTALLA */}
         <main
-          className={`flex-1 min-w-0 py-6 md:pl-4 ${
+          className={`flex-1 min-w-0 py-6 md:pl-6 ${
             rolActivo === 'ALUMNO' ? 'pb-24 md:pb-6' : ''
           }`}
         >
-          {/* Barra superior sutil de utilidades de pantalla (Toggle Dark/Light) */}
-          <div className="hidden md:flex justify-end items-center mb-4">
+          {/* Barra superior de utilidades (Switch de Rol & Modo Oscuro en desktop) */}
+          <div className="hidden md:flex justify-end items-center gap-2 mb-4">
+            <button
+              type="button"
+              onClick={() => setRolActivo(rolActivo === 'COACH' ? 'ALUMNO' : 'COACH')}
+              className="flex items-center gap-1.5 rounded-xl border border-[var(--bord)] bg-[var(--surf)] px-3 py-1.5 text-xs font-bold text-[var(--txt)] hover:bg-[var(--bg)] transition cursor-pointer"
+            >
+              <IconInterface name="users" size={14} />
+              <span>Cambiar a {rolActivo === 'COACH' ? 'Alumno' : 'Coach'}</span>
+            </button>
+
             <button
               type="button"
               onClick={alternarTema}
               aria-label={esModoOscuro ? 'Activar tema claro' : 'Activar tema oscuro'}
-              className="flex items-center gap-2 rounded-xl border border-[#E5E2D5] dark:border-[#244E43] bg-white dark:bg-[#15332B] px-3 py-1.5 text-xs font-bold text-[#1D2B24] dark:text-[#FAF7EE] hover:bg-[#E3EFE7]/40 transition shadow-2xs"
+              className="flex items-center gap-2 rounded-xl border border-[var(--bord)] bg-[var(--surf)] px-3 py-1.5 text-xs font-bold text-[var(--txt)] hover:bg-[var(--bg)] transition shadow-2xs cursor-pointer"
             >
               {esModoOscuro ? (
                 <>
-                  <Sun className="h-3.5 w-3.5 text-amber-400" />
+                  <IconInterface name="star" size={14} className="text-amber-400" />
                   <span>Modo claro</span>
                 </>
               ) : (
                 <>
-                  <Moon className="h-3.5 w-3.5 text-slate-600" />
+                  <IconInterface name="moon" size={14} />
                   <span>Modo oscuro</span>
                 </>
               )}
@@ -175,19 +215,45 @@ const MainLayout: React.FC = () => {
             </>
           )}
 
-          {/* VISTAS DE ALUMNO (IMAGEN 1 PANEL DEL ALUMNO) */}
+          {/* VISTAS DE ALUMNO (CATÁLOGO NEYIMA) */}
           {rolActivo === 'ALUMNO' && (
             <>
-              {vistaAlumnoActual === 'RUTINA' && (
-                <AthleteHomeView onIrADescanso={() => setVistaAlumnoActual('SUENIO')} />
+              {(vistaAlumnoActual === 'HOY' || vistaAlumnoActual === 'RUTINA') && (
+                <AthleteTodayView
+                  onIniciarEntrenamiento={() => setWorkoutActivo(true)}
+                  onIrABienestar={() => setVistaAlumnoActual('BIENESTAR')}
+                />
               )}
-              {vistaAlumnoActual === 'DASHBOARD' && <AthleteAnnualProgressView />}
-              {vistaAlumnoActual === 'FOTOS' && <AthleteGalleryMLP />}
+
+              {(vistaAlumnoActual === 'PROGRESO' || vistaAlumnoActual === 'FOTOS') && (
+                <AthleteGalleryMLP />
+              )}
+
+              {vistaAlumnoActual === 'BIENESTAR' && (
+                <AthleteWellnessView
+                  onGuardadoExitoso={() => setVistaAlumnoActual('HOY')}
+                />
+              )}
+
+              {vistaAlumnoActual === 'HISTORIAL' && <AthleteHistoryView />}
+
+              {vistaAlumnoActual === 'CICLO' && <AthleteCycleView />}
+
               {vistaAlumnoActual === 'SUENIO' && <AthleteSleepWearableMLP />}
+
+              {vistaAlumnoActual === 'DASHBOARD' && <AthleteAnnualProgressView />}
             </>
           )}
         </main>
       </div>
+
+      {/* MODAL DE ENTRENAMIENTO ACTIVO & CIERRE v2 */}
+      {workoutActivo && (
+        <ActiveWorkoutModal
+          sesion={sesionDelDia}
+          onCerrar={() => setWorkoutActivo(false)}
+        />
+      )}
 
       {/* BARRA INFERIOR DE NAVEGACIÓN PARA ALUMNO EN MÓVILES */}
       {rolActivo === 'ALUMNO' && (

@@ -1,10 +1,5 @@
-// =====================================================================
-// NEYEN ATHLETIC - HEADER DE ENTRENAMIENTO ACTIVO
-// RESPONSABILIDAD ÚNICA: Mostrar título, duración estimada y cronómetro
-// =====================================================================
-
 import React from 'react';
-import { X } from 'lucide-react';
+import { IconInterface } from '../../ui/icons/IconInterface';
 
 interface WorkoutHeaderProps {
   nombreSesion: string;
@@ -26,22 +21,25 @@ export const WorkoutHeader: React.FC<WorkoutHeaderProps> = ({
       <button
         type="button"
         onClick={onSolicitarCierre}
-        aria-label="Cerrar entrenamiento"
-        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border-2 border-[#163832] dark:border-[#25524A] bg-transparent text-[#163832] dark:text-white hover:bg-[#E1ECE5]/40 active:scale-95 transition"
+        aria-label="Salir de la sesión"
+        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border-2 border-[var(--field)] bg-transparent text-[var(--txt)] hover:bg-[var(--surf)] active:scale-95 transition cursor-pointer"
       >
-        <X className="h-6 w-6 stroke-[2.5]" aria-hidden="true" />
+        <IconInterface name="x" size={22} strokeWidth={2.2} aria-hidden="true" />
       </button>
 
       <div className="flex-1 min-w-0">
-        <h1 className="text-lg sm:text-xl font-bold text-[#163832] dark:text-white tracking-tight truncate">
+        <h1 className="text-base sm:text-lg font-extrabold text-[var(--txt)] tracking-tight truncate">
           {nombreSesion}
         </h1>
-        <p className="text-xs text-[#163832]/70 dark:text-[#9EB5B0] font-medium mt-0.5">
+        <p className="text-xs text-[var(--mut)] font-medium mt-0.5">
           ~{duracionEstimadaMinutos} min · RPE objetivo {rpeObjetivo}
         </p>
       </div>
 
-      <div className="rounded-2xl border-2 border-[#E5E2D5] dark:border-[#25524A] bg-white dark:bg-[#163630] px-4 py-2 font-mono font-bold text-lg text-[#163832] dark:text-white shadow-sm flex items-center justify-center shrink-0">
+      <div
+        aria-label="Tiempo de entrenamiento"
+        className="rounded-xl border border-[var(--bord)] bg-[var(--surf)] px-3.5 py-2 font-mono font-extrabold text-base text-[var(--txt)] shadow-xs flex items-center justify-center shrink-0 min-w-[76px]"
+      >
         {tiempoCronometro}
       </div>
     </div>

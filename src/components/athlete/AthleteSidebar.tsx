@@ -1,12 +1,12 @@
 // =====================================================================
-// NEYEN ATHLETIC - BARRA LATERAL DEL ALUMNO (DESKTOP/TABLET SIDEBAR)
-// DISEÑO FIEL A MOCKUP (IMAGEN 1)
+// NEYIMA ATHLETIC - BARRA LATERAL DEL ALUMNO (DESKTOP/TABLET SIDEBAR)
 // =====================================================================
 
 import React from 'react';
-import { NeyenLogo } from '../ui/NeyenLogo';
+import { NeyimaLogo } from '../ui/NeyimaLogo';
 import { useTraining } from '../../context/TrainingContext';
 import { VistaAlumno } from '../ui/BottomNav';
+import { IconInterface, type IconInterfaceName } from '../ui/icons/IconInterface';
 
 interface AthleteSidebarProps {
   vistaActual: VistaAlumno;
@@ -19,40 +19,54 @@ export const AthleteSidebar: React.FC<AthleteSidebarProps> = ({
 }) => {
   const { cerrarSesion } = useTraining();
 
-  const items: Array<{ id: VistaAlumno; label: string }> = [
-    { id: 'RUTINA', label: 'Mi sesión de hoy' },
-    { id: 'DASHBOARD', label: 'Progreso anual' },
-    { id: 'FOTOS', label: 'Fotos de progreso' },
-    { id: 'SUENIO', label: 'Descanso y reloj' },
+  const items: Array<{
+    id: VistaAlumno;
+    matches: VistaAlumno[];
+    label: string;
+    icon: IconInterfaceName;
+  }> = [
+    { id: 'HOY', matches: ['HOY', 'RUTINA'], label: 'Inicio (Hoy)', icon: 'home' },
+    { id: 'PROGRESO', matches: ['PROGRESO', 'FOTOS'], label: 'Progreso y fotos', icon: 'trend' },
+    { id: 'BIENESTAR', matches: ['BIENESTAR'], label: 'Bienestar diario', icon: 'heart' },
+    { id: 'HISTORIAL', matches: ['HISTORIAL'], label: 'Historial', icon: 'history' },
+    { id: 'CICLO', matches: ['CICLO'], label: 'Mi ciclo', icon: 'drop' },
+    { id: 'SUENIO', matches: ['SUENIO'], label: 'Descanso y reloj', icon: 'moon' },
+    { id: 'DASHBOARD', matches: ['DASHBOARD'], label: 'Panel expandido', icon: 'clipboard' },
   ];
 
   return (
     <aside
       aria-label="Navegación del Alumno"
-      className="w-60 shrink-0 py-8 pr-6 flex flex-col justify-between min-h-[calc(100vh-2rem)] select-none"
+      className="w-64 shrink-0 py-6 pr-6 flex flex-col justify-between min-h-[calc(100vh-2rem)] select-none border-r border-[var(--bord)]"
     >
-      <div className="space-y-10">
-        {/* Logo NEYEN */}
+      <div className="space-y-6">
+        {/* Logo NEYIMA */}
         <div className="px-2">
-          <NeyenLogo size="md" showSubtitle={false} />
+          <NeyimaLogo size="md" variant="emblema" roleTag="ALUMNO" />
         </div>
 
         {/* Lista de navegación vertical */}
-        <nav className="flex flex-col space-y-1.5" role="navigation">
+        <nav className="flex flex-col space-y-1" role="navigation">
           {items.map((item) => {
-            const isActive = vistaActual === item.id;
+            const isActive = item.matches.includes(vistaActual);
             return (
               <button
                 key={item.id}
                 type="button"
                 onClick={() => onCambiarVista(item.id)}
-                className={`text-left text-sm transition min-h-[48px] flex items-center px-4 py-3 rounded-2xl ${
+                className={`text-left text-sm transition min-h-[46px] flex items-center gap-3 px-3.5 py-2.5 rounded-xl cursor-pointer ${
                   isActive
-                    ? 'bg-[#2F6B4F] text-white font-extrabold shadow-sm'
-                    : 'text-[#1D2B24] dark:text-[#FAF7EE]/80 font-bold hover:bg-[#E3EFE7]/50 dark:hover:bg-[#15332B]/60'
+                    ? 'bg-[var(--navbg)] text-[var(--navon)] font-extrabold shadow-xs'
+                    : 'text-[var(--txt)] font-bold hover:bg-[var(--surf)]'
                 }`}
               >
-                {item.label}
+                <IconInterface
+                  name={item.icon}
+                  size={18}
+                  strokeWidth={2.2}
+                  aria-hidden="true"
+                />
+                <span>{item.label}</span>
               </button>
             );
           })}
@@ -60,13 +74,14 @@ export const AthleteSidebar: React.FC<AthleteSidebarProps> = ({
       </div>
 
       {/* Pie de navegación: Cerrar sesión */}
-      <div className="pt-6 border-t border-[#E5E2D5] dark:border-[#244E43] space-y-2">
+      <div className="pt-4 border-t border-[var(--bord)] space-y-2">
         <button
           type="button"
           onClick={cerrarSesion}
-          className="w-full text-left text-sm font-bold text-[#1D2B24] dark:text-[#FAF7EE]/80 hover:text-rose-600 dark:hover:text-rose-400 transition flex items-center px-4 py-3 rounded-2xl min-h-[48px]"
+          className="w-full text-left text-sm font-bold text-[var(--txt)] hover:text-[var(--acc)] transition flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl min-h-[44px] cursor-pointer"
         >
-          Cerrar sesión
+          <IconInterface name="logout" size={18} aria-hidden="true" />
+          <span>Cerrar sesión</span>
         </button>
       </div>
     </aside>

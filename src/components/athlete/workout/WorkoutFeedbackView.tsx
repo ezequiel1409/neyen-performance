@@ -1,11 +1,12 @@
 // =====================================================================
-// NEYEN ATHLETIC - MODAL FEEDBACK sRPE DE FOSTER ("¿CÓMO ESTUVO HOY?")
-// RESPONSABILIDAD ÚNICA: Recopilar y enviar feedback post-entrenamiento
+// NEYIMA ATHLETIC - CIERRE DE ENTRENAMIENTO v2 ("¿CÓMO ESTUVO HOY?")
+// RESPONSABILIDAD ÚNICA: Recopilar sRPE Foster y feedback fisiológico
 // =====================================================================
 
 import React from 'react';
-import { ArrowLeft, Minus, Plus } from 'lucide-react';
 import { EscalaEsfuerzoPercibidoSesion } from '../../../types';
+import { IconInterface } from '../../ui/icons/IconInterface';
+import { Button } from '../../ui/Button';
 
 interface WorkoutFeedbackViewProps {
   duracionMinutos: number;
@@ -43,21 +44,21 @@ export const WorkoutFeedbackView: React.FC<WorkoutFeedbackViewProps> = ({
       role="dialog"
       aria-modal="true"
       aria-label="¿Cómo estuvo hoy?"
-      className="fixed inset-0 z-50 flex flex-col bg-[#FAF7EE] dark:bg-[#0E2420] text-[#163832] dark:text-[#FAF7EE] overflow-y-auto"
+      className="fixed inset-0 z-50 flex flex-col bg-[var(--bg)] text-[var(--txt)] overflow-y-auto"
     >
-      <div className="w-full max-w-md mx-auto p-4 sm:p-6 flex flex-col min-h-screen justify-between space-y-5">
-        <div className="space-y-5">
+      <div className="w-full max-w-md mx-auto p-4 sm:p-6 flex flex-col min-h-screen justify-between space-y-4">
+        <div className="space-y-4">
           {/* Encabezado: Botón Atrás + Título */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 pt-1">
             <button
               type="button"
               onClick={onVolver}
               aria-label="Volver a la sesión"
-              className="flex h-12 w-12 items-center justify-center rounded-2xl border-2 border-[#163832] dark:border-[#25524A] bg-transparent text-[#163832] dark:text-white hover:bg-[#E1ECE5]/40 active:scale-95 transition"
+              className="flex h-12 w-12 items-center justify-center rounded-xl border-2 border-[var(--field)] bg-transparent text-[var(--txt)] hover:bg-[var(--surf)] active:scale-95 transition cursor-pointer"
             >
-              <ArrowLeft className="h-6 w-6 stroke-[2.5]" aria-hidden="true" />
+              <IconInterface name="back" size={22} strokeWidth={2.2} aria-hidden="true" />
             </button>
-            <h1 className="text-2xl font-bold text-[#163832] dark:text-white tracking-tight">
+            <h1 className="text-2xl font-extrabold text-[var(--txt)] tracking-tight">
               ¿Cómo estuvo hoy?
             </h1>
           </div>
@@ -65,10 +66,10 @@ export const WorkoutFeedbackView: React.FC<WorkoutFeedbackViewProps> = ({
           {/* DURACIÓN REAL */}
           <div className="flex items-center justify-between gap-3 pt-1">
             <div>
-              <h2 className="font-bold text-xs uppercase text-[#163832] dark:text-[#9EB5B0] tracking-wider">
+              <h2 className="font-bold text-xs uppercase text-[var(--mut)] tracking-wider">
                 DURACIÓN REAL
               </h2>
-              <p className="text-xs text-[#163832]/70 dark:text-[#9EB5B0]/70 mt-0.5">
+              <p className="text-xs text-[var(--mut)] mt-0.5">
                 Ajustala si no fue la prevista
               </p>
             </div>
@@ -76,29 +77,31 @@ export const WorkoutFeedbackView: React.FC<WorkoutFeedbackViewProps> = ({
               <button
                 type="button"
                 onClick={() => setDuracionMinutos((prev) => Math.max(5, prev - 5))}
-                className="flex h-12 w-12 items-center justify-center rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-transparent font-bold text-xl text-[#163832] dark:text-white hover:bg-[#E1ECE5]/40 active:scale-95 transition"
+                aria-label="Disminuir duración"
+                className="flex h-12 w-12 items-center justify-center rounded-xl border-2 border-[var(--link)] bg-transparent font-extrabold text-2xl text-[var(--link)] hover:bg-[var(--surf)] active:scale-95 transition cursor-pointer"
               >
-                <Minus className="h-5 w-5 stroke-[2.5]" />
+                −
               </button>
-              <span className="font-bold text-xl text-[#163832] dark:text-white min-w-[70px] text-center font-mono">
+              <span className="font-extrabold text-xl text-[var(--txt)] min-w-[70px] text-center font-mono">
                 {String(duracionMinutos).padStart(2, '0')} min
               </span>
               <button
                 type="button"
                 onClick={() => setDuracionMinutos((prev) => prev + 5)}
-                className="flex h-12 w-12 items-center justify-center rounded-xl border-2 border-[#163832] dark:border-[#25524A] bg-transparent font-bold text-xl text-[#163832] dark:text-white hover:bg-[#E1ECE5]/40 active:scale-95 transition"
+                aria-label="Aumentar duración"
+                className="flex h-12 w-12 items-center justify-center rounded-xl border-2 border-[var(--link)] bg-transparent font-extrabold text-2xl text-[var(--link)] hover:bg-[var(--surf)] active:scale-95 transition cursor-pointer"
               >
-                <Plus className="h-5 w-5 stroke-[2.5]" />
+                +
               </button>
             </div>
           </div>
 
           {/* ESFUERZO DE LA SESIÓN (1 A 10) */}
-          <div className="space-y-2.5">
-            <h2 className="font-bold text-xs uppercase text-[#163832] dark:text-[#9EB5B0] tracking-wider">
+          <div className="space-y-2">
+            <h2 className="font-bold text-xs uppercase text-[var(--mut)] tracking-wider">
               ESFUERZO DE LA SESIÓN (1 A 10)
             </h2>
-            <div className="grid grid-cols-5 gap-2.5">
+            <div className="grid grid-cols-5 gap-2">
               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => {
                 const isSelected = rpeSeleccionado === num;
                 return (
@@ -106,10 +109,12 @@ export const WorkoutFeedbackView: React.FC<WorkoutFeedbackViewProps> = ({
                     key={num}
                     type="button"
                     onClick={() => setRpeSeleccionado(num as EscalaEsfuerzoPercibidoSesion)}
-                    className={`flex h-14 items-center justify-center rounded-2xl border-2 font-extrabold text-xl transition active:scale-95 ${
+                    aria-pressed={isSelected}
+                    aria-label={`Esfuerzo ${num}`}
+                    className={`flex h-12 items-center justify-center rounded-xl border-2 font-extrabold text-lg transition-all active:scale-95 cursor-pointer ${
                       isSelected
-                        ? 'bg-[var(--selected-fill)] text-[var(--selected-text)] border-[var(--selected-fill)] shadow-sm'
-                        : 'bg-white dark:bg-[#163630] text-[#163832] dark:text-white border-[#163832] dark:border-[#25524A] hover:bg-[#E1ECE5]/40'
+                        ? 'border-[var(--navbg)] bg-[var(--navbg)] text-[var(--navon)] shadow-xs'
+                        : 'border-[var(--field)] bg-transparent text-[var(--txt)] hover:bg-[var(--surf)]'
                     }`}
                   >
                     {num}
@@ -117,18 +122,18 @@ export const WorkoutFeedbackView: React.FC<WorkoutFeedbackViewProps> = ({
                 );
               })}
             </div>
-            <div className="flex justify-between text-xs text-[#163832]/70 dark:text-[#9EB5B0] font-medium pt-0.5">
+            <div className="flex justify-between text-xs text-[var(--mut)] font-medium pt-0.5">
               <span>1 · Muy fácil</span>
               <span>10 · Máximo</span>
             </div>
           </div>
 
           {/* FATIGA (1 A 5) */}
-          <div className="space-y-2.5">
-            <h2 className="font-bold text-xs uppercase text-[#163832] dark:text-[#9EB5B0] tracking-wider">
+          <div className="space-y-2">
+            <h2 className="font-bold text-xs uppercase text-[var(--mut)] tracking-wider">
               FATIGA (1 A 5)
             </h2>
-            <div className="grid grid-cols-5 gap-2.5">
+            <div className="grid grid-cols-5 gap-2">
               {([1, 2, 3, 4, 5] as const).map((num) => {
                 const isSelected = fatigaSeleccionada === num;
                 return (
@@ -136,10 +141,12 @@ export const WorkoutFeedbackView: React.FC<WorkoutFeedbackViewProps> = ({
                     key={num}
                     type="button"
                     onClick={() => setFatigaSeleccionada(num)}
-                    className={`flex h-14 items-center justify-center rounded-2xl border-2 font-extrabold text-xl transition active:scale-95 ${
+                    aria-pressed={isSelected}
+                    aria-label={`Fatiga ${num} de 5`}
+                    className={`flex h-12 items-center justify-center rounded-xl border-2 font-extrabold text-lg transition-all active:scale-95 cursor-pointer ${
                       isSelected
-                        ? 'bg-[var(--selected-fill)] text-[var(--selected-text)] border-[var(--selected-fill)] shadow-sm'
-                        : 'bg-white dark:bg-[#163630] text-[#163832] dark:text-white border-[#163832] dark:border-[#25524A] hover:bg-[#E1ECE5]/40'
+                        ? 'border-[var(--navbg)] bg-[var(--navbg)] text-[var(--navon)] shadow-xs'
+                        : 'border-[var(--field)] bg-transparent text-[var(--txt)] hover:bg-[var(--surf)]'
                     }`}
                   >
                     {num}
@@ -150,21 +157,21 @@ export const WorkoutFeedbackView: React.FC<WorkoutFeedbackViewProps> = ({
           </div>
 
           {/* Carga interna (esfuerzo × minutos) */}
-          <div className="rounded-2xl bg-[#E1ECE5] dark:bg-[#1C4740] p-4 flex items-center justify-between shadow-sm">
-            <span className="font-medium text-sm text-[#163832] dark:text-[#E1ECE5]">
+          <div className="rounded-2xl bg-[var(--okbg)] text-[var(--oktx)] p-3.5 flex items-center justify-between shadow-xs">
+            <span className="font-medium text-sm">
               Carga interna (esfuerzo × minutos)
             </span>
-            <span className="font-black text-2xl text-[#163832] dark:text-white font-mono">
+            <span className="font-extrabold text-2xl font-mono">
               {String(cargaInterna).padStart(2, '0')} UA
             </span>
           </div>
 
           {/* ¿SENTISTE DOLOR? */}
-          <div className="space-y-2.5">
-            <h2 className="font-bold text-xs uppercase text-[#163832] dark:text-[#9EB5B0] tracking-wider">
+          <div className="space-y-2">
+            <h2 className="font-bold text-xs uppercase text-[var(--mut)] tracking-wider">
               ¿SENTISTE DOLOR?
             </h2>
-            <div className="flex flex-wrap gap-2.5">
+            <div className="flex flex-wrap gap-2">
               {['Ninguno', 'Rodilla', 'Espalda', 'Hombro', 'Otro'].map((zona) => {
                 const isSelected = zonaDolorSeleccionada === zona;
                 return (
@@ -172,10 +179,11 @@ export const WorkoutFeedbackView: React.FC<WorkoutFeedbackViewProps> = ({
                     key={zona}
                     type="button"
                     onClick={() => setZonaDolorSeleccionada(zona)}
-                    className={`rounded-full border-2 px-5 py-2.5 font-bold text-sm transition active:scale-95 ${
+                    aria-pressed={isSelected}
+                    className={`rounded-full border-2 px-4 py-2 font-bold text-sm transition-all active:scale-95 cursor-pointer ${
                       isSelected
-                        ? 'bg-[var(--selected-fill)] text-[var(--selected-text)] border-[var(--selected-fill)] shadow-sm'
-                        : 'bg-white dark:bg-transparent text-[#163832] dark:text-white border-[#163832] dark:border-[#25524A] hover:bg-[#E1ECE5]/40'
+                        ? 'border-[var(--navbg)] bg-[var(--navbg)] text-[var(--navon)] shadow-xs'
+                        : 'border-[var(--field)] bg-transparent text-[var(--txt)] hover:bg-[var(--surf)]'
                     }`}
                   >
                     {zona}
@@ -187,28 +195,31 @@ export const WorkoutFeedbackView: React.FC<WorkoutFeedbackViewProps> = ({
 
           {/* Comentario para tu coach (opcional) */}
           <div className="space-y-1.5">
-            <label className="block text-sm font-semibold text-[#163832] dark:text-white">
+            <label htmlFor="comentario-coach" className="block text-sm font-bold text-[var(--txt)]">
               Comentario para tu coach (opcional)
             </label>
             <textarea
-              rows={3}
+              id="comentario-coach"
+              rows={2}
               value={comentariosAtleta}
               onChange={(e) => setComentariosAtleta(e.target.value)}
               placeholder="Sensaciones, molestias o ajustes que hayas realizado..."
-              className="w-full rounded-2xl border-2 border-[#163832] dark:border-[#25524A] bg-transparent p-3.5 text-sm text-[#163832] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#1F5FA0]"
+              className="w-full rounded-xl border-2 border-[var(--field)] bg-[var(--surf)] p-3 text-sm text-[var(--txt)] focus:outline-none focus:border-[var(--link)]"
             />
           </div>
         </div>
 
         {/* Botón Finalizar entrenamiento */}
-        <div className="pt-4 pb-2">
-          <button
-            type="button"
+        <div className="pt-2 pb-4">
+          <Button
+            variant="primary"
+            size="lg"
+            fullWidth
             onClick={onFinalizar}
-            className="w-full rounded-2xl bg-[#2F6B4F] hover:bg-[#265740] active:scale-[0.99] text-white font-extrabold text-base py-4 text-center shadow-md transition"
+            className="text-base font-extrabold shadow-md min-h-[52px]"
           >
             Finalizar entrenamiento
-          </button>
+          </Button>
         </div>
       </div>
     </div>
