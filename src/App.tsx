@@ -5,13 +5,15 @@
 
 import React, { useState, useEffect } from 'react';
 import { BottomNav, VistaAlumno } from './components/ui/BottomNav';
-import { AnnualMacroTimelineView } from './components/coach/AnnualMacroTimelineView';
 import { AthleteProfileView } from './components/coach/AthleteProfileView';
 import { ExerciseBankView } from './components/coach/ExerciseBankView';
 import { PeriodizationPlannerView } from './components/coach/PeriodizationPlannerView';
 import { CoachNavSection, CoachSidebar } from './components/coach/CoachSidebar';
 import { CoachDashboardView } from './components/coach/CoachDashboardView';
 import { LoadControlACWRView } from './components/coach/LoadControlACWRView';
+import { CoachAthletesListView } from './components/coach/CoachAthletesListView';
+import { CoachAlertsView } from './components/coach/CoachAlertsView';
+import { CoachEvaluationsView } from './components/coach/CoachEvaluationsView';
 import { AthleteSidebar } from './components/athlete/AthleteSidebar';
 import { AthleteTodayView } from './components/athlete/AthleteTodayView';
 import { AthleteWellnessView } from './components/athlete/AthleteWellnessView';
@@ -22,14 +24,16 @@ import { AthleteGalleryMLP } from './components/athlete/AthleteGalleryMLP';
 import { AthleteSleepWearableMLP } from './components/athlete/AthleteSleepWearableMLP';
 import { ActiveWorkoutModal } from './components/athlete/ActiveWorkoutModal';
 import { LoginView } from './components/auth/LoginView';
+import { OnboardingView } from './components/auth/OnboardingView';
 import { NeyimaLogo } from './components/ui/NeyimaLogo';
 import { IconInterface } from './components/ui/icons/IconInterface';
 import { TrainingProvider, useTraining } from './context/TrainingContext';
 
 const MainLayout: React.FC = () => {
-  const { estaAutenticado, rolActivo, setRolActivo, cerrarSesion, macrociclo } = useTraining();
+  const { estaAutenticado, perfilCompletado, rolActivo, setRolActivo, cerrarSesion, macrociclo } = useTraining();
 
   const [seccionCoach, setSeccionCoach] = useState<CoachNavSection>('RESUMEN');
+  const [atletaDetalleAbierto, setAtletaDetalleAbierto] = useState<boolean>(false);
   const [vistaAlumnoActual, setVistaAlumnoActual] = useState<VistaAlumno>('HOY');
   const [workoutActivo, setWorkoutActivo] = useState<boolean>(false);
 
@@ -77,6 +81,11 @@ const MainLayout: React.FC = () => {
   // Si no está autenticado, renderizar la pantalla de Login
   if (!estaAutenticado) {
     return <LoginView />;
+  }
+
+  // Si no completó onboarding de perfil
+  if (!perfilCompletado) {
+    return <OnboardingView />;
   }
 
   return (
@@ -214,7 +223,10 @@ const MainLayout: React.FC = () => {
                 <CoachDashboardView
                   onAbrirPlanificador={() => setSeccionCoach('PLANIFICADOR')}
                   onVerAlertas={() => setSeccionCoach('ALERTAS')}
-                  onSeleccionarAtleta={() => setSeccionCoach('ATLETAS')}
+                  onSeleccionarAtleta={() => {
+                    setAtletaDetalleAbierto(false);
+                    setSeccionCoach('ATLETAS');
+                  }}
                 />
               )}
 
@@ -226,13 +238,45 @@ const MainLayout: React.FC = () => {
 
               {seccionCoach === 'BANCO_EJERCICIOS' && <ExerciseBankView />}
 
-              {(seccionCoach === 'ATLETAS' || seccionCoach === 'ALERTAS') && (
-                <AthleteProfileView />
+              {seccionCoach === 'ATLETAS' && (
+                atletaDetalleAbierto ? (
+                  <div className="space-y-3">
+                    <button
+                      type="button"
+                      onClick={() => setAtletaDetalleAbierto(false)}
+                      className="inline-flex items-center gap-1.5 text-xs font-bold text-[var(--mut)] hover:text-[var(--txt)] cursor-pointer"
+                    >
+                      <IconInterface name="back" size={14} />
+                      <span>Volver a la lista de atletas</span>
+                    </button>
+                    <AthleteProfileView
+                      onIrAlPlan={() => setSeccionCoach('PLANIFICADOR')}
+                      onVerEvaluaciones={() => setSeccionCoach('EVALUACIONES')}
+                    />
+                  </div>
+                ) : (
+                  <CoachAthletesListView
+                    onAbrirAtleta={() => setAtletaDetalleAbierto(true)}
+                  />
+                )
+              )}
+
+              {seccionCoach === 'ALERTAS' && (
+                <CoachAlertsView
+                  onNavegarA={(destino) => {
+                    if (destino === 'FICHA') {
+                      setAtletaDetalleAbierto(true);
+                      setSeccionCoach('ATLETAS');
+                    } else if (destino === 'CARGA') {
+                      setSeccionCoach('CONTROL_CARGA');
+                    }
+                  }}
+                />
               )}
 
               {seccionCoach === 'PLANIFICADOR' && <PeriodizationPlannerView />}
 
-              {seccionCoach === 'EVALUACIONES' && <AnnualMacroTimelineView />}
+              {seccionCoach === 'EVALUACIONES' && <CoachEvaluationsView />}
             </>
           )}
 
