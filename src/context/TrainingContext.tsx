@@ -32,8 +32,10 @@ import {
 interface TrainingContextType {
   // Autenticación & Sesión de usuario
   estaAutenticado: boolean;
+  perfilCompletado: boolean;
   usuarioEmail: string;
   iniciarSesion: (rol: 'COACH' | 'ALUMNO', email?: string) => void;
+  completarPerfil: (datosPerfil: Partial<Atleta>) => void;
   cerrarSesion: () => void;
 
   // Rol activo
@@ -45,6 +47,7 @@ interface TrainingContextType {
   setAtletaSeleccionadoId: (id: string) => void;
   atletaActual: Atleta;
   atletas: Atleta[];
+  agregarAtleta: (atleta: Atleta) => void;
 
   // Banco de ejercicios y tablas maestras
   ejercicios: Ejercicio[];
@@ -99,6 +102,14 @@ export const TrainingProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       return localStorage.getItem('neyen_auth_session') === 'true';
     } catch {
       return false;
+    }
+  });
+
+  const [perfilCompletado, setPerfilCompletado] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem('neyen_profile_completed') === 'true';
+    } catch {
+      return true; // por defecto demo completo
     }
   });
 
@@ -256,6 +267,24 @@ export const TrainingProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   }, [atletas, ejercicios, categorias, equipamientos, testsFuerza, macrociclo, historialSesiones]);
 
   const atletaActual = atletas.find((a) => a.identificadorAtleta === atletaSeleccionadoId) || atletas[0];
+
+  const agregarAtleta = (nuevo: Atleta) => {
+    setAtletas((prev) => [nuevo, ...prev]);
+  };
+
+  const completarPerfil = (datosPerfil: Partial<Atleta>) => {
+    setPerfilCompletado(true);
+    try {
+      localStorage.setItem('neyen_profile_completed', 'true');
+    } catch {}
+    if (Object.keys(datosPerfil).length > 0) {
+      setAtletas((prev) =>
+        prev.map((a) =>
+          a.identificadorAtleta === atletaSeleccionadoId ? { ...a, ...datosPerfil } : a
+        )
+      );
+    }
+  };
 
   const agregarEjercicio = (nuevo: Ejercicio) => {
     setEjercicios((prev) => [nuevo, ...prev]);
@@ -455,8 +484,10 @@ export const TrainingProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     <TrainingContext.Provider
       value={{
         estaAutenticado,
+        perfilCompletado,
         usuarioEmail,
         iniciarSesion,
+        completarPerfil,
         cerrarSesion,
         rolActivo,
         setRolActivo,
@@ -464,6 +495,7 @@ export const TrainingProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         setAtletaSeleccionadoId,
         atletaActual,
         atletas,
+        agregarAtleta,
         ejercicios,
         categorias,
         equipamientos,
