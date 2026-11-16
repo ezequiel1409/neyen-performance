@@ -1,18 +1,11 @@
 // =====================================================================
-// NEYEN ATHLETIC - DASHBOARD DE PROGRESO ANUAL DEL ALUMNO
+// NEYIMA ATHLETIC - DASHBOARD DE PROGRESO ANUAL DEL ALUMNO
+// CORRESPONDE A dashb-claro.html / progreso-claro.html
 // =====================================================================
 
 import React from 'react';
 import { useTraining } from '../../context/TrainingContext';
-import {
-  Award,
-  Calendar,
-  CheckCircle,
-  Dumbbell,
-  Flame,
-  TrendingUp,
-  Zap,
-} from 'lucide-react';
+import { IconInterface } from '../ui/icons/IconInterface';
 
 export const AthleteAnnualProgressView: React.FC = () => {
   const { atletaActual, testsFuerza, historialSesiones, macrociclo } = useTraining();
@@ -29,7 +22,6 @@ export const AthleteAnnualProgressView: React.FC = () => {
     0
   );
 
-  // Estimación de adherencia real: sesiones completadas respecto a las planificadas del microciclo actual
   const totalSesionesMicroActual =
     macrociclo.mesociclos[0]?.microciclos[0]?.sesionesDeEntrenamiento?.length || 1;
   const porcentajeAdherencia = Math.min(
@@ -37,7 +29,6 @@ export const AthleteAnnualProgressView: React.FC = () => {
     Math.round((sesionesAtleta.length / Math.max(1, totalSesionesMicroActual)) * 100)
   );
 
-  // Búsqueda de tests específicos reales (sin fallbacks inventados)
   const testSentadilla = testsAtleta.find(
     (t) =>
       t.identificadorEjercicioBase === 'EX0001' ||
@@ -50,102 +41,93 @@ export const AthleteAnnualProgressView: React.FC = () => {
       t.nombreEjercicioEvaluado.toLowerCase().includes('muerto')
   );
 
-  // Máximo relativo real para escalar las barras de fuerza de forma honesta
   const maximoRMFuerza = Math.max(
     ...testsAtleta.map((t) => t.unaRepeticionMaximaEfectiva),
     100
   );
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto">
+    <div className="space-y-5 max-w-4xl mx-auto">
       {/* Cabecera */}
       <header>
-        <h1 className="text-2xl font-black tracking-tight text-[#163832] dark:text-white flex items-center gap-2">
-          <TrendingUp className="h-6 w-6 text-[#2F6B4F]" aria-hidden="true" />
-          Mi Progreso Anual & Cargas de Entrenamiento
-        </h1>
-        <p className="text-xs text-[#163832]/70 dark:text-[#9EB5B0] mt-1">
-          Evolución de fuerza máxima evaluada (1RM), carga interna de Foster acumulada e historial
-          de sesiones.
-        </p>
+        <p className="text-xs sm:text-sm font-bold text-[var(--mut)]">Evolución de rendimiento</p>
+        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">Mi Progreso Anual</h1>
       </header>
 
-      {/* Tarjetas de Métricas Clave Honestadas */}
+      {/* Tarjetas de Métricas Clave */}
       <section aria-label="Métricas clave de rendimiento" className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <div className="rounded-2xl border-2 border-[#E5E2D5] dark:border-[#25524A] bg-white dark:bg-[#163630] p-4 shadow-sm">
-          <span className="text-xs text-[#163832]/80 dark:text-[#9EB5B0] font-semibold flex items-center gap-1.5">
-            <Flame className="h-4 w-4 text-[#2F6B4F] shrink-0" aria-hidden="true" />
+        <div className="rounded-2xl border border-[var(--bord)] bg-[var(--surf)] p-4 shadow-2xs">
+          <span className="text-xs text-[var(--mut)] font-bold flex items-center gap-1.5">
+            <IconInterface name="gauge" size={14} />
             Carga Acumulada
           </span>
-          <p className="mt-2 text-2xl font-black text-[#2F6B4F] font-mono">
+          <p className="mt-1.5 text-2xl font-black text-[var(--txt)] font-mono">
             {cargaTotalAcumuladaUA} UA
           </p>
-          <span className="text-xs text-[#163832]/60 dark:text-[#9EB5B0]/70">sRPE × Duración</span>
+          <span className="text-[11px] text-[var(--mut)]">Foster sRPE × min</span>
         </div>
 
-        <div className="rounded-2xl border-2 border-[#E5E2D5] dark:border-[#25524A] bg-white dark:bg-[#163630] p-4 shadow-sm">
-          <span className="text-xs text-[#163832]/80 dark:text-[#9EB5B0] font-semibold flex items-center gap-1.5">
-            <CheckCircle className="h-4 w-4 text-emerald-600 dark:text-emerald-400 shrink-0" aria-hidden="true" />
+        <div className="rounded-2xl border border-[var(--bord)] bg-[var(--surf)] p-4 shadow-2xs">
+          <span className="text-xs text-[var(--mut)] font-bold flex items-center gap-1.5">
+            <IconInterface name="check" size={14} />
             Sesiones Hechas
           </span>
-          <p className="mt-2 text-2xl font-black text-emerald-600 dark:text-emerald-400 font-mono">
+          <p className="mt-1.5 text-2xl font-black text-emerald-600 dark:text-emerald-400 font-mono">
             {sesionesAtleta.length}
           </p>
-          <span className="text-xs text-[#163832]/60 dark:text-[#9EB5B0]/70">
-            {sesionesAtleta.length > 0
-              ? `${porcentajeAdherencia}% adherencia de fase`
-              : 'Inicio de temporada'}
+          <span className="text-[11px] text-[var(--mut)]">
+            {sesionesAtleta.length > 0 ? `${porcentajeAdherencia}% adherencia` : 'Temporada actual'}
           </span>
         </div>
 
-        <div className="rounded-2xl border-2 border-[#E5E2D5] dark:border-[#25524A] bg-white dark:bg-[#163630] p-4 shadow-sm">
-          <span className="text-xs text-[#163832]/80 dark:text-[#9EB5B0] font-semibold flex items-center gap-1.5">
-            <Dumbbell className="h-4 w-4 text-[#163832] dark:text-[#FAF7EE] shrink-0" aria-hidden="true" />
+        <div className="rounded-2xl border border-[var(--bord)] bg-[var(--surf)] p-4 shadow-2xs">
+          <span className="text-xs text-[var(--mut)] font-bold flex items-center gap-1.5">
+            <IconInterface name="dumbbell" size={14} />
             1RM Sentadilla
           </span>
-          <p className="mt-2 text-2xl font-black text-[#163832] dark:text-[#FAF7EE] font-mono">
+          <p className="mt-1.5 text-2xl font-black text-[var(--txt)] font-mono">
             {testSentadilla ? `${testSentadilla.unaRepeticionMaximaEfectiva} kg` : 'Sin test'}
           </p>
-          <span className="text-xs text-[#163832]/60 dark:text-[#9EB5B0]/70">
-            {testSentadilla ? `Test: ${testSentadilla.fechaEvaluacion}` : 'Pendiente de evaluación'}
+          <span className="text-[11px] text-[var(--mut)]">
+            {testSentadilla ? `Evaluado: ${testSentadilla.fechaEvaluacion}` : 'Pendiente'}
           </span>
         </div>
 
-        <div className="rounded-2xl border-2 border-[#E5E2D5] dark:border-[#25524A] bg-white dark:bg-[#163630] p-4 shadow-sm">
-          <span className="text-xs text-[#163832]/80 dark:text-[#9EB5B0] font-semibold flex items-center gap-1.5">
-            <Zap className="h-4 w-4 text-amber-500 shrink-0" aria-hidden="true" />
+        <div className="rounded-2xl border border-[var(--bord)] bg-[var(--surf)] p-4 shadow-2xs">
+          <span className="text-xs text-[var(--mut)] font-bold flex items-center gap-1.5">
+            <IconInterface name="dumbbell" size={14} />
             1RM Peso Muerto
           </span>
-          <p className="mt-2 text-2xl font-black text-amber-500 font-mono">
+          <p className="mt-1.5 text-2xl font-black text-[var(--txt)] font-mono">
             {testPesoMuerto ? `${testPesoMuerto.unaRepeticionMaximaEfectiva} kg` : 'Sin test'}
           </p>
-          <span className="text-xs text-[#163832]/60 dark:text-[#9EB5B0]/70">
-            {testPesoMuerto ? `Test: ${testPesoMuerto.fechaEvaluacion}` : 'Pendiente de evaluación'}
+          <span className="text-[11px] text-[var(--mut)]">
+            {testPesoMuerto ? `Evaluado: ${testPesoMuerto.fechaEvaluacion}` : 'Pendiente'}
           </span>
         </div>
       </section>
 
-      {/* Gráfico Visual de Evolución de 1RM Proporcional al Atleta */}
+      {/* Gráfico Visual de Evolución de 1RM */}
       <section
         aria-labelledby="titulo-grafico-fuerza"
-        className="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 sm:p-6 space-y-4 shadow-xl"
+        className="rounded-2xl border border-[var(--bord)] bg-[var(--surf)] p-4 sm:p-5 space-y-3 shadow-2xs"
       >
-        <div className="flex items-center justify-between">
-          <h2 id="titulo-grafico-fuerza" className="text-sm font-bold uppercase tracking-wider text-white flex items-center gap-2">
-            <Award className="h-5 w-5 text-blue-400" aria-hidden="true" />
-            Evaluación de Fuerza Máxima en Ejercicios Básicos
+        <div className="flex items-center justify-between border-b border-[var(--bord)] pb-2.5">
+          <h2 id="titulo-grafico-fuerza" className="text-sm font-bold flex items-center gap-2">
+            <IconInterface name="clipboard" size={16} />
+            <span>Fuerza Máxima Estimada en Ejercicios Básicos</span>
           </h2>
-          <span className="text-xs text-slate-400 font-mono">
+          <span className="text-xs text-[var(--mut)] font-bold">
             Fórmula: {atletaActual.formulaCalculoRepeticionMaximaPreferida}
           </span>
         </div>
 
         {testsAtleta.length === 0 ? (
-          <div className="text-center py-6 text-xs text-slate-400">
+          <div className="text-center py-6 text-xs text-[var(--mut)]">
             No hay tests registrados aún para este atleta.
           </div>
         ) : (
-          <div className="space-y-4 pt-2">
+          <div className="space-y-3 pt-1">
             {testsAtleta.map((t) => {
               const porcentajeBarra = Math.min(
                 100,
@@ -153,35 +135,32 @@ export const AthleteAnnualProgressView: React.FC = () => {
               );
 
               return (
-                <div key={t.identificadorTest} className="space-y-1.5">
-                  <div className="flex justify-between text-xs font-semibold">
-                    <span className="text-white">{t.nombreEjercicioEvaluado}</span>
-                    <span className="font-mono text-emerald-400 font-bold text-sm">
+                <div key={t.identificadorTest} className="space-y-1">
+                  <div className="flex justify-between text-xs font-bold">
+                    <span>{t.nombreEjercicioEvaluado}</span>
+                    <span className="font-mono text-emerald-600 dark:text-emerald-400 font-extrabold text-sm">
                       {t.unaRepeticionMaximaEfectiva} kg
                     </span>
                   </div>
 
-                  {/* Barra accesible con role progressbar */}
                   <div
                     role="progressbar"
                     aria-label={`1RM de ${t.nombreEjercicioEvaluado}`}
                     aria-valuenow={t.unaRepeticionMaximaEfectiva}
                     aria-valuemin={0}
                     aria-valuemax={maximoRMFuerza}
-                    className="h-3.5 w-full rounded-full bg-slate-800 overflow-hidden"
+                    className="h-3 w-full rounded-full bg-[var(--bg)] overflow-hidden"
                   >
                     <div
-                      className="h-full rounded-full bg-gradient-to-r from-blue-600 to-emerald-500 transition-all duration-500 motion-reduce:transition-none"
+                      className="h-full rounded-full bg-[var(--navbg)] transition-all duration-500"
                       style={{ width: `${porcentajeBarra}%` }}
                     />
                   </div>
 
-                  <div className="flex justify-between text-xs text-slate-400 pt-0.5">
+                  <div className="flex justify-between text-[11px] text-[var(--mut)] pt-0.5">
                     <span>
                       Evaluado: {t.fechaEvaluacion}
-                      {t.faseCicloMenstrualMomentoEvaluacion
-                        ? ` (${t.faseCicloMenstrualMomentoEvaluacion})`
-                        : ''}
+                      {t.faseCicloMenstrualMomentoEvaluacion ? ` (${t.faseCicloMenstrualMomentoEvaluacion})` : ''}
                     </span>
                     <span>Levantado: {t.pesoLevantadoKilogramos} kg × {t.repeticionesRealizadas} reps</span>
                   </div>
@@ -195,62 +174,59 @@ export const AthleteAnnualProgressView: React.FC = () => {
       {/* Historial de Sesiones Completadas con sRPE */}
       <section
         aria-labelledby="titulo-historial-sesiones"
-        className="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 sm:p-6 space-y-4 shadow-xl"
+        className="rounded-2xl border border-[var(--bord)] bg-[var(--surf)] p-4 sm:p-5 space-y-3 shadow-2xs"
       >
-        <h2 id="titulo-historial-sesiones" className="text-sm font-bold uppercase tracking-wider text-white flex items-center gap-2">
-          <Calendar className="h-5 w-5 text-amber-400" aria-hidden="true" />
-          Historial Reciente de Sesiones y Respuesta al Entrenamiento
+        <h2 id="titulo-historial-sesiones" className="text-sm font-bold flex items-center gap-2 border-b border-[var(--bord)] pb-2.5">
+          <IconInterface name="calendar" size={16} />
+          <span>Historial Reciente de Sesiones</span>
         </h2>
 
         {sesionesAtleta.length === 0 ? (
-          <div className="text-center py-6 text-xs text-slate-400">
-            Aún no has completado entrenamientos. Cuando finalices tu primera sesión, verás aquí el
-            resumen de sRPE y carga interna de Foster.
+          <div className="text-center py-6 text-xs text-[var(--mut)]">
+            Aún no has completado entrenamientos. Cuando finalices tu primera sesión, verás aquí el resumen.
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             {sesionesAtleta.map((ses) => (
               <article
                 key={ses.identificadorRegistro}
-                className="rounded-xl border border-slate-800/80 bg-slate-950/70 p-4 space-y-2 shadow-sm"
+                className="rounded-xl border border-[var(--bord)] bg-[var(--bg)] p-3.5 space-y-2 text-xs"
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <span className="font-bold text-white text-sm">Sesión Finalizada</span>
-                    <p className="text-xs text-slate-400 mt-0.5">
-                      Duración: <strong className="text-white">{ses.duracionRealMinutos} min</strong> • Finalizada: {new Date(ses.fechaYHoraFinalizacion).toLocaleDateString()}
+                    <span className="font-extrabold text-sm text-[var(--txt)]">Sesión Finalizada</span>
+                    <p className="text-[11px] text-[var(--mut)] mt-0.5">
+                      Duración: <b className="text-[var(--txt)]">{ses.duracionRealMinutos} min</b> • Fecha: {new Date(ses.fechaYHoraFinalizacion).toLocaleDateString()}
                     </p>
                   </div>
 
-                  <div className="text-right">
-                    <span className="rounded-lg bg-emerald-500/10 px-3 py-1.5 text-xs font-black text-emerald-400 border border-emerald-500/30 font-mono">
-                      {ses.cargaInternaUnidadesArbitrarias} UA
-                    </span>
-                  </div>
+                  <span className="px-2.5 py-1 rounded-full text-xs font-black bg-[var(--okbg)] text-[var(--oktx)] font-mono">
+                    {ses.cargaInternaUnidadesArbitrarias} UA
+                  </span>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-3 text-xs text-slate-300 border-t border-slate-800/80 pt-2 font-medium">
+                <div className="flex flex-wrap items-center gap-3 pt-1 border-t border-[var(--bord)]">
                   <span>
-                    sRPE de Sesión:{' '}
-                    <strong className="text-amber-400">
+                    sRPE:{' '}
+                    <strong className="text-[var(--txt)]">
                       {ses.feedbackEntrenamiento.esfuerzoPercibidoSesion} / 10
                     </strong>
                   </span>
                   <span>
                     Fatiga:{' '}
-                    <strong className="text-blue-400">
+                    <strong className="text-[var(--txt)]">
                       {ses.feedbackEntrenamiento.nivelFatigaPercibida} / 5
                     </strong>
                   </span>
                   {ses.feedbackEntrenamiento.presentaDolorOMolestia && (
-                    <span className="text-rose-400 font-semibold bg-rose-500/10 px-2 py-0.5 rounded border border-rose-500/20">
+                    <span className="text-rose-600 dark:text-rose-400 font-bold">
                       ⚠️ Molestia: {ses.feedbackEntrenamiento.zonaCorporalMolestia}
                     </span>
                   )}
                 </div>
 
                 {ses.feedbackEntrenamiento.comentariosDelAtleta && (
-                  <p className="text-xs text-slate-400 italic bg-slate-900/90 p-2.5 rounded-lg border border-slate-800">
+                  <p className="text-[11px] text-[var(--mut)] italic pt-1">
                     "{ses.feedbackEntrenamiento.comentariosDelAtleta}"
                   </p>
                 )}

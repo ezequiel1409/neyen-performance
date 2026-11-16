@@ -1,24 +1,15 @@
 // =====================================================================
-// NEYEN ATHLETIC - DESCANSO, SUEÑO REM & WEARABLES SMARTWATCH (MLP)
+// NEYIMA ATHLETIC - DESCANSO, SUEÑO & WEARABLES SMARTWATCH (MLP)
+// CORRESPONDE A sueno-claro.html / sueno-oscuro.html
 // =====================================================================
 
 import React, { useState } from 'react';
 import { useTraining } from '../../context/TrainingContext';
-import {
-  Activity,
-  CheckCircle2,
-  Clock,
-  Heart,
-  Moon,
-  RefreshCw,
-  Watch,
-  Zap,
-} from 'lucide-react';
-import { Button } from '../ui/Button';
+import { IconInterface } from '../ui/icons/IconInterface';
 
 export const AthleteSleepWearableMLP: React.FC = () => {
   const { atletaActual, sincronizarSmartwatchMock } = useTraining();
-  const [sincronizando, setSincronizando] = useState<boolean>(false);
+  const [sincronizando, setSincronizando] = useState(false);
   const [mensajeSync, setMensajeSync] = useState<string | null>(null);
 
   const registros = atletaActual.registrosDescanso || [];
@@ -29,57 +20,34 @@ export const AthleteSleepWearableMLP: React.FC = () => {
     setTimeout(() => {
       sincronizarSmartwatchMock(atletaActual.identificadorAtleta);
       setSincronizando(false);
-      setMensajeSync('✓ Datos de sueño y HRV sincronizados con éxito desde el Smartwatch.');
-      setTimeout(() => setMensajeSync(null), 4000);
-    }, 1000);
+      setMensajeSync('✓ Datos de descanso y HRV sincronizados con éxito.');
+      setTimeout(() => setMensajeSync(null), 3000);
+    }, 800);
   };
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto">
-      {/* Cabecera */}
-      <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div className="space-y-5 max-w-4xl mx-auto">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="rounded-full bg-[#E1ECE5] dark:bg-[#1C4740] px-3 py-0.5 text-xs font-bold text-[#163832] dark:text-[#E1ECE5]">
-              MLP PREVIEW
-            </span>
-            <h1 className="text-2xl font-black tracking-tight text-[#163832] dark:text-white flex items-center gap-2">
-              <Moon className="h-6 w-6 text-[#2F6B4F]" aria-hidden="true" />
-              Monitoreo de Descanso & Wearables
-            </h1>
-          </div>
-          <p className="text-xs text-[#163832]/70 dark:text-[#9EB5B0] mt-1">
-            Métricas de recuperación fisiológica del sistema nervioso autónomo y fases del sueño para{' '}
-            <strong className="text-[#163832] dark:text-white">{atletaActual.nombreCompleto}</strong>.
-          </p>
+          <p className="text-xs sm:text-sm font-bold text-[var(--mut)]">Biometría y recuperación</p>
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">Descanso y Wearables</h1>
         </div>
 
-        {/* Botón Sincronizar Smartwatch con min 44px de alto */}
-        <Button
-          variant="primary"
-          size="md"
+        <button
+          type="button"
           onClick={handleSincronizar}
           disabled={sincronizando}
-          icon={
-            <RefreshCw
-              className={`h-4 w-4 ${sincronizando ? 'animate-spin motion-reduce:animate-none' : ''}`}
-              aria-hidden="true"
-            />
-          }
-          className="bg-gradient-to-r from-indigo-600 to-blue-600 shadow-indigo-600/30"
+          className="px-4 py-2 rounded-xl bg-[var(--navbg)] text-[var(--navon)] hover:opacity-95 font-bold text-xs sm:text-sm transition self-start cursor-pointer flex items-center gap-2"
         >
-          {sincronizando ? 'Sincronizando...' : 'Sincronizar Smartwatch'}
-        </Button>
-      </header>
+          <IconInterface name="gauge" size={16} />
+          <span>{sincronizando ? 'Sincronizando...' : 'Sincronizar Smartwatch'}</span>
+        </button>
+      </div>
 
-      {/* Región de anuncio dinámico accesible */}
       {mensajeSync && (
-        <div
-          role="status"
-          aria-live="polite"
-          className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3.5 text-xs font-bold text-emerald-300 flex items-center gap-2.5 shadow-sm"
-        >
-          <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" aria-hidden="true" />
+        <div className="rounded-xl border border-emerald-500/30 bg-emerald-50 dark:bg-emerald-950/30 p-3 text-xs font-bold text-emerald-800 dark:text-emerald-300 flex items-center gap-2">
+          <IconInterface name="check" size={14} />
           <span>{mensajeSync}</span>
         </div>
       )}
@@ -87,156 +55,87 @@ export const AthleteSleepWearableMLP: React.FC = () => {
       {/* Tarjetas Principales de la Última Noche */}
       {ultimoRegistro ? (
         <section aria-label="Métricas de la última noche" className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4 shadow-sm">
-            <span className="text-xs text-slate-400 font-semibold flex items-center gap-1.5">
-              <Clock className="h-4 w-4 text-indigo-400 shrink-0" aria-hidden="true" />
+          <div className="rounded-2xl border border-[var(--bord)] bg-[var(--surf)] p-4 shadow-2xs">
+            <span className="text-xs text-[var(--mut)] font-bold flex items-center gap-1.5">
+              <IconInterface name="clock" size={14} />
               Sueño Total
             </span>
-            <p className="mt-2 text-2xl font-black text-white font-mono">
+            <p className="mt-1.5 text-2xl font-black text-[var(--txt)] font-mono">
               {ultimoRegistro.horasSuenioTotal} hrs
             </p>
-            <span className="text-xs text-emerald-400 font-semibold">Óptimo (+8 hrs)</span>
+            <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold">Óptimo (+7.5 hrs)</span>
           </div>
 
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4 shadow-sm">
-            <span className="text-xs text-slate-400 font-semibold flex items-center gap-1.5">
-              <Moon className="h-4 w-4 text-purple-400 shrink-0" aria-hidden="true" />
-              Sueño REM
+          <div className="rounded-2xl border border-[var(--bord)] bg-[var(--surf)] p-4 shadow-2xs">
+            <span className="text-xs text-[var(--mut)] font-bold flex items-center gap-1.5">
+              <IconInterface name="heart" size={14} />
+              HRV Nocturna
             </span>
-            <p className="mt-2 text-2xl font-black text-purple-400 font-mono">
-              {ultimoRegistro.porcentajeSuenioRem}%
-            </p>
-            <span className="text-xs text-slate-400">Recuperación neural</span>
-          </div>
-
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4 shadow-sm">
-            <span className="text-xs text-slate-400 font-semibold flex items-center gap-1.5">
-              <Zap className="h-4 w-4 text-blue-400 shrink-0" aria-hidden="true" />
-              Sueño Profundo
-            </span>
-            <p className="mt-2 text-2xl font-black text-blue-400 font-mono">
-              {ultimoRegistro.porcentajeSuenioProfundo}%
-            </p>
-            <span className="text-xs text-slate-400">Reparación tisular</span>
-          </div>
-
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4 shadow-sm">
-            <span className="text-xs text-slate-400 font-semibold flex items-center gap-1.5">
-              <Heart className="h-4 w-4 text-rose-400 shrink-0" aria-hidden="true" />
-              HRV / VFC
-            </span>
-            <p className="mt-2 text-2xl font-black text-rose-400 font-mono">
+            <p className="mt-1.5 text-2xl font-black text-[var(--txt)] font-mono">
               {ultimoRegistro.variabilidadFrecuenciaCardiacaHrvMs} ms
             </p>
-            <span className="text-xs text-emerald-400 font-semibold">Alta recuperación</span>
+            <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold">Tono vagal alto</span>
+          </div>
+
+          <div className="rounded-2xl border border-[var(--bord)] bg-[var(--surf)] p-4 shadow-2xs">
+            <span className="text-xs text-[var(--mut)] font-bold flex items-center gap-1.5">
+              <IconInterface name="heart" size={14} />
+              FC Reposo
+            </span>
+            <p className="mt-1.5 text-2xl font-black text-[var(--txt)] font-mono">
+              {ultimoRegistro.frecuenciaCardiacaReposoLpm} lpm
+            </p>
+            <span className="text-[11px] text-[var(--mut)]">Línea base deportiva</span>
+          </div>
+
+          <div className="rounded-2xl border border-[var(--bord)] bg-[var(--surf)] p-4 shadow-2xs">
+            <span className="text-xs text-[var(--mut)] font-bold flex items-center gap-1.5">
+              <IconInterface name="star" size={14} />
+              Calidad Subjetiva
+            </span>
+            <p className="mt-1.5 text-2xl font-black text-[var(--txt)] font-mono">
+              {ultimoRegistro.calidadSubjetivaDescanso} / 5
+            </p>
+            <span className="text-[11px] text-[var(--mut)]">Fuente: {ultimoRegistro.fuenteWearable}</span>
           </div>
         </section>
       ) : (
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-8 text-center text-xs text-slate-400">
-          No hay registros de descanso aún. Toca en <strong>«Sincronizar Smartwatch»</strong> para
-          simular la conexión con tu dispositivo wearable.
+        <div className="rounded-2xl border border-[var(--bord)] bg-[var(--surf)] p-8 text-center text-xs text-[var(--mut)]">
+          No hay registros de descanso aún. Presioná &ldquo;Sincronizar Smartwatch&rdquo; para cargar la última noche.
         </div>
       )}
 
-      {/* Desglose Arquitectónico de Fases de Sueño */}
+      {/* Desglose de Fases de Sueño */}
       {ultimoRegistro && (
-        <section
-          aria-labelledby="titulo-arquitectura-suenio"
-          className="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 sm:p-6 space-y-4 shadow-xl"
-        >
-          <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-            <h2 id="titulo-arquitectura-suenio" className="text-sm font-bold uppercase tracking-wider text-white flex items-center gap-2">
-              <Activity className="h-5 w-5 text-indigo-400" aria-hidden="true" />
-              Arquitectura del Sueño (Noche {ultimoRegistro.fechaNoche})
-            </h2>
-            <span className="rounded bg-indigo-500/10 px-2.5 py-1 text-xs font-bold text-indigo-300 border border-indigo-500/30">
-              Dispositivo: {ultimoRegistro.fuenteWearable}
-            </span>
-          </div>
+        <section className="rounded-2xl border border-[var(--bord)] bg-[var(--surf)] p-4 sm:p-5 space-y-3 shadow-2xs">
+          <h2 className="text-sm font-bold flex items-center gap-2 border-b border-[var(--bord)] pb-2.5">
+            <IconInterface name="moon" size={16} />
+            <span>Fases del Sueño y Calidad Restaurativa</span>
+          </h2>
 
-          <div className="space-y-4 pt-1">
-            <div>
-              <div className="flex justify-between text-xs font-semibold text-slate-300">
-                <span>Sueño REM ({ultimoRegistro.porcentajeSuenioRem}%)</span>
-                <span className="text-purple-400 font-mono">
-                  {((ultimoRegistro.horasSuenioTotal * ultimoRegistro.porcentajeSuenioRem) / 100).toFixed(1)} hrs
-                </span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-1.5">
+              <div className="flex justify-between text-xs font-bold">
+                <span>Sueño Profundo (Reparación Muscular)</span>
+                <span className="font-mono">{ultimoRegistro.porcentajeSuenioProfundo}%</span>
               </div>
-              <div
-                role="progressbar"
-                aria-label="Porcentaje de Sueño REM"
-                aria-valuenow={ultimoRegistro.porcentajeSuenioRem}
-                aria-valuemin={0}
-                aria-valuemax={100}
-                className="mt-1.5 h-3.5 w-full rounded-full bg-slate-800 overflow-hidden"
-              >
+              <div className="h-2.5 w-full rounded-full bg-[var(--bg)] overflow-hidden">
                 <div
-                  className="h-full rounded-full bg-purple-500 transition-all duration-500 motion-reduce:transition-none"
-                  style={{ width: `${ultimoRegistro.porcentajeSuenioRem}%` }}
+                  className="h-full rounded-full bg-[var(--navbg)]"
+                  style={{ width: `${ultimoRegistro.porcentajeSuenioProfundo * 2.5}%` }}
                 />
               </div>
             </div>
 
-            <div>
-              <div className="flex justify-between text-xs font-semibold text-slate-300">
-                <span>Sueño Profundo ({ultimoRegistro.porcentajeSuenioProfundo}%)</span>
-                <span className="text-blue-400 font-mono">
-                  {((ultimoRegistro.horasSuenioTotal * ultimoRegistro.porcentajeSuenioProfundo) / 100).toFixed(1)} hrs
-                </span>
+            <div className="space-y-1.5">
+              <div className="flex justify-between text-xs font-bold">
+                <span>Sueño REM (Consolidación Motriz)</span>
+                <span className="font-mono">{ultimoRegistro.porcentajeSuenioRem}%</span>
               </div>
-              <div
-                role="progressbar"
-                aria-label="Porcentaje de Sueño Profundo"
-                aria-valuenow={ultimoRegistro.porcentajeSuenioProfundo}
-                aria-valuemin={0}
-                aria-valuemax={100}
-                className="mt-1.5 h-3.5 w-full rounded-full bg-slate-800 overflow-hidden"
-              >
+              <div className="h-2.5 w-full rounded-full bg-[var(--bg)] overflow-hidden">
                 <div
-                  className="h-full rounded-full bg-blue-500 transition-all duration-500 motion-reduce:transition-none"
-                  style={{ width: `${ultimoRegistro.porcentajeSuenioProfundo}%` }}
-                />
-              </div>
-            </div>
-
-            <div>
-              <div className="flex justify-between text-xs font-semibold text-slate-300">
-                <span>
-                  Sueño Ligero / Transición (
-                  {100 - ultimoRegistro.porcentajeSuenioRem - ultimoRegistro.porcentajeSuenioProfundo}%)
-                </span>
-                <span className="text-slate-400 font-mono">
-                  {(
-                    (ultimoRegistro.horasSuenioTotal *
-                      (100 -
-                        ultimoRegistro.porcentajeSuenioRem -
-                        ultimoRegistro.porcentajeSuenioProfundo)) /
-                    100
-                  ).toFixed(1)}{' '}
-                  hrs
-                </span>
-              </div>
-              <div
-                role="progressbar"
-                aria-label="Porcentaje de Sueño Ligero"
-                aria-valuenow={
-                  100 -
-                  ultimoRegistro.porcentajeSuenioRem -
-                  ultimoRegistro.porcentajeSuenioProfundo
-                }
-                aria-valuemin={0}
-                aria-valuemax={100}
-                className="mt-1.5 h-3.5 w-full rounded-full bg-slate-800 overflow-hidden"
-              >
-                <div
-                  className="h-full rounded-full bg-slate-600 transition-all duration-500 motion-reduce:transition-none"
-                  style={{
-                    width: `${
-                      100 -
-                      ultimoRegistro.porcentajeSuenioRem -
-                      ultimoRegistro.porcentajeSuenioProfundo
-                    }%`,
-                  }}
+                  className="h-full rounded-full bg-[var(--navbg)]"
+                  style={{ width: `${ultimoRegistro.porcentajeSuenioRem * 2.5}%` }}
                 />
               </div>
             </div>
@@ -244,32 +143,29 @@ export const AthleteSleepWearableMLP: React.FC = () => {
         </section>
       )}
 
-      {/* Historial de Noches Registradas */}
-      <section
-        aria-labelledby="titulo-historial-noches"
-        className="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 sm:p-6 space-y-4 shadow-xl"
-      >
-        <h2 id="titulo-historial-noches" className="text-sm font-bold uppercase tracking-wider text-white flex items-center gap-2">
-          <Watch className="h-5 w-5 text-indigo-400" aria-hidden="true" />
-          Historial de Noches Conectadas ({registros.length})
+      {/* Historial de Noches */}
+      <section className="space-y-3">
+        <h2 className="text-xs font-bold uppercase tracking-wider text-[var(--mut)]">
+          Historial de Descanso ({registros.length} noches)
         </h2>
 
         <div className="space-y-2">
-          {registros.map((r) => (
+          {registros.map((reg) => (
             <div
-              key={r.identificadorRegistro}
-              className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 rounded-xl border border-slate-800 bg-slate-950 p-3.5 text-xs"
+              key={reg.identificadorRegistro}
+              className="rounded-xl border border-[var(--bord)] bg-[var(--surf)] p-3 flex items-center justify-between text-xs shadow-2xs"
             >
               <div>
-                <span className="font-bold text-white">{r.fechaNoche}</span>
-                <span className="ml-2 text-slate-400 font-medium">
-                  Duración: <strong className="text-slate-200">{r.horasSuenioTotal} hrs</strong>
-                </span>
+                <b className="text-sm font-bold">{reg.fechaNoche}</b>
+                <p className="text-[11px] text-[var(--mut)] mt-0.5">
+                  {reg.horasSuenioTotal} hrs • FC Reposo: {reg.frecuenciaCardiacaReposoLpm} lpm • Fuente: {reg.fuenteWearable}
+                </p>
               </div>
-              <div className="flex items-center gap-4 text-xs font-semibold">
-                <span className="text-purple-400">REM: {r.porcentajeSuenioRem}%</span>
-                <span className="text-blue-400">Profundo: {r.porcentajeSuenioProfundo}%</span>
-                <span className="text-rose-400 font-mono">HRV: {r.variabilidadFrecuenciaCardiacaHrvMs} ms</span>
+
+              <div className="text-right">
+                <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-[var(--okbg)] text-[var(--oktx)] font-mono">
+                  HRV: {reg.variabilidadFrecuenciaCardiacaHrvMs} ms
+                </span>
               </div>
             </div>
           ))}
