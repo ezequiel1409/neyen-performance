@@ -115,10 +115,10 @@ export const PeriodizationPlannerView: React.FC = () => {
           <button
             type="button"
             onClick={() => setSubVista('EDITOR_SESION')}
-            className={`rounded-full px-5 py-2 text-xs font-bold transition select-none ${
+            className={`rounded-full px-5 py-2 text-xs font-bold transition select-none cursor-pointer ${
               subVista === 'EDITOR_SESION'
-                ? 'bg-[#2F6B4F] text-white shadow-sm'
-                : 'border-2 border-[#163832] dark:border-[#25524A] text-[#163832] dark:text-white bg-transparent hover:bg-[#E1ECE5]/40'
+                ? 'bg-[var(--navbg)] text-[var(--navon)] shadow-xs'
+                : 'border border-[var(--bord)] text-[var(--mut)] hover:bg-[var(--surf)]'
             }`}
           >
             Editor de sesión
@@ -126,18 +126,18 @@ export const PeriodizationPlannerView: React.FC = () => {
           <button
             type="button"
             onClick={() => setSubVista('ESTRUCTURA_PLAN')}
-            className={`rounded-full px-5 py-2 text-xs font-bold transition select-none ${
+            className={`rounded-full px-5 py-2 text-xs font-bold transition select-none cursor-pointer ${
               subVista === 'ESTRUCTURA_PLAN'
-                ? 'bg-[#2F6B4F] text-white shadow-sm'
-                : 'border-2 border-[#163832] dark:border-[#25524A] text-[#163832] dark:text-white bg-transparent hover:bg-[#E1ECE5]/40'
+                ? 'bg-[var(--navbg)] text-[var(--navon)] shadow-xs'
+                : 'border border-[var(--bord)] text-[var(--mut)] hover:bg-[var(--surf)]'
             }`}
           >
             Estructura del plan
           </button>
         </div>
 
-        <span className="text-xs text-[#163832]/70 dark:text-[#9EB5B0] font-semibold">
-          Atleta: <strong className="text-[#163832] dark:text-white">{atletaActual.nombreCompleto}</strong>
+        <span className="text-xs text-[var(--mut)] font-bold">
+          Atleta: <strong className="text-[var(--txt)]">{atletaActual.nombreCompleto}</strong>
         </span>
       </div>
 

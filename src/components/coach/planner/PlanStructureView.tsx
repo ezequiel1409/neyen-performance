@@ -35,10 +35,10 @@ export const PlanStructureView: React.FC<PlanStructureViewProps> = ({
       {/* Cabecera: Breadcrumb, Título y Botón Crear plan */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <span className="text-xs font-semibold text-[#163832]/60 dark:text-[#9EB5B0] block">
+          <span className="text-xs font-bold text-[var(--mut)] block">
             Planificador &gt; Nuevo macrociclo
           </span>
-          <h1 className="text-3xl font-bold tracking-tight text-[#163832] dark:text-white mt-0.5">
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight mt-0.5">
             Estructura del plan
           </h1>
         </div>
@@ -46,7 +46,7 @@ export const PlanStructureView: React.FC<PlanStructureViewProps> = ({
         <button
           type="button"
           onClick={onCrearPlan}
-          className="rounded-2xl bg-[#2F6B4F] hover:bg-[#265740] active:scale-[0.99] text-white font-extrabold text-sm px-7 py-3.5 shadow-md transition self-start"
+          className="rounded-xl bg-[var(--navbg)] text-[var(--navon)] hover:opacity-95 font-extrabold text-xs sm:text-sm px-6 py-2.5 shadow-2xs transition self-start cursor-pointer"
         >
           Crear plan
         </button>

@@ -45,26 +45,26 @@ export const SessionEditorView: React.FC<SessionEditorViewProps> = ({
       {/* Cabecera: Breadcrumb, Título y Botones */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <span className="text-xs font-semibold text-[#163832]/60 dark:text-[#9EB5B0] block">
+          <span className="text-xs font-bold text-[var(--mut)] block">
             Macrociclo &gt; Mesociclo 05 &gt; Semana 02 &gt; Lunes
           </span>
-          <h1 className="text-3xl font-bold tracking-tight text-[#163832] dark:text-white mt-0.5">
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight mt-0.5">
             Editor de sesión
           </h1>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={onAgregarBloque}
-            className="rounded-xl border-2 border-[#163832] dark:border-[#25524A] text-[#163832] dark:text-white font-bold text-xs px-4 py-3 bg-transparent hover:bg-[#E1ECE5]/40 transition min-h-[44px]"
+            className="rounded-xl border-2 border-[var(--link)] text-[var(--link)] hover:bg-[var(--link)] hover:text-white font-bold text-xs sm:text-sm px-4 py-2 transition min-h-[44px] cursor-pointer"
           >
             + Agregar bloque
           </button>
           <button
             type="button"
             onClick={onGuardarSesion}
-            className="rounded-xl bg-[#2F6B4F] hover:bg-[#265740] active:scale-[0.99] text-white font-extrabold text-xs px-6 py-3 shadow-md transition min-h-[44px]"
+            className="rounded-xl bg-[var(--navbg)] text-[var(--navon)] hover:opacity-95 font-extrabold text-xs sm:text-sm px-5 py-2 shadow-2xs transition min-h-[44px] cursor-pointer"
           >
             Guardar sesión
           </button>
