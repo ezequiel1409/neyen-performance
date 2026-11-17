@@ -242,13 +242,13 @@ export const AthleteProfileView: React.FC<AthleteProfileViewProps> = ({
                 <div key={lesion.identificadorLesion} className="py-2.5 first:pt-0 last:pb-0 text-xs space-y-1">
                   <div className="flex items-center justify-between">
                     <b className="text-sm font-bold">{lesion.descripcionLesion}</b>
-                    <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-[#DCEBDD] text-[#1B5A37]">
+                    <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-[#DCEBDD] text-[#1B5A37]">
                       {lesion.estadoLesion}
                     </span>
                   </div>
                   <p className="text-[var(--mut)]">{lesion.zonaCorporalAfectada} • Dx: {lesion.fechaDiagnostico}</p>
                   {lesion.limitacionesDeMovimiento && (
-                    <p className="text-[11px]">
+                    <p className="text-xs">
                       <b>Limitaciones:</b> {lesion.limitacionesDeMovimiento}
                     </p>
                   )}
@@ -315,7 +315,7 @@ export const AthleteProfileView: React.FC<AthleteProfileViewProps> = ({
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs sm:text-sm">
             <thead>
-              <tr className="border-b border-[var(--bord)] text-[var(--mut)] uppercase tracking-wider text-[11px] font-bold">
+              <tr className="border-b border-[var(--bord)] text-[var(--mut)] uppercase tracking-wider text-xs font-bold">
                 <th className="py-2 px-2">Ejercicio</th>
                 <th className="py-2 px-2">Peso × Reps</th>
                 <th className="py-2 px-2">Epley / Brzycki</th>

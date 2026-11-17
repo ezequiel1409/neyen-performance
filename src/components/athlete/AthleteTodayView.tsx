@@ -63,7 +63,7 @@ export const AthleteTodayView: React.FC<AthleteTodayViewProps> = ({
       {/* Tarjeta 2: Sesión de hoy con bloques A, B, C */}
       <div className="rounded-2xl border border-[var(--bord)] bg-[var(--surf)] p-4 shadow-xs space-y-3">
         <div>
-          <p className="text-[11px] font-bold tracking-widest uppercase text-[var(--mut)]">
+          <p className="text-xs font-bold tracking-wider uppercase text-[var(--mut)]">
             Sesión de hoy
           </p>
           <h2 className="text-lg font-extrabold text-[var(--txt)] mt-0.5 leading-snug">

@@ -66,7 +66,7 @@ export const AthleteWellnessView: React.FC<AthleteWellnessViewProps> = ({ onGuar
                 onClick={() => setValor(n)}
                 aria-pressed={isSelected}
                 aria-label={`${label} ${n} de 5`}
-                className={`h-11 rounded-xl font-extrabold text-base transition-all select-none cursor-pointer border-2 ${
+                className={`h-12 rounded-xl font-extrabold text-base transition-all select-none cursor-pointer border-2 active:scale-95 focus-visible:outline-2 focus-visible:outline-[var(--focus)] ${
                   isSelected
                     ? 'border-[var(--navbg)] bg-[var(--navbg)] text-[var(--navon)] shadow-xs'
                     : 'border-[var(--field)] bg-transparent text-[var(--txt)] hover:bg-[var(--surf)]'

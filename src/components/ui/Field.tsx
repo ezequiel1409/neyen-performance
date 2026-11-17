@@ -52,7 +52,7 @@ export const Field: React.FC<FieldProps> = ({
           {label}
           {required && <span className="ml-1 text-[var(--estado-bad-texto)]" aria-hidden="true">*</span>}
         </label>
-        {required && <span className="text-[11px] text-[var(--mut)]">Requerido</span>}
+        {required && <span className="text-xs text-[var(--mut)]">Requerido</span>}
       </div>
 
       {children({

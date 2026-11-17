@@ -103,7 +103,7 @@ export const NeyimaLogo: React.FC<NeyimaLogoProps> = ({
             NEYIMA
           </span>
           {roleTag && (
-            <span className="text-[11px] font-extrabold tracking-widest uppercase text-[var(--mut)] block -mt-0.5">
+            <span className="text-xs font-extrabold tracking-wider uppercase text-[var(--mut)] block -mt-0.5">
               {roleTag}
             </span>
           )}

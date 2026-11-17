@@ -190,7 +190,7 @@ export const LoginView: React.FC = () => {
         </div>
 
         {/* Footer legal */}
-        <p className="text-[11px] text-[var(--mut)] text-center mt-8">
+        <p className="text-xs text-[var(--mut)] text-center mt-8">
           NEYIMA Athletic Performance OS • Versión 2.0
         </p>
       </div>

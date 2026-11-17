@@ -91,30 +91,30 @@ export const AnnualMacroTimelineView: React.FC = () => {
         <div className="rounded-xl border border-[var(--bord)] bg-[var(--surf)] p-3">
           <span className="font-bold text-[var(--txt)] block">Mesos 1 - 3</span>
           <p className="font-bold text-[var(--mut)] mt-0.5">Adaptación</p>
-          <span className="text-[11px] text-[var(--mut)] block mt-0.5">70-75% 1RM</span>
+          <span className="text-xs text-[var(--mut)] block mt-0.5">70-75% 1RM</span>
         </div>
         <div className="rounded-xl border-2 border-[#F92424] bg-[var(--surf)] p-3 shadow-2xs">
           <div className="flex items-center justify-between">
             <span className="font-extrabold text-[#F92424] block">Mesos 4 - 6</span>
-            <span className="text-[10px] font-extrabold px-1.5 py-0.2 rounded bg-[#F92424] text-white">ACTIVO</span>
+            <span className="text-xs font-extrabold px-1.5 py-0.5 rounded bg-[#F92424] text-white">ACTIVO</span>
           </div>
           <p className="font-bold text-[var(--txt)] mt-0.5">Fuerza Máxima</p>
-          <span className="text-[11px] text-[var(--mut)] block mt-0.5">80-90% 1RM</span>
+          <span className="text-xs text-[var(--mut)] block mt-0.5">80-90% 1RM</span>
         </div>
         <div className="rounded-xl border border-[var(--bord)] bg-[var(--surf)] p-3">
           <span className="font-bold text-[var(--txt)] block">Mesos 7 - 9</span>
           <p className="font-bold text-[var(--mut)] mt-0.5">Potencia</p>
-          <span className="text-[11px] text-[var(--mut)] block mt-0.5">Velocidad / Pliometría</span>
+          <span className="text-xs text-[var(--mut)] block mt-0.5">Velocidad / Pliometría</span>
         </div>
         <div className="rounded-xl border border-[var(--bord)] bg-[var(--surf)] p-3">
           <span className="font-bold text-[var(--txt)] block">Mesos 10 - 12</span>
           <p className="font-bold text-[var(--mut)] mt-0.5">Competencia</p>
-          <span className="text-[11px] text-[var(--mut)] block mt-0.5">Picos & Tapering</span>
+          <span className="text-xs text-[var(--mut)] block mt-0.5">Picos & Tapering</span>
         </div>
         <div className="rounded-xl border border-[var(--bord)] bg-[var(--surf)] p-3">
           <span className="font-bold text-[var(--txt)] block">Meso 13</span>
           <p className="font-bold text-[var(--mut)] mt-0.5">Descarga</p>
-          <span className="text-[11px] text-[var(--mut)] block mt-0.5">Regeneración</span>
+          <span className="text-xs text-[var(--mut)] block mt-0.5">Regeneración</span>
         </div>
       </section>
 
@@ -149,7 +149,7 @@ export const AnnualMacroTimelineView: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <span className="font-bold">Micro #{sem.numSemana}</span>
                   <span
-                    className={`rounded px-1.5 py-0.5 font-extrabold text-[10px] ${
+                    className={`rounded px-1.5 py-0.5 font-extrabold text-xs ${
                       sem.esActivo ? 'bg-[#F92424] text-white' : 'bg-[var(--surf)] text-[var(--mut)]'
                     }`}
                   >
@@ -157,24 +157,24 @@ export const AnnualMacroTimelineView: React.FC = () => {
                   </span>
                 </div>
 
-                <p className="mt-1 font-mono text-[11px] text-[var(--mut)]">{sem.fechaString}</p>
+                <p className="mt-1 font-mono text-xs text-[var(--mut)]">{sem.fechaString}</p>
 
                 {sem.evento ? (
-                  <div className="mt-1.5 rounded-md bg-amber-100 dark:bg-amber-900/40 px-1.5 py-0.5 text-[10px] font-bold text-amber-900 dark:text-amber-200 truncate">
+                  <div className="mt-1.5 rounded-md bg-amber-100 dark:bg-amber-900/40 px-1.5 py-0.5 text-xs font-bold text-amber-900 dark:text-amber-200 truncate">
                     ★ {sem.evento}
                   </div>
                 ) : sem.numSemana % 4 === 0 ? (
-                  <div className="mt-1.5 text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
+                  <div className="mt-1.5 text-xs font-bold text-emerald-600 dark:text-emerald-400">
                     Descarga (-30%)
                   </div>
                 ) : (
-                  <div className="mt-1.5 text-[11px] text-[var(--mut)]">
+                  <div className="mt-1.5 text-xs text-[var(--mut)]">
                     RPE: {sem.rpeObjetivo}/10
                   </div>
                 )}
               </div>
 
-              <div className="mt-2 border-t border-[var(--bord)] pt-1 text-[10px] text-[var(--mut)] truncate">
+              <div className="mt-2 border-t border-[var(--bord)] pt-1 text-xs text-[var(--mut)] truncate">
                 {sem.periodoNombre}
               </div>
             </div>

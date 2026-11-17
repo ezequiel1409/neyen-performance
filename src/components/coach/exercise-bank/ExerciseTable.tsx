@@ -25,7 +25,7 @@ export const ExerciseTable: React.FC<ExerciseTableProps> = ({
     <div className="overflow-x-auto bg-[var(--surf)] border border-[var(--bord)] rounded-2xl p-2">
       <table className="w-full text-left text-xs">
         <thead>
-          <tr className="border-b border-[var(--bord)] text-[var(--mut)] font-bold uppercase tracking-wider text-[11px]">
+          <tr className="border-b border-[var(--bord)] text-[var(--mut)] font-bold uppercase tracking-wider text-xs">
             <th className="py-2.5 px-3">EJERCICIO</th>
             <th className="py-2.5 px-3">CATEGORÍA</th>
             <th className="py-2.5 px-3">EQUIPAMIENTO</th>

@@ -60,7 +60,7 @@ export const PrescriptionBlockCard: React.FC<PrescriptionBlockCardProps> = ({
       <div className="overflow-x-auto">
         <table className="w-full text-left text-xs min-w-[650px]">
           <thead>
-            <tr className="text-[var(--mut)] font-bold uppercase tracking-wider text-[11px] pb-2">
+            <tr className="text-[var(--mut)] font-bold uppercase tracking-wider text-xs pb-2">
               <th className="py-2 px-2">EJERCICIO</th>
               <th className="py-2 px-2 text-center">SERIES</th>
               <th className="py-2 px-2 text-center">REPS</th>

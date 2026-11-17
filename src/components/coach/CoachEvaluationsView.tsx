@@ -113,7 +113,7 @@ export const CoachEvaluationsView: React.FC = () => {
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs sm:text-sm">
                 <thead>
-                  <tr className="border-b border-[var(--bord)] text-[var(--mut)] uppercase tracking-wider text-[11px] font-bold">
+                  <tr className="border-b border-[var(--bord)] text-[var(--mut)] uppercase tracking-wider text-xs font-bold">
                     <th className="py-2 px-2">Ejercicio</th>
                     <th className="py-2 px-2">Carga × Reps</th>
                     <th className="py-2 px-2">Epley</th>

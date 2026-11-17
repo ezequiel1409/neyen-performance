@@ -103,7 +103,7 @@ export const OnboardingView: React.FC<OnboardingProps> = ({ onFinalizado }) => {
           >
             <IconInterface name="users" size={24} strokeWidth={2.2} />
             <span className="text-sm font-bold mt-1.5">Soy Atleta</span>
-            <span className="text-[11px] text-[var(--mut)]">Entreno y registro mis cargas</span>
+            <span className="text-xs text-[var(--mut)]">Entreno y registro mis cargas</span>
           </button>
 
           <button
@@ -117,7 +117,7 @@ export const OnboardingView: React.FC<OnboardingProps> = ({ onFinalizado }) => {
           >
             <IconInterface name="users" size={24} strokeWidth={2.2} />
             <span className="text-sm font-bold mt-1.5">Soy Coach</span>
-            <span className="text-[11px] text-[var(--mut)]">Planifico y monitoreo atletas</span>
+            <span className="text-xs text-[var(--mut)]">Planifico y monitoreo atletas</span>
           </button>
         </div>
 
@@ -171,7 +171,7 @@ export const OnboardingView: React.FC<OnboardingProps> = ({ onFinalizado }) => {
               <div className="p-3.5 rounded-2xl bg-[var(--bg)] border border-[var(--bord)]">
                 <span className="text-xs font-bold uppercase tracking-wider text-[var(--mut)]">Tu código de invitación</span>
                 <p className="text-sm font-extrabold text-[var(--txt)] mt-0.5 tracking-wider">COACH-NEYIMA-77</p>
-                <p className="text-[11px] text-[var(--mut)] mt-1">
+                <p className="text-xs text-[var(--mut)] mt-1">
                   Compartí este código con tus atletas para que se vinculen a tu panel.
                 </p>
               </div>
@@ -196,7 +196,7 @@ export const OnboardingView: React.FC<OnboardingProps> = ({ onFinalizado }) => {
                       }`}
                     >
                       <IconDiscipline discipline={disc} size={22} />
-                      <span className="text-[11px] font-bold capitalize mt-1">{disc}</span>
+                      <span className="text-xs font-bold capitalize mt-1">{disc}</span>
                     </button>
                   ))}
                 </div>
@@ -312,7 +312,7 @@ export const OnboardingView: React.FC<OnboardingProps> = ({ onFinalizado }) => {
                   <div className="flex items-center justify-between">
                     <div>
                       <span className="text-xs font-bold text-[var(--txt)]">Monitoreo Fisiológico del Ciclo</span>
-                      <p className="text-[11px] text-[var(--mut)]">Ajuste automático de cargas (-7.5% en fase lútea)</p>
+                      <p className="text-xs text-[var(--mut)]">Ajuste automático de cargas (-7.5% en fase lútea)</p>
                     </div>
                     <input
                       type="checkbox"
@@ -325,7 +325,7 @@ export const OnboardingView: React.FC<OnboardingProps> = ({ onFinalizado }) => {
                   {monitorearCiclo && (
                     <div className="grid grid-cols-2 gap-2 pt-2 border-t border-[var(--bord)]">
                       <div>
-                        <label htmlFor="onb-fum" className="block text-[11px] font-bold text-[var(--mut)] mb-1">
+                        <label htmlFor="onb-fum" className="block text-xs font-bold text-[var(--mut)] mb-1">
                           Última menstruación
                         </label>
                         <input
@@ -337,7 +337,7 @@ export const OnboardingView: React.FC<OnboardingProps> = ({ onFinalizado }) => {
                         />
                       </div>
                       <div>
-                        <label htmlFor="onb-dur" className="block text-[11px] font-bold text-[var(--mut)] mb-1">
+                        <label htmlFor="onb-dur" className="block text-xs font-bold text-[var(--mut)] mb-1">
                           Duración promedio (días)
                         </label>
                         <input
@@ -349,7 +349,7 @@ export const OnboardingView: React.FC<OnboardingProps> = ({ onFinalizado }) => {
                         />
                       </div>
                       <div className="col-span-2 pt-1 flex items-center justify-between">
-                        <span className="text-[11px] text-[var(--mut)] font-bold">Compartir con mi entrenador</span>
+                        <span className="text-xs text-[var(--mut)] font-bold">Compartir con mi entrenador</span>
                         <input
                           type="checkbox"
                           checked={compartirCiclo}

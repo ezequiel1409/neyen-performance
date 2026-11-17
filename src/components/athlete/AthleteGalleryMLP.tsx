@@ -143,7 +143,7 @@ export const AthleteGalleryMLP: React.FC = () => {
                     alt={`Foto ${f.tipoVista} ${f.fechaRegistro}`}
                     className="h-full w-full object-cover"
                   />
-                  <span className="absolute top-2 right-2 rounded-full bg-[var(--bg)]/90 px-2.5 py-0.5 text-[11px] font-bold text-[var(--txt)] border border-[var(--bord)]">
+                  <span className="absolute top-2 right-2 rounded-full bg-[var(--bg)]/90 px-2.5 py-0.5 text-xs font-bold text-[var(--txt)] border border-[var(--bord)]">
                     {f.tipoVista}
                   </span>
                 </div>

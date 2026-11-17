@@ -168,7 +168,7 @@ export const CoachDashboardView: React.FC<CoachDashboardViewProps> = ({
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm select-none">
               <thead>
-                <tr className="text-[11px] font-bold uppercase tracking-wider text-[var(--mut)] border-b border-[var(--bord)] pb-2">
+                <tr className="text-xs font-bold uppercase tracking-wider text-[var(--mut)] border-b border-[var(--bord)] pb-2">
                   <th className="py-2 pr-3">Atleta</th>
                   <th className="py-2 pr-3">Disciplina</th>
                   <th className="py-2 pr-3">Meso</th>

@@ -136,7 +136,7 @@ export const CoachAthletesListView: React.FC<CoachAthletesListViewProps> = ({ on
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs sm:text-sm">
               <thead>
-                <tr className="border-b border-[var(--bord)] text-[var(--mut)] uppercase tracking-wider text-[11px] font-bold">
+                <tr className="border-b border-[var(--bord)] text-[var(--mut)] uppercase tracking-wider text-xs font-bold">
                   <th className="py-2.5 px-2">ID</th>
                   <th className="py-2.5 px-2">Nombre</th>
                   <th className="py-2.5 px-2">Deporte</th>

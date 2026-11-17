@@ -280,7 +280,7 @@ export const LoadControlACWRView: React.FC<LoadControlACWRViewProps> = ({
             </div>
           </div>
 
-          <p className="text-[11px] text-[var(--mut)] pt-2 border-t border-[var(--bord)]">
+          <p className="text-xs text-[var(--mut)] pt-2 border-t border-[var(--bord)]">
             Carga de la sesión = duración (min) × sRPE (1 a 10).
           </p>
         </div>

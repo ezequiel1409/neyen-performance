@@ -64,7 +64,7 @@ export const AthleteAnnualProgressView: React.FC = () => {
           <p className="mt-1.5 text-2xl font-black text-[var(--txt)] font-mono">
             {cargaTotalAcumuladaUA} UA
           </p>
-          <span className="text-[11px] text-[var(--mut)]">Foster sRPE × min</span>
+          <span className="text-xs text-[var(--mut)]">Foster sRPE × min</span>
         </div>
 
         <div className="rounded-2xl border border-[var(--bord)] bg-[var(--surf)] p-4 shadow-2xs">
@@ -75,7 +75,7 @@ export const AthleteAnnualProgressView: React.FC = () => {
           <p className="mt-1.5 text-2xl font-black text-emerald-600 dark:text-emerald-400 font-mono">
             {sesionesAtleta.length}
           </p>
-          <span className="text-[11px] text-[var(--mut)]">
+          <span className="text-xs text-[var(--mut)]">
             {sesionesAtleta.length > 0 ? `${porcentajeAdherencia}% adherencia` : 'Temporada actual'}
           </span>
         </div>
@@ -88,7 +88,7 @@ export const AthleteAnnualProgressView: React.FC = () => {
           <p className="mt-1.5 text-2xl font-black text-[var(--txt)] font-mono">
             {testSentadilla ? `${testSentadilla.unaRepeticionMaximaEfectiva} kg` : 'Sin test'}
           </p>
-          <span className="text-[11px] text-[var(--mut)]">
+          <span className="text-xs text-[var(--mut)]">
             {testSentadilla ? `Evaluado: ${testSentadilla.fechaEvaluacion}` : 'Pendiente'}
           </span>
         </div>
@@ -101,7 +101,7 @@ export const AthleteAnnualProgressView: React.FC = () => {
           <p className="mt-1.5 text-2xl font-black text-[var(--txt)] font-mono">
             {testPesoMuerto ? `${testPesoMuerto.unaRepeticionMaximaEfectiva} kg` : 'Sin test'}
           </p>
-          <span className="text-[11px] text-[var(--mut)]">
+          <span className="text-xs text-[var(--mut)]">
             {testPesoMuerto ? `Evaluado: ${testPesoMuerto.fechaEvaluacion}` : 'Pendiente'}
           </span>
         </div>
@@ -157,7 +157,7 @@ export const AthleteAnnualProgressView: React.FC = () => {
                     />
                   </div>
 
-                  <div className="flex justify-between text-[11px] text-[var(--mut)] pt-0.5">
+                  <div className="flex justify-between text-xs text-[var(--mut)] pt-0.5">
                     <span>
                       Evaluado: {t.fechaEvaluacion}
                       {t.faseCicloMenstrualMomentoEvaluacion ? ` (${t.faseCicloMenstrualMomentoEvaluacion})` : ''}
@@ -195,7 +195,7 @@ export const AthleteAnnualProgressView: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <span className="font-extrabold text-sm text-[var(--txt)]">Sesión Finalizada</span>
-                    <p className="text-[11px] text-[var(--mut)] mt-0.5">
+                    <p className="text-xs text-[var(--mut)] mt-0.5">
                       Duración: <b className="text-[var(--txt)]">{ses.duracionRealMinutos} min</b> • Fecha: {new Date(ses.fechaYHoraFinalizacion).toLocaleDateString()}
                     </p>
                   </div>
@@ -226,7 +226,7 @@ export const AthleteAnnualProgressView: React.FC = () => {
                 </div>
 
                 {ses.feedbackEntrenamiento.comentariosDelAtleta && (
-                  <p className="text-[11px] text-[var(--mut)] italic pt-1">
+                  <p className="text-xs text-[var(--mut)] italic pt-1">
                     "{ses.feedbackEntrenamiento.comentariosDelAtleta}"
                   </p>
                 )}

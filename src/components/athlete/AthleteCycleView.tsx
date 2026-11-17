@@ -69,7 +69,7 @@ export const AthleteCycleView: React.FC = () => {
 
       {/* Tarjeta 2: Fase actual del ciclo */}
       <div className="rounded-2xl bg-[var(--okbg)] text-[var(--oktx)] p-4 shadow-xs space-y-1">
-        <p className="text-[11px] font-bold uppercase tracking-wider opacity-80">HOY</p>
+        <p className="text-xs font-bold uppercase tracking-wider opacity-80">HOY</p>
         <p className="text-2xl font-extrabold leading-tight">
           {enRetraso ? 'Ciclo en pausa por retraso' : 'Día 23 · fase lútea tardía'}
         </p>

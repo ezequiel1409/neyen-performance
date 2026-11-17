@@ -63,7 +63,7 @@ export const AthleteSleepWearableMLP: React.FC = () => {
             <p className="mt-1.5 text-2xl font-black text-[var(--txt)] font-mono">
               {ultimoRegistro.horasSuenioTotal} hrs
             </p>
-            <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold">Óptimo (+7.5 hrs)</span>
+            <span className="text-xs text-emerald-600 dark:text-emerald-400 font-bold">Óptimo (+7.5 hrs)</span>
           </div>
 
           <div className="rounded-2xl border border-[var(--bord)] bg-[var(--surf)] p-4 shadow-2xs">
@@ -74,7 +74,7 @@ export const AthleteSleepWearableMLP: React.FC = () => {
             <p className="mt-1.5 text-2xl font-black text-[var(--txt)] font-mono">
               {ultimoRegistro.variabilidadFrecuenciaCardiacaHrvMs} ms
             </p>
-            <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold">Tono vagal alto</span>
+            <span className="text-xs text-emerald-600 dark:text-emerald-400 font-bold">Tono vagal alto</span>
           </div>
 
           <div className="rounded-2xl border border-[var(--bord)] bg-[var(--surf)] p-4 shadow-2xs">
@@ -85,7 +85,7 @@ export const AthleteSleepWearableMLP: React.FC = () => {
             <p className="mt-1.5 text-2xl font-black text-[var(--txt)] font-mono">
               {ultimoRegistro.frecuenciaCardiacaReposoLpm} lpm
             </p>
-            <span className="text-[11px] text-[var(--mut)]">Línea base deportiva</span>
+            <span className="text-xs text-[var(--mut)]">Línea base deportiva</span>
           </div>
 
           <div className="rounded-2xl border border-[var(--bord)] bg-[var(--surf)] p-4 shadow-2xs">
@@ -96,7 +96,7 @@ export const AthleteSleepWearableMLP: React.FC = () => {
             <p className="mt-1.5 text-2xl font-black text-[var(--txt)] font-mono">
               {ultimoRegistro.calidadSubjetivaDescanso} / 5
             </p>
-            <span className="text-[11px] text-[var(--mut)]">Fuente: {ultimoRegistro.fuenteWearable}</span>
+            <span className="text-xs text-[var(--mut)]">Fuente: {ultimoRegistro.fuenteWearable}</span>
           </div>
         </section>
       ) : (
@@ -157,7 +157,7 @@ export const AthleteSleepWearableMLP: React.FC = () => {
             >
               <div>
                 <b className="text-sm font-bold">{reg.fechaNoche}</b>
-                <p className="text-[11px] text-[var(--mut)] mt-0.5">
+                <p className="text-xs text-[var(--mut)] mt-0.5">
                   {reg.horasSuenioTotal} hrs • FC Reposo: {reg.frecuenciaCardiacaReposoLpm} lpm • Fuente: {reg.fuenteWearable}
                 </p>
               </div>

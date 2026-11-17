@@ -209,7 +209,7 @@ export const CoachAlertsView: React.FC<CoachAlertsViewProps> = ({ onNavegarA }) 
                 <div>
                   <h2 className="text-sm sm:text-base font-bold">{alerta.titulo}</h2>
                   <p className="text-xs text-[var(--mut)] mt-0.5 leading-relaxed">{alerta.descripcion}</p>
-                  <p className="text-[11px] text-[var(--mut)] font-bold mt-1.5">
+                  <p className="text-xs text-[var(--mut)] font-bold mt-1.5">
                     {alerta.atletaNombre} • {alerta.tiempo}
                   </p>
                 </div>
