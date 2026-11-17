@@ -1,0 +1,16 @@
+{
+  "detector": {
+    "ignoreRules": [
+      "cream-palette"
+    ],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "plus jakarta sans",
+        "createdAt": "2026-11-17T12:19:57.210Z",
+        "reason": "Brand font pinned in design brief"
+      }
+    ]
+  }
+}
