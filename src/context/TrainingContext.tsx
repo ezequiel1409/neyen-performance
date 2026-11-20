@@ -3,6 +3,7 @@
 // =====================================================================
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { api } from '../infrastructure/api/client';
 import {
   ATLETA_FEMENINA_DEMO,
   ATLETA_MASCULINO_DEMO,
@@ -139,6 +140,9 @@ export const TrainingProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       localStorage.setItem('neyen_auth_role', rol);
       if (email) localStorage.setItem('neyen_auth_email', email);
     } catch {}
+
+    // Sincronizar sesión segura con Cloudflare D1
+    api.demoLogin(rol).catch(console.warn);
   };
 
   const cerrarSesion = () => {
@@ -146,6 +150,9 @@ export const TrainingProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     try {
       localStorage.removeItem('neyen_auth_session');
     } catch {}
+
+    // Invalidar sesión segura en backend
+    api.logout().catch(console.warn);
   };
 
   const [atletaSeleccionadoId, setAtletaSeleccionadoId] = useState<string>('AL0001');
@@ -359,9 +366,25 @@ export const TrainingProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     };
 
     setHistorialSesiones((prev) => [nuevaSesion, ...prev]);
+
+    // Persistir en backend D1 y disparar recálculo de ACWR y alertas si hay dolor
+    api
+      .finishWorkout({
+        idSesionPlanificada: identificadorSesionOriginal,
+        duracionRealMinutos,
+        srpeFoster: feedback.esfuerzoPercibidoSesion,
+        fatigaPercibida: feedback.nivelFatigaPercibida,
+        presentaDolor: Boolean(feedback.presentaDolorOMolestia),
+        zonaDolor: feedback.zonaCorporalMolestia,
+        comentarios: feedback.comentariosDelAtleta,
+      })
+      .catch(console.warn);
   };
 
   const reportarRetrasoMenstrual = (atletaId: string) => {
+    // Notificar al backend D1 (dispara alerta ámbar al coach si comparte datos)
+    api.reportCycleDelay().catch(console.warn);
+
     setAtletas((prev) =>
       prev.map((atleta) => {
         if (atleta.identificadorAtleta === atletaId && atleta.datosCicloMenstrual) {

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { api } from '../../infrastructure/api/client';
 import { Button } from '../ui/Button';
 import { IndicatorStatus } from '../ui/IndicatorStatus';
 import { IconInterface, type IconInterfaceName } from '../ui/icons/IconInterface';
@@ -35,6 +36,18 @@ export const AthleteWellnessView: React.FC<AthleteWellnessViewProps> = ({ onGuar
 
   const handleGuardar = () => {
     setGuardado(true);
+
+    // Persistir en backend Cloudflare D1
+    api
+      .submitWellness({
+        suenio,
+        fatiga,
+        dolorMuscular,
+        estres,
+        animo,
+      })
+      .catch(console.warn);
+
     setTimeout(() => {
       setGuardado(false);
       if (onGuardadoExitoso) onGuardadoExitoso();
