@@ -6,6 +6,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { api } from '../infrastructure/api/client';
 import {
   ATLETA_FEMENINA_DEMO,
+  ATLETA_FEMENINA_2_DEMO,
   ATLETA_MASCULINO_DEMO,
   BANCO_EJERCICIOS_INICIAL,
   CATEGORIAS_INICIALES,
@@ -35,7 +36,7 @@ interface TrainingContextType {
   estaAutenticado: boolean;
   perfilCompletado: boolean;
   usuarioEmail: string;
-  iniciarSesion: (rol: 'COACH' | 'ALUMNO', email?: string) => void;
+  iniciarSesion: (rol: 'COACH' | 'ALUMNO', email?: string, atletaId?: string) => void;
   completarPerfil: (datosPerfil: Partial<Atleta>) => void;
   cerrarSesion: () => void;
 
@@ -43,12 +44,14 @@ interface TrainingContextType {
   rolActivo: 'COACH' | 'ALUMNO';
   setRolActivo: (rol: 'COACH' | 'ALUMNO') => void;
 
-  // Atleta seleccionado
+  // Atleta seleccionado y Clubes
   atletaSeleccionadoId: string;
   setAtletaSeleccionadoId: (id: string) => void;
   atletaActual: Atleta;
   atletas: Atleta[];
   agregarAtleta: (atleta: Atleta) => void;
+  clubes: string[];
+  agregarClub: (nombreClub: string) => void;
 
   // Banco de ejercicios y tablas maestras
   ejercicios: Ejercicio[];
@@ -95,7 +98,7 @@ interface TrainingContextType {
 
 const TrainingContext = createContext<TrainingContextType | null>(null);
 
-const STORAGE_KEY = 'neyen_performance_state_v1';
+const STORAGE_KEY = 'neyen_performance_state_v2';
 
 export const TrainingProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [estaAutenticado, setEstaAutenticado] = useState<boolean>(() => {
@@ -116,9 +119,9 @@ export const TrainingProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const [usuarioEmail, setUsuarioEmail] = useState<string>(() => {
     try {
-      return localStorage.getItem('neyen_auth_email') || 'alumno@neyen.com';
+      return localStorage.getItem('neyen_auth_email') || 'sofia@neyima.com';
     } catch {
-      return 'alumno@neyen.com';
+      return 'sofia@neyima.com';
     }
   });
 
@@ -131,14 +134,68 @@ export const TrainingProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   });
 
-  const iniciarSesion = (rol: 'COACH' | 'ALUMNO', email?: string) => {
+  const [atletaSeleccionadoId, setAtletaSeleccionadoId] = useState<string>(() => {
+    try {
+      return localStorage.getItem('neyen_auth_athlete_id') || 'AL0001';
+    } catch {
+      return 'AL0001';
+    }
+  });
+
+  const [atletas, setAtletas] = useState<Atleta[]>([
+    ATLETA_FEMENINA_DEMO,
+    ATLETA_MASCULINO_DEMO,
+    ATLETA_FEMENINA_2_DEMO,
+  ]);
+
+  const [clubesBase, setClubesBase] = useState<string[]>([
+    'Club Atlético Obras',
+    'Club Atlético River Plate',
+    'NEYIMA Running Club',
+  ]);
+
+  const clubes = Array.from(
+    new Set([
+      ...clubesBase,
+      ...atletas
+        .map((a) => a.identificadorEquipoPerteneciente)
+        .filter((c): c is string => Boolean(c && c.trim())),
+    ])
+  );
+
+  const agregarClub = (nombreClub: string) => {
+    const limpio = nombreClub.trim();
+    if (!limpio) return;
+    setClubesBase((prev) => (prev.includes(limpio) ? prev : [...prev, limpio]));
+  };
+
+  const iniciarSesion = (rol: 'COACH' | 'ALUMNO', email?: string, atletaId?: string) => {
     setRolActivo(rol);
     if (email) setUsuarioEmail(email);
+
+    let idAtletaSesion = atletaId;
+    if (!idAtletaSesion && rol === 'ALUMNO' && email) {
+      const emailLower = email.toLowerCase();
+      const encontrado = atletas.find(
+        (a) =>
+          emailLower.includes(a.nombreCompleto.split(' ')[0].toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')) ||
+          emailLower.includes(a.identificadorAtleta.toLowerCase())
+      );
+      if (encontrado) {
+        idAtletaSesion = encontrado.identificadorAtleta;
+      }
+    }
+
+    if (idAtletaSesion) {
+      setAtletaSeleccionadoId(idAtletaSesion);
+    }
+
     setEstaAutenticado(true);
     try {
       localStorage.setItem('neyen_auth_session', 'true');
       localStorage.setItem('neyen_auth_role', rol);
       if (email) localStorage.setItem('neyen_auth_email', email);
+      if (idAtletaSesion) localStorage.setItem('neyen_auth_athlete_id', idAtletaSesion);
     } catch {}
 
     // Sincronizar sesión segura con Cloudflare D1
@@ -154,10 +211,6 @@ export const TrainingProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     // Invalidar sesión segura en backend
     api.logout().catch(console.warn);
   };
-
-  const [atletaSeleccionadoId, setAtletaSeleccionadoId] = useState<string>('AL0001');
-
-  const [atletas, setAtletas] = useState<Atleta[]>([ATLETA_FEMENINA_DEMO, ATLETA_MASCULINO_DEMO]);
   const [ejercicios, setEjercicios] = useState<Ejercicio[]>(BANCO_EJERCICIOS_INICIAL);
   const [categorias, setCategorias] = useState<CategoriaEjercicio[]>(CATEGORIAS_INICIALES);
   const [equipamientos, setEquipamientos] = useState<TipoEquipamiento[]>(EQUIPAMIENTOS_INICIALES);
@@ -216,6 +269,43 @@ export const TrainingProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       unaRepeticionMaximaEstimadaBrzycki: 180.0,
       unaRepeticionMaximaEfectiva: 186.7,
       fechaEvaluacion: '2026-09-18',
+    },
+    {
+      identificadorTest: 'TEST-F-05',
+      identificadorAtleta: 'AL0002',
+      identificadorEjercicioBase: 'EX0001',
+      nombreEjercicioEvaluado: 'Sentadilla Trasera con barra',
+      pesoLevantadoKilogramos: 120,
+      repeticionesRealizadas: 4,
+      unaRepeticionMaximaEstimadaEpley: 136.0,
+      unaRepeticionMaximaEstimadaBrzycki: 130.9,
+      unaRepeticionMaximaEfectiva: 136.0,
+      fechaEvaluacion: '2026-10-05',
+    },
+    {
+      identificadorTest: 'TEST-F-06',
+      identificadorAtleta: 'AL0002',
+      identificadorEjercicioBase: 'EX0006',
+      nombreEjercicioEvaluado: 'Press de Pecho Plano con barra',
+      pesoLevantadoKilogramos: 95,
+      repeticionesRealizadas: 3,
+      unaRepeticionMaximaEstimadaEpley: 104.5,
+      unaRepeticionMaximaEstimadaBrzycki: 100.6,
+      unaRepeticionMaximaEfectiva: 104.5,
+      fechaEvaluacion: '2026-10-06',
+    },
+    {
+      identificadorTest: 'TEST-F-07',
+      identificadorAtleta: 'AL0003',
+      identificadorEjercicioBase: 'EX0001',
+      nombreEjercicioEvaluado: 'Sentadilla Trasera con barra',
+      pesoLevantadoKilogramos: 78,
+      repeticionesRealizadas: 4,
+      unaRepeticionMaximaEstimadaEpley: 88.4,
+      unaRepeticionMaximaEstimadaBrzycki: 85.1,
+      unaRepeticionMaximaEfectiva: 85.1,
+      fechaEvaluacion: '2026-10-12',
+      faseCicloMenstrualMomentoEvaluacion: 'FOLICULAR',
     },
   ]);
 
@@ -549,6 +639,8 @@ export const TrainingProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         atletaActual,
         atletas,
         agregarAtleta,
+        clubes,
+        agregarClub,
         ejercicios,
         categorias,
         equipamientos,

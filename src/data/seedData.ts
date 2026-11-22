@@ -269,7 +269,7 @@ export const ATLETA_FEMENINA_DEMO: Atleta = {
   objetivoPrincipalEntrenamiento: 'Potencia vertical, primer paso explosivo y prevención de lesiones de LCA',
   diasDisponiblesParaEntrenarPorSemana: 4,
   formulaCalculoRepeticionMaximaPreferida: 'EPLEY',
-  identificadorEquipoPerteneciente: 'EQUIPO-01',
+  identificadorEquipoPerteneciente: 'Club Atlético Obras',
   
   // Historial clínico de lesiones
   historialLesiones: [
@@ -375,8 +375,35 @@ export const ATLETA_MASCULINO_DEMO: Atleta = {
   objetivoPrincipalEntrenamiento: 'Capacidad de aceleración repetida, potencia de piernas y masa magra',
   diasDisponiblesParaEntrenarPorSemana: 5,
   formulaCalculoRepeticionMaximaPreferida: 'EPLEY',
-  identificadorEquipoPerteneciente: 'EQUIPO-02',
+  identificadorEquipoPerteneciente: 'Club Atlético River Plate',
   historialLesiones: [],
+};
+
+export const ATLETA_FEMENINA_2_DEMO: Atleta = {
+  identificadorAtleta: 'AL0003',
+  nombreCompleto: 'Valentina Paz',
+  generoAtleta: 'F',
+  fechaNacimiento: '2003-09-10',
+  edadCronologicaAnios: 23,
+  alturaCentimetros: 171,
+  pesoCorporalKilogramos: 62.0,
+  deportePracticado: 'Básquetbol',
+  posicionEnElCampoDeJuego: 'Base conductora',
+  nivelRendimientoDeportivo: 'Avanzado',
+  objetivoPrincipalEntrenamiento: 'Agilidad reactiva, cambio de dirección y fuerza explosiva',
+  diasDisponiblesParaEntrenarPorSemana: 4,
+  formulaCalculoRepeticionMaximaPreferida: 'BRZYCKI',
+  identificadorEquipoPerteneciente: 'Club Atlético Obras',
+  historialLesiones: [],
+  datosCicloMenstrual: {
+    activo: true,
+    fechaUltimaMenstruacion: new Date(Date.now() - 9 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    duracionPromedioCicloDias: 28,
+    duracionPromedioMenstruacionDias: 5,
+    enRetrasoMenstrual: false,
+    diasDeRetraso: 0,
+    historialRetrasosReportados: [],
+  },
 };
 
 // Macrociclo NEYEN 2025-2026 (52 Semanas y 13 Mesociclos)
