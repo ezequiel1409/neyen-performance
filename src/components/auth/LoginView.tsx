@@ -119,7 +119,7 @@ export const LoginView: React.FC = () => {
               >
                 {atletas.map((a) => (
                   <option key={a.identificadorAtleta} value={a.identificadorAtleta}>
-                    {a.nombreCompleto} ({a.generoAtleta === 'F' ? 'Femenino · Ciclo activo' : 'Masculino · Estándar'}) — {a.identificadorEquipoPerteneciente || 'Sin club'}
+                    {a.nombreCompleto} ({a.generoAtleta === 'F' ? 'Femenino · Ciclo activo' : 'Masculino · Estándar'}) — {a.identificadorEquipoPerteneciente || 'Personalizado (1 a 1)'}
                   </option>
                 ))}
               </select>

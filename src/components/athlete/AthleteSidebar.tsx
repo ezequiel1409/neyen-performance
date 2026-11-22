@@ -11,11 +11,15 @@ import { IconInterface, type IconInterfaceName } from '../ui/icons/IconInterface
 interface AthleteSidebarProps {
   vistaActual: VistaAlumno;
   onCambiarVista: (vista: VistaAlumno) => void;
+  esModoOscuro?: boolean;
+  onAlternarTema?: () => void;
 }
 
 export const AthleteSidebar: React.FC<AthleteSidebarProps> = ({
   vistaActual,
   onCambiarVista,
+  esModoOscuro = false,
+  onAlternarTema,
 }) => {
   const { cerrarSesion, atletaActual } = useTraining();
   const esFemenino = atletaActual.generoAtleta === 'F';
@@ -77,12 +81,47 @@ export const AthleteSidebar: React.FC<AthleteSidebarProps> = ({
         </nav>
       </div>
 
-      {/* Pie de navegación: Cerrar sesión */}
+      {/* Pie de navegación: Sesión actual, Tema y Cerrar sesión */}
       <div className="pt-4 border-t border-[var(--bord)] space-y-2">
+        <div className="rounded-xl border border-[var(--bord)] bg-[var(--surf)] p-3 space-y-1">
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-full bg-[var(--navbg)] text-[var(--navon)] flex items-center justify-center font-extrabold text-xs shrink-0">
+              {atletaActual.nombreCompleto.charAt(0)}
+            </div>
+            <div className="min-w-0">
+              <p className="text-xs font-extrabold text-[var(--txt)] truncate">
+                {atletaActual.nombreCompleto} ({atletaActual.generoAtleta})
+              </p>
+              <p className="text-xs text-[var(--mut)] truncate">
+                {atletaActual.identificadorEquipoPerteneciente || 'Personalizado (1 a 1)'}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {onAlternarTema && (
+          <button
+            type="button"
+            onClick={onAlternarTema}
+            aria-label={esModoOscuro ? 'Activar tema claro' : 'Activar tema oscuro'}
+            className="w-full text-left text-xs font-bold text-[var(--txt)] hover:bg-[var(--surf)] transition flex items-center justify-between px-3.5 py-2.5 rounded-xl min-h-[42px] border border-[var(--bord)] cursor-pointer"
+          >
+            <span className="flex items-center gap-2.5">
+              {esModoOscuro ? (
+                <IconInterface name="star" size={16} className="text-amber-400" />
+              ) : (
+                <IconInterface name="moon" size={16} />
+              )}
+              <span>{esModoOscuro ? 'Modo claro' : 'Modo oscuro'}</span>
+            </span>
+            <span className="text-xs text-[var(--mut)]">Tema</span>
+          </button>
+        )}
+
         <button
           type="button"
           onClick={cerrarSesion}
-          className="w-full text-left text-sm font-bold text-[var(--txt)] hover:text-[var(--acc)] transition flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl min-h-[44px] cursor-pointer"
+          className="w-full text-left text-sm font-bold text-[var(--txt)] hover:text-[var(--acc)] hover:bg-[var(--surf)] transition flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl min-h-[44px] cursor-pointer"
         >
           <IconInterface name="logout" size={18} aria-hidden="true" />
           <span>Cerrar sesión</span>

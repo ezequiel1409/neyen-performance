@@ -44,7 +44,7 @@ export const AthleteTodayView: React.FC<AthleteTodayViewProps> = ({
       <div className="pt-2 px-1 flex items-start justify-between gap-2">
         <div>
           <p className="text-xs font-bold uppercase tracking-wider text-[var(--mut)]">
-            Hoy · {atletaActual.identificadorEquipoPerteneciente || 'Atleta Individual'}
+            Hoy · {atletaActual.identificadorEquipoPerteneciente || 'Personalizado (1 a 1)'}
           </p>
           <h1 className="text-3xl font-extrabold text-[var(--txt)] tracking-tight">
             Hola, {nombreAtleta}

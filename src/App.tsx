@@ -31,7 +31,7 @@ import { TrainingProvider, useTraining } from './context/TrainingContext';
 import { useAndroidBackNavigation } from './utils/nativeBridge';
 
 const MainLayout: React.FC = () => {
-  const { estaAutenticado, perfilCompletado, rolActivo, atletaActual, usuarioEmail, cerrarSesion, macrociclo } = useTraining();
+  const { estaAutenticado, perfilCompletado, rolActivo, atletaActual, cerrarSesion, macrociclo } = useTraining();
 
   const [seccionCoach, setSeccionCoach] = useState<CoachNavSection>('RESUMEN');
   const [atletaDetalleAbierto, setAtletaDetalleAbierto] = useState<boolean>(false);
@@ -182,17 +182,21 @@ const MainLayout: React.FC = () => {
           CONTENIDO PRINCIPAL (DESKTOP / TABLET CON SIDEBAR LATERAL NATIVO)
           ===================================================================== */}
       <div className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 flex">
-        {/* SIDEBAR LATERAL: COACH VS ALUMNO */}
+        {/* SIDEBAR LATERAL: COACH VS ALUMNO (Con Sesión Actual y Tema integrados) */}
         <div className="hidden md:block">
           {rolActivo === 'COACH' ? (
             <CoachSidebar
               seccionActiva={seccionCoach}
               onCambiarSeccion={setSeccionCoach}
+              esModoOscuro={esModoOscuro}
+              onAlternarTema={alternarTema}
             />
           ) : (
             <AthleteSidebar
               vistaActual={vistaAlumnoActual}
               onCambiarVista={setVistaAlumnoActual}
+              esModoOscuro={esModoOscuro}
+              onAlternarTema={alternarTema}
             />
           )}
         </div>
@@ -203,48 +207,6 @@ const MainLayout: React.FC = () => {
             rolActivo === 'ALUMNO' ? 'pb-24 md:pb-6' : ''
           }`}
         >
-          {/* Barra superior de sesión activa y utilidades en desktop */}
-          <div className="hidden md:flex justify-between items-center gap-2 mb-4 pb-3 border-b border-[var(--bord)]">
-            <div className="flex items-center gap-2 text-xs font-bold text-[var(--mut)]">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--surf)] border border-[var(--bord)] text-[var(--txt)]">
-                <IconInterface name="users" size={14} />
-                {rolActivo === 'COACH'
-                  ? `Sesión Coach · ${usuarioEmail}`
-                  : `Sesión Atleta: ${atletaActual.nombreCompleto} · Sexo: ${atletaActual.generoAtleta} · ${atletaActual.identificadorEquipoPerteneciente || 'Sin club'}`}
-              </span>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={alternarTema}
-                aria-label={esModoOscuro ? 'Activar tema claro' : 'Activar tema oscuro'}
-                className="flex items-center gap-2 rounded-xl border border-[var(--bord)] bg-[var(--surf)] px-3 py-1.5 text-xs font-bold text-[var(--txt)] hover:bg-[var(--bg)] transition shadow-2xs cursor-pointer"
-              >
-                {esModoOscuro ? (
-                  <>
-                    <IconInterface name="star" size={14} className="text-amber-400" />
-                    <span>Modo claro</span>
-                  </>
-                ) : (
-                  <>
-                    <IconInterface name="moon" size={14} />
-                    <span>Modo oscuro</span>
-                  </>
-                )}
-              </button>
-
-              <button
-                type="button"
-                onClick={cerrarSesion}
-                className="flex items-center gap-1.5 rounded-xl border border-[var(--bord)] bg-[var(--surf)] px-3 py-1.5 text-xs font-bold text-[var(--acc)] hover:bg-[var(--bg)] transition cursor-pointer"
-              >
-                <IconInterface name="logout" size={14} />
-                <span>Cambiar sesión / Salir</span>
-              </button>
-            </div>
-          </div>
-
           {/* VISTAS DE COACH (CATÁLOGO NEYIMA COACH) */}
           {rolActivo === 'COACH' && (
             <>
