@@ -9,23 +9,49 @@ import { NeyimaLogo } from '../ui/NeyimaLogo';
 import { Button } from '../ui/Button';
 
 export const LoginView: React.FC = () => {
-  const { iniciarSesion } = useTraining();
+  const { iniciarSesion, atletas } = useTraining();
   const [rolSeleccionado, setRolSeleccionado] = useState<'ALUMNO' | 'COACH'>('ALUMNO');
-  const [email, setEmail] = useState<string>('mateo@neyima.com');
+  const [atletaLoginId, setAtletaLoginId] = useState<string>(atletas[0]?.identificadorAtleta || 'AL0001');
+  const [email, setEmail] = useState<string>('sofia@neyima.com');
   const [password, setPassword] = useState<string>('password123');
+
+  const handleSeleccionarAtletaSesion = (idAtleta: string) => {
+    setAtletaLoginId(idAtleta);
+    const encontrado = atletas.find((a) => a.identificadorAtleta === idAtleta);
+    if (encontrado) {
+      const slug = encontrado.nombreCompleto
+        .split(' ')[0]
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '');
+      setEmail(`${slug}@neyima.com`);
+    }
+  };
 
   const handleCambiarRol = (nuevoRol: 'ALUMNO' | 'COACH') => {
     setRolSeleccionado(nuevoRol);
-    setEmail(nuevoRol === 'ALUMNO' ? 'mateo@neyima.com' : 'coach@neyima.com');
+    if (nuevoRol === 'COACH') {
+      setEmail('coach@neyima.com');
+    } else {
+      handleSeleccionarAtletaSesion(atletaLoginId);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    iniciarSesion(rolSeleccionado, email);
+    iniciarSesion(
+      rolSeleccionado,
+      email,
+      rolSeleccionado === 'ALUMNO' ? atletaLoginId : undefined
+    );
   };
 
   const handleGoogleLogin = () => {
-    iniciarSesion(rolSeleccionado, email);
+    iniciarSesion(
+      rolSeleccionado,
+      email,
+      rolSeleccionado === 'ALUMNO' ? atletaLoginId : undefined
+    );
   };
 
   return (
@@ -75,6 +101,30 @@ export const LoginView: React.FC = () => {
               Coach
             </button>
           </div>
+
+          {/* Selector de Sesión de Atleta (para probar perfiles F / M y Clubes mediante sesión real) */}
+          {rolSeleccionado === 'ALUMNO' && (
+            <div className="mb-5 p-3.5 rounded-2xl border border-[var(--bord)] bg-[var(--surf)] space-y-2">
+              <label
+                htmlFor="selector-sesion-atleta"
+                className="block text-xs font-bold uppercase tracking-wider text-[var(--mut)]"
+              >
+                Seleccionar cuenta de atleta (Sesión por perfil F / M y Club)
+              </label>
+              <select
+                id="selector-sesion-atleta"
+                value={atletaLoginId}
+                onChange={(e) => handleSeleccionarAtletaSesion(e.target.value)}
+                className="w-full h-11 px-3 rounded-xl border-2 border-[var(--bord)] bg-[var(--bg)] text-[var(--txt)] text-xs sm:text-sm font-bold outline-hidden"
+              >
+                {atletas.map((a) => (
+                  <option key={a.identificadorAtleta} value={a.identificadorAtleta}>
+                    {a.nombreCompleto} ({a.generoAtleta === 'F' ? 'Femenino · Ciclo activo' : 'Masculino · Estándar'}) — {a.identificadorEquipoPerteneciente || 'Sin club'}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
           {/* Botón de Google OAuth */}
           <div className="mb-5">

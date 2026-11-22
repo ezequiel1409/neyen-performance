@@ -31,7 +31,7 @@ import { TrainingProvider, useTraining } from './context/TrainingContext';
 import { useAndroidBackNavigation } from './utils/nativeBridge';
 
 const MainLayout: React.FC = () => {
-  const { estaAutenticado, perfilCompletado, rolActivo, setRolActivo, cerrarSesion, macrociclo } = useTraining();
+  const { estaAutenticado, perfilCompletado, rolActivo, atletaActual, usuarioEmail, cerrarSesion, macrociclo } = useTraining();
 
   const [seccionCoach, setSeccionCoach] = useState<CoachNavSection>('RESUMEN');
   const [atletaDetalleAbierto, setAtletaDetalleAbierto] = useState<boolean>(false);
@@ -117,15 +117,12 @@ const MainLayout: React.FC = () => {
         <NeyimaLogo size="sm" variant="emblema" roleTag={rolActivo === 'COACH' ? 'COACH' : 'ALUMNO'} />
 
         <div className="flex items-center gap-1.5">
-          {/* Switch rápido de Rol para pruebas de UI */}
-          <button
-            type="button"
-            onClick={() => setRolActivo(rolActivo === 'COACH' ? 'ALUMNO' : 'COACH')}
-            aria-label="Cambiar de rol"
-            className="px-2.5 py-1.5 rounded-xl border border-[var(--bord)] bg-[var(--bg)] text-[var(--txt)] text-xs font-bold cursor-pointer"
-          >
-            {rolActivo === 'COACH' ? 'Ver Alumno' : 'Ver Coach'}
-          </button>
+          {/* Indicador de Sesión Activa */}
+          <span className="px-2.5 py-1 rounded-xl border border-[var(--bord)] bg-[var(--bg)] text-[var(--txt)] text-xs font-bold truncate max-w-[155px]">
+            {rolActivo === 'COACH'
+              ? 'Coach'
+              : `${atletaActual.nombreCompleto.split(' ')[0]} (${atletaActual.generoAtleta})`}
+          </span>
 
           {/* Toggle de tema */}
           <button
@@ -141,12 +138,13 @@ const MainLayout: React.FC = () => {
             )}
           </button>
 
-          {/* Cerrar sesión */}
+          {/* Cerrar sesión para cambiar de cuenta */}
           <button
             type="button"
             onClick={cerrarSesion}
             aria-label="Cerrar sesión"
-            className="p-2 rounded-xl text-[var(--acc)] hover:bg-[var(--bg)] cursor-pointer"
+            title="Cerrar sesión"
+            className="p-2 rounded-xl border border-[var(--bord)] text-[var(--acc)] hover:bg-[var(--bg)] cursor-pointer"
           >
             <IconInterface name="logout" size={16} strokeWidth={2.2} />
           </button>
@@ -205,35 +203,46 @@ const MainLayout: React.FC = () => {
             rolActivo === 'ALUMNO' ? 'pb-24 md:pb-6' : ''
           }`}
         >
-          {/* Barra superior de utilidades (Switch de Rol & Modo Oscuro en desktop) */}
-          <div className="hidden md:flex justify-end items-center gap-2 mb-4">
-            <button
-              type="button"
-              onClick={() => setRolActivo(rolActivo === 'COACH' ? 'ALUMNO' : 'COACH')}
-              className="flex items-center gap-1.5 rounded-xl border border-[var(--bord)] bg-[var(--surf)] px-3 py-1.5 text-xs font-bold text-[var(--txt)] hover:bg-[var(--bg)] transition cursor-pointer"
-            >
-              <IconInterface name="users" size={14} />
-              <span>Cambiar a {rolActivo === 'COACH' ? 'Alumno' : 'Coach'}</span>
-            </button>
+          {/* Barra superior de sesión activa y utilidades en desktop */}
+          <div className="hidden md:flex justify-between items-center gap-2 mb-4 pb-3 border-b border-[var(--bord)]">
+            <div className="flex items-center gap-2 text-xs font-bold text-[var(--mut)]">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--surf)] border border-[var(--bord)] text-[var(--txt)]">
+                <IconInterface name="users" size={14} />
+                {rolActivo === 'COACH'
+                  ? `Sesión Coach · ${usuarioEmail}`
+                  : `Sesión Atleta: ${atletaActual.nombreCompleto} · Sexo: ${atletaActual.generoAtleta} · ${atletaActual.identificadorEquipoPerteneciente || 'Sin club'}`}
+              </span>
+            </div>
 
-            <button
-              type="button"
-              onClick={alternarTema}
-              aria-label={esModoOscuro ? 'Activar tema claro' : 'Activar tema oscuro'}
-              className="flex items-center gap-2 rounded-xl border border-[var(--bord)] bg-[var(--surf)] px-3 py-1.5 text-xs font-bold text-[var(--txt)] hover:bg-[var(--bg)] transition shadow-2xs cursor-pointer"
-            >
-              {esModoOscuro ? (
-                <>
-                  <IconInterface name="star" size={14} className="text-amber-400" />
-                  <span>Modo claro</span>
-                </>
-              ) : (
-                <>
-                  <IconInterface name="moon" size={14} />
-                  <span>Modo oscuro</span>
-                </>
-              )}
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={alternarTema}
+                aria-label={esModoOscuro ? 'Activar tema claro' : 'Activar tema oscuro'}
+                className="flex items-center gap-2 rounded-xl border border-[var(--bord)] bg-[var(--surf)] px-3 py-1.5 text-xs font-bold text-[var(--txt)] hover:bg-[var(--bg)] transition shadow-2xs cursor-pointer"
+              >
+                {esModoOscuro ? (
+                  <>
+                    <IconInterface name="star" size={14} className="text-amber-400" />
+                    <span>Modo claro</span>
+                  </>
+                ) : (
+                  <>
+                    <IconInterface name="moon" size={14} />
+                    <span>Modo oscuro</span>
+                  </>
+                )}
+              </button>
+
+              <button
+                type="button"
+                onClick={cerrarSesion}
+                className="flex items-center gap-1.5 rounded-xl border border-[var(--bord)] bg-[var(--surf)] px-3 py-1.5 text-xs font-bold text-[var(--acc)] hover:bg-[var(--bg)] transition cursor-pointer"
+              >
+                <IconInterface name="logout" size={14} />
+                <span>Cambiar sesión / Salir</span>
+              </button>
+            </div>
           </div>
 
           {/* VISTAS DE COACH (CATÁLOGO NEYIMA COACH) */}
@@ -243,8 +252,12 @@ const MainLayout: React.FC = () => {
                 <CoachDashboardView
                   onAbrirPlanificador={() => setSeccionCoach('PLANIFICADOR')}
                   onVerAlertas={() => setSeccionCoach('ALERTAS')}
-                  onSeleccionarAtleta={() => {
+                  onIrAAtletas={() => {
                     setAtletaDetalleAbierto(false);
+                    setSeccionCoach('ATLETAS');
+                  }}
+                  onSeleccionarAtleta={() => {
+                    setAtletaDetalleAbierto(true);
                     setSeccionCoach('ATLETAS');
                   }}
                 />
@@ -322,7 +335,16 @@ const MainLayout: React.FC = () => {
 
               {vistaAlumnoActual === 'HISTORIAL' && <AthleteHistoryView />}
 
-              {vistaAlumnoActual === 'CICLO' && <AthleteCycleView />}
+              {vistaAlumnoActual === 'CICLO' && (
+                atletaActual.generoAtleta === 'F' ? (
+                  <AthleteCycleView />
+                ) : (
+                  <AthleteTodayView
+                    onIniciarEntrenamiento={() => setWorkoutActivo(true)}
+                    onIrABienestar={() => setVistaAlumnoActual('BIENESTAR')}
+                  />
+                )
+              )}
 
               {vistaAlumnoActual === 'SUENIO' && <AthleteSleepWearableMLP />}
 
