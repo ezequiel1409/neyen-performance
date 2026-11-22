@@ -1,10 +1,11 @@
 // =====================================================================
-// NEYIMA ATHLETIC - PANEL DEL COACH (DASHBOARD GENERAL)
+// NEYIMA ATHLETIC - PANEL DEL COACH (DASHBOARD GENERAL Y POR CLUBES)
 // DISEÑO EXACTO FIEL A MOCKUPS NEYIMA (13 MESOCICLOS CON ACTIVO EN ROJO)
 // =====================================================================
 
 import React, { useState } from 'react';
 import { useTraining } from '../../context/TrainingContext';
+import { calcularFaseCicloActual } from '../../utils/trainingMath';
 import { IndicatorStatus } from '../ui/IndicatorStatus';
 import { Button } from '../ui/Button';
 import { IconInterface } from '../ui/icons/IconInterface';
@@ -13,71 +14,38 @@ import { IconDiscipline, type DisciplineName } from '../ui/icons/IconDiscipline'
 interface CoachDashboardViewProps {
   onAbrirPlanificador?: () => void;
   onVerAlertas?: () => void;
+  onIrAAtletas?: () => void;
   onSeleccionarAtleta?: (atletaId: string) => void;
+}
+
+function mapDeporteToDiscipline(deporte: string): DisciplineName {
+  const lower = deporte.toLowerCase();
+  if (lower.includes('run')) return 'running';
+  if (lower.includes('nat')) return 'natacion';
+  if (lower.includes('fuerza')) return 'fuerza';
+  return 'equipo';
 }
 
 export const CoachDashboardView: React.FC<CoachDashboardViewProps> = ({
   onAbrirPlanificador,
   onVerAlertas,
+  onIrAAtletas,
   onSeleccionarAtleta,
 }) => {
-  const { atletas, setAtletaSeleccionadoId } = useTraining();
+  const { atletas, clubes, testsFuerza, historialSesiones, setAtletaSeleccionadoId } = useTraining();
+  const [filtroClub, setFiltroClub] = useState<string>('TODOS');
   const [filtroDisciplina, setFiltroDisciplina] = useState<string>('Todas');
 
-  const disciplinasDisponibles = ['Todas', 'Running', 'Fuerza', 'Natación', 'Equipo'];
+  const disciplinasDisponibles = ['Todas', 'Básquetbol', 'Fútbol', 'Running', 'Natación', 'Fuerza'];
 
-  const atletasMocks = [
-    {
-      id: 'AL0001',
-      nombre: 'Lucía Fernández',
-      disciplina: 'running' as DisciplineName,
-      disciplinaLabel: 'Running',
-      meso: 'M04',
-      cargaUA: 520,
-      estado: { status: 'ok' as const, label: 'En plan' },
-    },
-    {
-      id: 'AL0002',
-      nombre: 'Martín Benítez',
-      disciplina: 'fuerza' as DisciplineName,
-      disciplinaLabel: 'Fuerza',
-      meso: 'M04',
-      cargaUA: 640,
-      estado: { status: 'warn' as const, label: 'Revisar' },
-    },
-    {
-      id: 'AL0003',
-      nombre: 'Camila Rossi',
-      disciplina: 'natacion' as DisciplineName,
-      disciplinaLabel: 'Natación',
-      meso: 'M03',
-      cargaUA: 480,
-      estado: { status: 'ok' as const, label: 'En plan' },
-    },
-    {
-      id: 'AL0004',
-      nombre: 'Joaquín Gómez',
-      disciplina: 'equipo' as DisciplineName,
-      disciplinaLabel: 'Equipo',
-      meso: 'M04',
-      cargaUA: 590,
-      estado: { status: 'warn' as const, label: 'Revisar' },
-    },
-    {
-      id: 'AL0005',
-      nombre: 'Sofía Álvarez',
-      disciplina: 'running' as DisciplineName,
-      disciplinaLabel: 'Running',
-      meso: 'M05',
-      cargaUA: 410,
-      estado: { status: 'ok' as const, label: 'En plan' },
-    },
-  ];
-
-  const atletasFiltrados =
-    filtroDisciplina === 'Todas'
-      ? atletasMocks
-      : atletasMocks.filter((a) => a.disciplinaLabel.toLowerCase() === filtroDisciplina.toLowerCase());
+  const atletasFiltrados = atletas.filter((a) => {
+    const coincideClub =
+      filtroClub === 'TODOS' || a.identificadorEquipoPerteneciente === filtroClub;
+    const coincideDisciplina =
+      filtroDisciplina === 'Todas' ||
+      a.deportePracticado.toLowerCase().includes(filtroDisciplina.toLowerCase());
+    return coincideClub && coincideDisciplina;
+  });
 
   const handleAbrirAtleta = (atletaId: string) => {
     setAtletaSeleccionadoId(atletaId);
@@ -90,36 +58,78 @@ export const CoachDashboardView: React.FC<CoachDashboardViewProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <p className="text-xs font-bold uppercase tracking-wider text-[var(--mut)]">
-            Panel del coach
+            Panel del coach · {filtroClub === 'TODOS' ? `${clubes.length} clubes activos` : filtroClub}
           </p>
           <h1 className="text-3xl font-extrabold text-[var(--txt)] tracking-tight">
             Hola, Coach
           </h1>
         </div>
 
-        <Button variant="primary" size="md" className="font-extrabold self-start sm:self-auto">
-          + Nuevo atleta
+        <Button
+          variant="primary"
+          size="md"
+          onClick={onIrAAtletas}
+          className="font-extrabold self-start sm:self-auto"
+        >
+          + Nuevo atleta / Club
         </Button>
       </div>
 
-      {/* 4 KPIs Clave */}
+      {/* Selector rápido de Clubes del Coach */}
+      <div className="flex flex-wrap items-center gap-1.5">
+        <button
+          type="button"
+          onClick={() => setFiltroClub('TODOS')}
+          className={`px-3 py-1.5 rounded-xl text-xs font-extrabold transition cursor-pointer ${
+            filtroClub === 'TODOS'
+              ? 'bg-[var(--navbg)] text-[var(--navon)]'
+              : 'border border-[var(--bord)] bg-[var(--surf)] text-[var(--txt)]'
+          }`}
+        >
+          Todos los clubes ({atletas.length})
+        </button>
+        {clubes.map((club) => {
+          const count = atletas.filter((a) => a.identificadorEquipoPerteneciente === club).length;
+          return (
+            <button
+              key={club}
+              type="button"
+              onClick={() => setFiltroClub(club)}
+              className={`px-3 py-1.5 rounded-xl text-xs font-extrabold transition cursor-pointer ${
+                filtroClub === club
+                  ? 'bg-[var(--navbg)] text-[var(--navon)]'
+                  : 'border border-[var(--bord)] bg-[var(--surf)] text-[var(--txt)]'
+              }`}
+            >
+              {club} ({count})
+            </button>
+          );
+        })}
+      </div>
+
+      {/* 4 KPIs Clave reactivos al Club */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <div className="rounded-2xl border border-[var(--bord)] bg-[var(--surf)] p-4 shadow-xs">
           <p className="text-xs font-bold uppercase tracking-wider text-[var(--mut)]">
-            Atletas activos
+            Atletas en vista
           </p>
           <p className="text-3xl font-extrabold text-[var(--txt)] mt-1">
-            {String(atletas.length || 5).padStart(2, '0')}
+            {String(atletasFiltrados.length).padStart(2, '0')}
           </p>
-          <p className="text-xs text-[var(--mut)] mt-0.5">todas las disciplinas</p>
+          <p className="text-xs text-[var(--mut)] mt-0.5">
+            {atletasFiltrados.filter((a) => a.generoAtleta === 'F').length} F ·{' '}
+            {atletasFiltrados.filter((a) => a.generoAtleta === 'M').length} M
+          </p>
         </div>
 
         <div className="rounded-2xl border border-[var(--bord)] bg-[var(--surf)] p-4 shadow-xs">
           <p className="text-xs font-bold uppercase tracking-wider text-[var(--mut)]">
-            Sesiones de hoy
+            Clubes gestionados
           </p>
-          <p className="text-3xl font-extrabold text-[var(--txt)] mt-1">04</p>
-          <p className="text-xs text-[var(--mut)] mt-0.5">programadas</p>
+          <p className="text-3xl font-extrabold text-[var(--txt)] mt-1">
+            {String(clubes.length).padStart(2, '0')}
+          </p>
+          <p className="text-xs text-[var(--mut)] mt-0.5">planteles activos</p>
         </div>
 
         <div className="rounded-2xl border border-[var(--bord)] bg-[var(--surf)] p-4 shadow-xs">
@@ -134,21 +144,28 @@ export const CoachDashboardView: React.FC<CoachDashboardViewProps> = ({
           <p className="text-xs font-bold uppercase tracking-wider text-[var(--mut)]">
             Cumplimiento
           </p>
-          <p className="text-3xl font-extrabold text-[var(--txt)] mt-1">92%</p>
-          <p className="text-xs text-[var(--mut)] mt-0.5">esta semana</p>
+          <p className="text-3xl font-extrabold text-[var(--txt)] mt-1">94%</p>
+          <p className="text-xs text-[var(--mut)] mt-0.5">evolución semanal</p>
         </div>
       </div>
 
-      {/* Grilla Principal: Tabla de atletas (2.1fr) + Alertas (1fr) */}
+      {/* Grilla Principal: Tabla de evolución por Club (2.1fr) + Alertas (1fr) */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
-        {/* Tabla Mis Atletas */}
+        {/* Tabla Mis Atletas y Evolución por Club */}
         <div className="lg:col-span-2 rounded-2xl border border-[var(--bord)] bg-[var(--surf)] p-4 shadow-xs space-y-3">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[var(--bord)] pb-2.5">
-            <h2 className="text-lg font-extrabold text-[var(--txt)]">Mis atletas</h2>
+            <div>
+              <h2 className="text-lg font-extrabold text-[var(--txt)]">
+                Evolución por Club y Atleta
+              </h2>
+              <p className="text-xs text-[var(--mut)]">
+                Seguimiento de 1RM, carga UA y validación de fase lútea (F/M)
+              </p>
+            </div>
 
             <div className="flex items-center gap-2">
               <label htmlFor="filtro-dis" className="text-xs font-bold text-[var(--mut)]">
-                Disciplina
+                Deporte
               </label>
               <select
                 id="filtro-dis"
@@ -170,56 +187,121 @@ export const CoachDashboardView: React.FC<CoachDashboardViewProps> = ({
               <thead>
                 <tr className="text-xs font-bold uppercase tracking-wider text-[var(--mut)] border-b border-[var(--bord)] pb-2">
                   <th className="py-2 pr-3">Atleta</th>
-                  <th className="py-2 pr-3">Disciplina</th>
-                  <th className="py-2 pr-3">Meso</th>
-                  <th className="py-2 pr-3">Carga</th>
+                  <th className="py-2 pr-3">Club / Deporte</th>
+                  <th className="py-2 pr-3">Sexo / Ciclo</th>
+                  <th className="py-2 pr-3">1RM / Carga</th>
                   <th className="py-2 pr-3">Estado</th>
                   <th className="py-2 text-right"></th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[var(--bord)]">
-                {atletasFiltrados.map((a) => (
-                  <tr key={a.id} className="hover:bg-[var(--bg)]/40 transition">
-                    <td className="py-2.5 pr-3 font-bold text-[var(--txt)] whitespace-nowrap">
-                      <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-full bg-[var(--okbg)] text-[var(--oktx)] flex items-center justify-center font-extrabold text-xs">
-                          {a.nombre.charAt(0)}
+                {atletasFiltrados.map((a) => {
+                  const testSq = testsFuerza.find(
+                    (t) =>
+                      t.identificadorAtleta === a.identificadorAtleta &&
+                      t.identificadorEjercicioBase === 'EX0001'
+                  );
+                  const sesionesA = historialSesiones.filter(
+                    (s) => s.identificadorAtleta === a.identificadorAtleta
+                  );
+                  const cargaUA =
+                    sesionesA.reduce((acc, s) => acc + s.cargaInternaUnidadesArbitrarias, 0) || 520;
+
+                  const infoCiclo =
+                    a.generoAtleta === 'F' && a.datosCicloMenstrual?.activo
+                      ? calcularFaseCicloActual(
+                          a.datosCicloMenstrual.fechaUltimaMenstruacion,
+                          a.datosCicloMenstrual.duracionPromedioCicloDias,
+                          a.datosCicloMenstrual.duracionPromedioMenstruacionDias
+                        )
+                      : null;
+
+                  const tieneLesionActiva = a.historialLesiones.some(
+                    (l) => l.estadoLesion !== 'RECUPERADA'
+                  );
+
+                  return (
+                    <tr key={a.identificadorAtleta} className="hover:bg-[var(--bg)]/40 transition">
+                      <td className="py-2.5 pr-3 font-bold text-[var(--txt)] whitespace-nowrap">
+                        <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-full bg-[var(--okbg)] text-[var(--oktx)] flex items-center justify-center font-extrabold text-xs">
+                            {a.nombreCompleto.charAt(0)}
+                          </div>
+                          <div>
+                            <span className="block">{a.nombreCompleto}</span>
+                            <span className="block text-xs text-[var(--mut)]">
+                              {a.identificadorAtleta} · M04
+                            </span>
+                          </div>
                         </div>
-                        <span>{a.nombre}</span>
-                      </div>
-                    </td>
+                      </td>
 
-                    <td className="py-2.5 pr-3 whitespace-nowrap">
-                      <div className="flex items-center gap-2">
-                        <IconDiscipline discipline={a.disciplina} size={26} rounded={true} />
-                        <span className="text-xs font-bold text-[var(--txt)]">{a.disciplinaLabel}</span>
-                      </div>
-                    </td>
+                      <td className="py-2.5 pr-3 whitespace-nowrap">
+                        <div className="flex items-center gap-2">
+                          <IconDiscipline
+                            discipline={mapDeporteToDiscipline(a.deportePracticado)}
+                            size={24}
+                            rounded={true}
+                          />
+                          <div>
+                            <span className="block text-xs font-extrabold text-[var(--txt)]">
+                              {a.identificadorEquipoPerteneciente || 'Sin club'}
+                            </span>
+                            <span className="block text-xs text-[var(--mut)]">
+                              {a.deportePracticado}
+                            </span>
+                          </div>
+                        </div>
+                      </td>
 
-                    <td className="py-2.5 pr-3 text-xs font-semibold text-[var(--mut)]">
-                      {a.meso}
-                    </td>
+                      <td className="py-2.5 pr-3 text-xs whitespace-nowrap">
+                        {a.generoAtleta === 'F' ? (
+                          <div>
+                            <span className="font-extrabold text-[var(--txt)]">
+                              F · {infoCiclo ? `Día ${infoCiclo.diaActualDelCiclo}` : 'Ciclo'}
+                            </span>
+                            <span className="block text-[var(--mut)]">
+                              {infoCiclo?.faseActual === 'LUTEA'
+                                ? 'Lútea (−7,5 %)'
+                                : infoCiclo?.nombreFaseLegible || '100 %'}
+                            </span>
+                          </div>
+                        ) : (
+                          <div>
+                            <span className="font-extrabold text-[var(--txt)]">M · Masculino</span>
+                            <span className="block text-[var(--mut)]">Carga 100 %</span>
+                          </div>
+                        )}
+                      </td>
 
-                    <td className="py-2.5 pr-3 text-xs font-bold text-[var(--txt)] font-mono">
-                      {a.cargaUA} UA
-                    </td>
+                      <td className="py-2.5 pr-3 text-xs font-bold text-[var(--txt)] font-mono whitespace-nowrap">
+                        <span className="block">
+                          1RM: {testSq ? `${testSq.unaRepeticionMaximaEfectiva} kg` : '—'}
+                        </span>
+                        <span className="block text-[var(--mut)]">{cargaUA} UA</span>
+                      </td>
 
-                    <td className="py-2.5 pr-3 whitespace-nowrap">
-                      <IndicatorStatus status={a.estado.status} label={a.estado.label} size="sm" />
-                    </td>
+                      <td className="py-2.5 pr-3 whitespace-nowrap">
+                        <IndicatorStatus
+                          status={tieneLesionActiva ? 'warn' : 'ok'}
+                          label={tieneLesionActiva ? 'Revisar' : 'En plan'}
+                          size="sm"
+                        />
+                      </td>
 
-                    <td className="py-2.5 text-right whitespace-nowrap">
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        onClick={() => handleAbrirAtleta(a.id)}
-                        className="font-bold py-1 px-3 min-h-[36px]"
-                      >
-                        Abrir
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
+                      <td className="py-2.5 text-right whitespace-nowrap">
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          onClick={() => handleAbrirAtleta(a.identificadorAtleta)}
+                          className="font-bold py-1 px-3 min-h-[36px]"
+                        >
+                          Ficha
+                        </Button>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
@@ -241,18 +323,18 @@ export const CoachDashboardView: React.FC<CoachDashboardViewProps> = ({
                   <IconInterface name="activity" size={14} />
                 </span>
                 <div>
-                  <p className="font-bold text-[var(--txt)]">Martín Benítez</p>
-                  <p className="text-[var(--mut)]">Reportó dolor en tendón rotuliano</p>
+                  <p className="font-bold text-[var(--txt)]">Sofía Rodríguez (Club Obras)</p>
+                  <p className="text-[var(--mut)]">Sobrecarga tendón rotuliano izquierdo</p>
                 </div>
               </div>
 
               <div className="py-2.5 flex items-start gap-2.5">
                 <span className="w-7 h-7 rounded-full bg-[var(--estado-warn-fondo)] text-[var(--estado-warn-texto)] flex items-center justify-center shrink-0">
-                  <IconInterface name="calclock" size={14} />
+                  <IconInterface name="drop" size={14} />
                 </span>
                 <div>
-                  <p className="font-bold text-[var(--txt)]">Camila Rossi</p>
-                  <p className="text-[var(--mut)]">Retraso de ciclo ovárico reportado</p>
+                  <p className="font-bold text-[var(--txt)]">Sofía Rodríguez (F · Día 24)</p>
+                  <p className="text-[var(--mut)]">Fase lútea activa: ajuste −7,5 % aplicado</p>
                 </div>
               </div>
 
@@ -261,8 +343,8 @@ export const CoachDashboardView: React.FC<CoachDashboardViewProps> = ({
                   <IconInterface name="clock" size={14} />
                 </span>
                 <div>
-                  <p className="font-bold text-[var(--txt)]">Joaquín Gómez</p>
-                  <p className="text-[var(--mut)]">Sesión del jueves sin completar</p>
+                  <p className="font-bold text-[var(--txt)]">Lucas Gómez (Club River Plate)</p>
+                  <p className="text-[var(--mut)]">Evaluación de 1RM programada esta semana</p>
                 </div>
               </div>
             </div>
@@ -287,10 +369,8 @@ export const CoachDashboardView: React.FC<CoachDashboardViewProps> = ({
             Macrociclo anual · 13 mesociclos
           </p>
 
-          {/* Barra segmentada de 13 mesociclos */}
           <div className="flex gap-1.5 w-full">
             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].map((mesoNum) => {
-              // Regla de color NEYIMA: Mesociclo actual activo en rojo (#F92424), pasados en done, futuros en todo
               const isDone = mesoNum < 4;
               const isCurrent = mesoNum === 4;
 
@@ -303,8 +383,8 @@ export const CoachDashboardView: React.FC<CoachDashboardViewProps> = ({
                     backgroundColor: isCurrent
                       ? 'var(--rojo, #F92424)'
                       : isDone
-                      ? 'var(--done)'
-                      : 'var(--todo)',
+                        ? 'var(--done)'
+                        : 'var(--todo)',
                   }}
                 />
               );
