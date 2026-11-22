@@ -1,5 +1,6 @@
 import React from 'react';
 import { IconInterface, type IconInterfaceName } from './icons/IconInterface';
+import { triggerHaptic } from '../../utils/nativeBridge';
 
 export type VistaAlumno =
   | 'HOY'
@@ -68,7 +69,10 @@ export const BottomNav: React.FC<BottomNavProps> = ({ vistaActual, onCambiarVist
           return (
             <button
               key={tab.id}
-              onClick={() => onCambiarVista(tab.id)}
+              onClick={() => {
+                triggerHaptic('light');
+                onCambiarVista(tab.id);
+              }}
               aria-current={isActive ? 'page' : undefined}
               className={`flex-1 min-h-[56px] flex flex-col items-center justify-center gap-1 rounded-xl transition-all select-none cursor-pointer text-xs font-bold active:scale-95 focus-visible:outline-2 focus-visible:outline-[var(--focus)] ${
                 isActive

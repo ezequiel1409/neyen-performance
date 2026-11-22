@@ -28,6 +28,7 @@ import { OnboardingView } from './components/auth/OnboardingView';
 import { NeyimaLogo } from './components/ui/NeyimaLogo';
 import { IconInterface } from './components/ui/icons/IconInterface';
 import { TrainingProvider, useTraining } from './context/TrainingContext';
+import { useAndroidBackNavigation } from './utils/nativeBridge';
 
 const MainLayout: React.FC = () => {
   const { estaAutenticado, perfilCompletado, rolActivo, setRolActivo, cerrarSesion, macrociclo } = useTraining();
@@ -68,6 +69,25 @@ const MainLayout: React.FC = () => {
     setEsModoOscuro((prev) => !prev);
   };
 
+  // Soporte del gesto/botón físico "Atrás" de Android para navegación nativa sin cerrar la APK
+  const esVistaPrincipal =
+    rolActivo === 'ALUMNO' ? vistaAlumnoActual === 'HOY' : seccionCoach === 'RESUMEN';
+
+  useAndroidBackNavigation({
+    workoutActivo,
+    onCerrarWorkout: () => setWorkoutActivo(false),
+    atletaDetalleAbierto,
+    onCerrarAtletaDetalle: () => setAtletaDetalleAbierto(false),
+    esVistaPrincipal,
+    onVolverAVistaPrincipal: () => {
+      if (rolActivo === 'ALUMNO') {
+        setVistaAlumnoActual('HOY');
+      } else {
+        setSeccionCoach('RESUMEN');
+      }
+    },
+  });
+
   // Sesión del día para el modal activo
   const sesionDelDia =
     macrociclo.mesociclos[0]?.microciclos[0]?.sesionesDeEntrenamiento[0] || {
@@ -93,7 +113,7 @@ const MainLayout: React.FC = () => {
       {/* =====================================================================
           HEADER MÓVIL COMPACTO (SÓLO VISIBLE EN DISPOSITIVOS MÓVILES < MD)
           ===================================================================== */}
-      <header className="md:hidden flex items-center justify-between px-4 py-2.5 bg-[var(--surf)] border-b border-[var(--bord)] sticky top-0 z-30">
+      <header className="md:hidden flex items-center justify-between px-4 py-2.5 bg-[var(--surf)] border-b border-[var(--bord)] sticky top-0 z-30 safe-area-pt">
         <NeyimaLogo size="sm" variant="emblema" roleTag={rolActivo === 'COACH' ? 'COACH' : 'ALUMNO'} />
 
         <div className="flex items-center gap-1.5">
