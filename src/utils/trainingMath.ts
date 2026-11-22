@@ -2,7 +2,7 @@
 // NEYEN ATHLETIC - MOTOR MATEMÁTICO Y FISIOLÓGICO DE ENTRENAMIENTO
 // =====================================================================
 
-import { EscalaEsfuerzoPercibidoSesion, FaseCicloMenstrual, FormulaCalculoRepeticionMaxima } from '../types';
+import type { EscalaEsfuerzoPercibidoSesion, FaseCicloMenstrual, FormulaCalculoRepeticionMaxima } from '../types';
 
 /**
  * Fórmula de Epley para estimar 1RM:
