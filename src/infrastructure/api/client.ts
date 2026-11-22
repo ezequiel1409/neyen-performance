@@ -1,9 +1,38 @@
 // =====================================================================
 // NEYIMA ATHLETIC - CLIENTE HTTP DE API (INFRAESTRUCTURA)
-// Comunicación segura con Cloudflare Workers & D1
+// Comunicación segura con Cloudflare Workers & D1 (Web + Android APK/Capacitor)
 // =====================================================================
 
-const API_BASE = '/api';
+const PROD_API_URL = 'https://neyen-performance.facuezedrive.workers.dev/api';
+
+/**
+ * Detecta si la app corre dentro de un contenedor nativo Android (Capacitor / WebView)
+ * para dirigir las llamadas al backend de Cloudflare Workers en lugar de localhost.
+ */
+export function isNativeAndroidOrCapacitor(): boolean {
+  if (typeof window === 'undefined') return false;
+  const { protocol, hostname, port } = window.location;
+  const isCapacitorProtocol = protocol === 'capacitor:' || protocol === 'file:';
+  const isLocalWebView = hostname === 'localhost' && (!port || port === '80' || port === '443');
+  const hasCapacitorGlobal = 'Capacitor' in window;
+  return isCapacitorProtocol || isLocalWebView || hasCapacitorGlobal;
+}
+
+function getApiBase(): string {
+  const envUrl = import.meta.env?.VITE_API_BASE_URL as string | undefined;
+  if (envUrl) return envUrl;
+  if (isNativeAndroidOrCapacitor()) return PROD_API_URL;
+  return '/api';
+}
+
+export interface ApiUserDTO {
+  id: string;
+  email: string;
+  nombre: string;
+  rol: 'COACH' | 'ALUMNO';
+  avatarUrl?: string | null;
+  perfilCompletado: boolean;
+}
 
 function getStoredToken(): string | null {
   try {
@@ -13,7 +42,7 @@ function getStoredToken(): string | null {
   }
 }
 
-export function setStoredToken(token: string | null) {
+export function setStoredToken(token: string | null): void {
   try {
     if (token) {
       localStorage.setItem('neyima_auth_token', token);
@@ -36,28 +65,33 @@ async function request<T>(
   }
 
   try {
-    const res = await fetch(`${API_BASE}${endpoint}`, {
+    const res = await fetch(`${getApiBase()}${endpoint}`, {
       ...options,
       headers,
-      credentials: 'include', // Para enviar cookies HttpOnly
+      credentials: 'include', // Para enviar cookies HttpOnly en web
     });
 
-    const json = (await res.json().catch(() => ({}))) as any;
+    const json = (await res.json().catch(() => ({}))) as Record<string, unknown>;
 
     if (!res.ok) {
-      return { error: json?.mensaje || json?.error || `Error HTTP ${res.status}` };
+      const errorMsg =
+        (typeof json.mensaje === 'string' && json.mensaje) ||
+        (typeof json.error === 'string' && json.error) ||
+        `Error HTTP ${res.status}`;
+      return { error: errorMsg };
     }
 
     return { data: json as T };
-  } catch (err: any) {
-    return { error: err.message || 'Error de conexión de red' };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Error de conexión de red';
+    return { error: message };
   }
 }
 
 export const api = {
   // Auth
   async loginWithGoogle(idToken: string, rolDeseado?: 'COACH' | 'ALUMNO', codigoInvitacion?: string) {
-    const res = await request<{ token: string; user: any }>('/auth/google', {
+    const res = await request<{ token: string; user: ApiUserDTO }>('/auth/google', {
       method: 'POST',
       body: JSON.stringify({ idToken, rolDeseado, codigoInvitacion }),
     });
@@ -68,7 +102,7 @@ export const api = {
   },
 
   async demoLogin(rol: 'COACH' | 'ALUMNO') {
-    const res = await request<{ token: string; user: any }>('/auth/demo-login', {
+    const res = await request<{ token: string; user: ApiUserDTO }>('/auth/demo-login', {
       method: 'POST',
       body: JSON.stringify({ rol }),
     });
@@ -79,11 +113,15 @@ export const api = {
   },
 
   async getMe() {
-    return request<{ user: any; coach?: any; atleta?: any }>('/auth/me');
+    return request<{
+      user: ApiUserDTO;
+      coach?: Record<string, unknown>;
+      atleta?: Record<string, unknown>;
+    }>('/auth/me');
   },
 
-  async submitOnboarding(datos: any) {
-    const res = await request<{ token: string; user: any }>('/auth/onboarding', {
+  async submitOnboarding(datos: Record<string, unknown>) {
+    const res = await request<{ token: string; user: ApiUserDTO }>('/auth/onboarding', {
       method: 'POST',
       body: JSON.stringify(datos),
     });
@@ -95,12 +133,12 @@ export const api = {
 
   async logout() {
     setStoredToken(null);
-    return request('/auth/logout', { method: 'POST' });
+    return request<{ success: boolean }>('/auth/logout', { method: 'POST' });
   },
 
   // Alumno
   async getAthleteToday() {
-    return request<any>('/athlete/today');
+    return request<Record<string, unknown>>('/athlete/today');
   },
 
   async submitWellness(datos: {
@@ -110,7 +148,12 @@ export const api = {
     estres: number;
     animo: number;
   }) {
-    return request<any>('/athlete/wellness', {
+    return request<{
+      success: boolean;
+      scorePorcentaje: number;
+      estadoLabel: string;
+      fecha: string;
+    }>('/athlete/wellness', {
       method: 'POST',
       body: JSON.stringify(datos),
     });
@@ -124,28 +167,30 @@ export const api = {
     presentaDolor: boolean;
     zonaDolor?: string | null;
     comentarios?: string | null;
-    seriesCompletadas?: any[];
+    seriesCompletadas?: unknown[];
   }) {
-    return request<any>('/athlete/workout/finish', {
+    return request<Record<string, unknown>>('/athlete/workout/finish', {
       method: 'POST',
       body: JSON.stringify(datos),
     });
   },
 
   async reportCycleDelay() {
-    return request<any>('/athlete/cycle/delay', { method: 'POST' });
+    return request<{ success: boolean; mensaje: string }>('/athlete/cycle/delay', {
+      method: 'POST',
+    });
   },
 
   async getAthleteHistory() {
-    return request<any>('/athlete/history');
+    return request<{ sesiones: Record<string, unknown>[] }>('/athlete/history');
   },
 
   async getAthleteSleep() {
-    return request<any>('/athlete/sleep');
+    return request<{ registros: Record<string, unknown>[] }>('/athlete/sleep');
   },
 
-  async submitSleep(datos: any) {
-    return request<any>('/athlete/sleep', {
+  async submitSleep(datos: Record<string, unknown>) {
+    return request<{ success: boolean }>('/athlete/sleep', {
       method: 'POST',
       body: JSON.stringify(datos),
     });
@@ -153,34 +198,34 @@ export const api = {
 
   // Coach
   async getCoachDashboard() {
-    return request<any>('/coach/dashboard');
+    return request<Record<string, unknown>>('/coach/dashboard');
   },
 
   async getCoachAthletes() {
-    return request<any>('/coach/athletes');
+    return request<{ atletas: Record<string, unknown>[] }>('/coach/athletes');
   },
 
   async getCoachAthleteProfile(id: string) {
-    return request<any>(`/coach/athletes/${id}`);
+    return request<Record<string, unknown>>(`/coach/athletes/${id}`);
   },
 
-  async createAthlete(datos: any) {
-    return request<any>('/coach/athletes', {
+  async createAthlete(datos: Record<string, unknown>) {
+    return request<Record<string, unknown>>('/coach/athletes', {
       method: 'POST',
       body: JSON.stringify(datos),
     });
   },
 
   async getCoachAlerts() {
-    return request<any>('/coach/alerts');
+    return request<{ alertas: Record<string, unknown>[] }>('/coach/alerts');
   },
 
   async resolveAlert(id: string) {
-    return request<any>(`/coach/alerts/${id}/resolve`, { method: 'PUT' });
+    return request<{ success: boolean }>(`/coach/alerts/${id}/resolve`, { method: 'PUT' });
   },
 
-  async submit1rmEvaluation(datos: any) {
-    return request<any>('/coach/evaluations/1rm', {
+  async submit1rmEvaluation(datos: Record<string, unknown>) {
+    return request<Record<string, unknown>>('/coach/evaluations/1rm', {
       method: 'POST',
       body: JSON.stringify(datos),
     });
@@ -188,14 +233,14 @@ export const api = {
 
   // Catálogo
   async getExercises() {
-    return request<any>('/catalog/exercises');
+    return request<{ ejercicios: Record<string, unknown>[] }>('/catalog/exercises');
   },
 
   async getCategories() {
-    return request<any>('/catalog/categories');
+    return request<{ categorias: Record<string, unknown>[] }>('/catalog/categories');
   },
 
   async getEquipment() {
-    return request<any>('/catalog/equipment');
+    return request<{ equipamientos: Record<string, unknown>[] }>('/catalog/equipment');
   },
 };
