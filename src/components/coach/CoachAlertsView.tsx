@@ -3,8 +3,9 @@
 // CORRESPONDE A alertas-claro.html / alertas-oscuro.html
 // =====================================================================
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTraining } from '../../context/TrainingContext';
+import { api } from '../../infrastructure/api/client';
 import { IconInterface } from '../ui/icons/IconInterface';
 
 type TipoAlerta = 'TODAS' | 'SALUD' | 'CICLO' | 'CARGA' | 'BIENESTAR' | 'SESIONES';
@@ -110,8 +111,57 @@ export const CoachAlertsView: React.FC<CoachAlertsViewProps> = ({ onNavegarA }) 
     },
   ]);
 
+  useEffect(() => {
+    let active = true;
+    api
+      .getCoachAlerts()
+      .then((res) => {
+        if (!active || !res.data?.alertas) return;
+        const remotas: AlertaItem[] = res.data.alertas.map((raw) => {
+          const tipo = String(raw.tipo || 'SALUD');
+          const severidad = String(raw.severidad || 'AMBAR');
+          const categoria: AlertaItem['categoria'] =
+            tipo === 'DOLOR'
+              ? 'SALUD'
+              : tipo === 'CICLO'
+                ? 'CICLO'
+                : tipo === 'ACWR'
+                  ? 'CARGA'
+                  : tipo === 'BIENESTAR'
+                    ? 'BIENESTAR'
+                    : 'SESIONES';
+
+          return {
+            id: String(raw.id),
+            categoria,
+            titulo: String(raw.titulo || 'Alerta del sistema'),
+            descripcion: String(raw.descripcion || ''),
+            atletaNombre: String(raw.atleta_nombre || 'Atleta'),
+            tiempo: 'en vivo (D1)',
+            nivelRiesgo: severidad === 'ROJA' ? 'alto' : severidad === 'AMBAR' ? 'medio' : 'info',
+            accionLabel: categoria === 'CARGA' ? 'Ver carga' : 'Ver ficha',
+            accionTipo: categoria === 'CARGA' ? 'CARGA' : 'FICHA',
+          };
+        });
+
+        if (remotas.length > 0) {
+          setAlertas((prev) => {
+            const idsExistentes = new Set(prev.map((p) => p.id));
+            const nuevas = remotas.filter((r) => !idsExistentes.has(r.id));
+            return [...nuevas, ...prev];
+          });
+        }
+      })
+      .catch(() => {});
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
   const descartarAlerta = (id: string) => {
     setAlertas((prev) => prev.filter((a) => a.id !== id));
+    api.resolveAlert(id).catch(() => {});
   };
 
   const alertasFiltradas = alertas.filter((a) => {

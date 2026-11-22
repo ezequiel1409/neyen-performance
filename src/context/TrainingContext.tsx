@@ -277,6 +277,17 @@ export const TrainingProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const agregarAtleta = (nuevo: Atleta) => {
     setAtletas((prev) => [nuevo, ...prev]);
+
+    api
+      .createAthlete({
+        nombre: nuevo.nombreCompleto,
+        email: `${nuevo.identificadorAtleta.toLowerCase()}@neyima.com`,
+        deporte: nuevo.deportePracticado,
+        genero: nuevo.generoAtleta,
+        pesoKg: nuevo.pesoCorporalKilogramos,
+        alturaCm: nuevo.alturaCentimetros,
+      })
+      .catch(() => {});
   };
 
   const completarPerfil = (datosPerfil: Partial<Atleta>) => {
@@ -290,6 +301,15 @@ export const TrainingProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           a.identificadorAtleta === atletaSeleccionadoId ? { ...a, ...datosPerfil } : a
         )
       );
+      api
+        .submitOnboarding({
+          genero: datosPerfil.generoAtleta,
+          deporte: datosPerfil.deportePracticado,
+          posicion: datosPerfil.posicionEnElCampoDeJuego,
+          pesoKg: datosPerfil.pesoCorporalKilogramos,
+          alturaCm: datosPerfil.alturaCentimetros,
+        })
+        .catch(() => {});
     }
   };
 
@@ -337,6 +357,16 @@ export const TrainingProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       );
       return [nuevoTest, ...filtrados];
     });
+
+    api
+      .submit1rmEvaluation({
+        idAtleta: 'usr_atleta_demo',
+        idEjercicioBase: testData.identificadorEjercicioBase,
+        pesoLevantadoKg: testData.pesoLevantadoKilogramos,
+        repeticionesRealizadas: testData.repeticionesRealizadas,
+        formulaPreferida: atletaActual.formulaCalculoRepeticionMaximaPreferida || 'EPLEY',
+      })
+      .catch(() => {});
   };
 
   const actualizarMacrociclo = (macro: PlanMacrociclo) => {
