@@ -37,10 +37,15 @@ export const CoachDashboardView: React.FC<CoachDashboardViewProps> = ({
   const [filtroDisciplina, setFiltroDisciplina] = useState<string>('Todas');
 
   const disciplinasDisponibles = ['Todas', 'Básquetbol', 'Fútbol', 'Running', 'Natación', 'Fuerza'];
+  const totalPersonalizados = atletas.filter((a) => !a.identificadorEquipoPerteneciente).length;
 
   const atletasFiltrados = atletas.filter((a) => {
     const coincideClub =
-      filtroClub === 'TODOS' || a.identificadorEquipoPerteneciente === filtroClub;
+      filtroClub === 'TODOS'
+        ? true
+        : filtroClub === 'PERSONALIZADO'
+          ? !a.identificadorEquipoPerteneciente
+          : a.identificadorEquipoPerteneciente === filtroClub;
     const coincideDisciplina =
       filtroDisciplina === 'Todas' ||
       a.deportePracticado.toLowerCase().includes(filtroDisciplina.toLowerCase());
@@ -58,7 +63,7 @@ export const CoachDashboardView: React.FC<CoachDashboardViewProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <p className="text-xs font-bold uppercase tracking-wider text-[var(--mut)]">
-            Panel del coach · {filtroClub === 'TODOS' ? `${clubes.length} clubes activos` : filtroClub}
+            Panel del coach · {clubes.length} clubes y {totalPersonalizados} personalizado(s)
           </p>
           <h1 className="text-3xl font-extrabold text-[var(--txt)] tracking-tight">
             Hola, Coach
@@ -75,39 +80,7 @@ export const CoachDashboardView: React.FC<CoachDashboardViewProps> = ({
         </Button>
       </div>
 
-      {/* Selector rápido de Clubes del Coach */}
-      <div className="flex flex-wrap items-center gap-1.5">
-        <button
-          type="button"
-          onClick={() => setFiltroClub('TODOS')}
-          className={`px-3 py-1.5 rounded-xl text-xs font-extrabold transition cursor-pointer ${
-            filtroClub === 'TODOS'
-              ? 'bg-[var(--navbg)] text-[var(--navon)]'
-              : 'border border-[var(--bord)] bg-[var(--surf)] text-[var(--txt)]'
-          }`}
-        >
-          Todos los clubes ({atletas.length})
-        </button>
-        {clubes.map((club) => {
-          const count = atletas.filter((a) => a.identificadorEquipoPerteneciente === club).length;
-          return (
-            <button
-              key={club}
-              type="button"
-              onClick={() => setFiltroClub(club)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-extrabold transition cursor-pointer ${
-                filtroClub === club
-                  ? 'bg-[var(--navbg)] text-[var(--navon)]'
-                  : 'border border-[var(--bord)] bg-[var(--surf)] text-[var(--txt)]'
-              }`}
-            >
-              {club} ({count})
-            </button>
-          );
-        })}
-      </div>
-
-      {/* 4 KPIs Clave reactivos al Club */}
+      {/* 4 KPIs Clave reactivos al Club / Modalidad */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <div className="rounded-2xl border border-[var(--bord)] bg-[var(--surf)] p-4 shadow-xs">
           <p className="text-xs font-bold uppercase tracking-wider text-[var(--mut)]">
@@ -163,22 +136,53 @@ export const CoachDashboardView: React.FC<CoachDashboardViewProps> = ({
               </p>
             </div>
 
-            <div className="flex items-center gap-2">
-              <label htmlFor="filtro-dis" className="text-xs font-bold text-[var(--mut)]">
-                Deporte
-              </label>
-              <select
-                id="filtro-dis"
-                value={filtroDisciplina}
-                onChange={(e) => setFiltroDisciplina(e.target.value)}
-                className="h-9 rounded-xl border border-[var(--bord)] bg-[var(--bg)] text-[var(--txt)] text-xs font-bold px-2.5 focus:outline-none"
-              >
-                {disciplinasDisponibles.map((d) => (
-                  <option key={d} value={d}>
-                    {d}
+            <div className="flex flex-wrap items-center gap-2">
+              <div className="flex items-center gap-1.5">
+                <label htmlFor="dash-filtro-club" className="text-xs font-bold text-[var(--mut)]">
+                  Club
+                </label>
+                <select
+                  id="dash-filtro-club"
+                  value={filtroClub}
+                  onChange={(e) => setFiltroClub(e.target.value)}
+                  className="h-9 rounded-xl border border-[var(--bord)] bg-[var(--bg)] text-[var(--txt)] text-xs font-bold px-2.5 focus:outline-none"
+                >
+                  <option value="TODOS">Todos ({atletas.length})</option>
+                  <option value="PERSONALIZADO">
+                    Personalizados / Sin club ({totalPersonalizados})
                   </option>
-                ))}
-              </select>
+                  <optgroup label={`Clubes (${clubes.length})`}>
+                    {clubes.map((club) => {
+                      const count = atletas.filter(
+                        (a) => a.identificadorEquipoPerteneciente === club
+                      ).length;
+                      return (
+                        <option key={club} value={club}>
+                          {club} ({count})
+                        </option>
+                      );
+                    })}
+                  </optgroup>
+                </select>
+              </div>
+
+              <div className="flex items-center gap-1.5">
+                <label htmlFor="filtro-dis" className="text-xs font-bold text-[var(--mut)]">
+                  Deporte
+                </label>
+                <select
+                  id="filtro-dis"
+                  value={filtroDisciplina}
+                  onChange={(e) => setFiltroDisciplina(e.target.value)}
+                  className="h-9 rounded-xl border border-[var(--bord)] bg-[var(--bg)] text-[var(--txt)] text-xs font-bold px-2.5 focus:outline-none"
+                >
+                  {disciplinasDisponibles.map((d) => (
+                    <option key={d} value={d}>
+                      {d}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
           </div>
 
@@ -245,7 +249,7 @@ export const CoachDashboardView: React.FC<CoachDashboardViewProps> = ({
                           />
                           <div>
                             <span className="block text-xs font-extrabold text-[var(--txt)]">
-                              {a.identificadorEquipoPerteneciente || 'Sin club'}
+                              {a.identificadorEquipoPerteneciente || 'Personalizado (1 a 1)'}
                             </span>
                             <span className="block text-xs text-[var(--mut)]">
                               {a.deportePracticado}

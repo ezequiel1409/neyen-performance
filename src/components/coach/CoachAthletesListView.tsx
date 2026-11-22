@@ -1,6 +1,6 @@
 // =====================================================================
 // NEYIMA ATHLETIC - DIRECTORIO DE CLUBES Y EVOLUCIÓN DE ATLETAS (COACH)
-// Segmentación por Club, validación M/F (Fase Lútea) y evolución de 1RM/Carga
+// Segmentación por Club (<select> escalable >10 clubes) o Personalizado (1 a 1)
 // =====================================================================
 
 import React, { useState } from 'react';
@@ -28,13 +28,25 @@ export const CoachAthletesListView: React.FC<CoachAthletesListViewProps> = ({ on
   const [clubFiltro, setClubFiltro] = useState<string>('TODOS');
   const [generoFiltro, setGeneroFiltro] = useState<'TODOS' | 'F' | 'M'>('TODOS');
 
+  const totalPersonalizados = atletas.filter(
+    (a) => !a.identificadorEquipoPerteneciente
+  ).length;
+
   const atletasFiltrados = atletas.filter((atleta) => {
     const coincideTexto =
       atleta.nombreCompleto.toLowerCase().includes(busqueda.toLowerCase()) ||
       atleta.identificadorAtleta.toLowerCase().includes(busqueda.toLowerCase()) ||
-      (atleta.identificadorEquipoPerteneciente || '').toLowerCase().includes(busqueda.toLowerCase());
+      (atleta.identificadorEquipoPerteneciente || 'personalizado')
+        .toLowerCase()
+        .includes(busqueda.toLowerCase());
+
     const coincideClub =
-      clubFiltro === 'TODOS' || atleta.identificadorEquipoPerteneciente === clubFiltro;
+      clubFiltro === 'TODOS'
+        ? true
+        : clubFiltro === 'PERSONALIZADO'
+          ? !atleta.identificadorEquipoPerteneciente
+          : atleta.identificadorEquipoPerteneciente === clubFiltro;
+
     const coincideGenero = generoFiltro === 'TODOS' || atleta.generoAtleta === generoFiltro;
     return coincideTexto && coincideClub && coincideGenero;
   });
@@ -44,69 +56,38 @@ export const CoachAthletesListView: React.FC<CoachAthletesListViewProps> = ({ on
     onAbrirAtleta(id);
   };
 
-  // Estadísticas resumidas del club seleccionado
   const totalFemeninasClub = atletasFiltrados.filter((a) => a.generoAtleta === 'F').length;
   const totalMasculinosClub = atletasFiltrados.filter((a) => a.generoAtleta === 'M').length;
 
   return (
     <div className="space-y-4">
-      {/* Encabezado y Selector Rápido de Clubes */}
+      {/* Encabezado */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
           <p className="text-xs sm:text-sm font-bold text-[var(--mut)]">
-            Gestión por planteles y evolución individual
+            Gestión por planteles, personalizados (1 a 1) y evolución individual
           </p>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
             Clubes y Atletas
           </h1>
         </div>
-
-        {/* Píldoras de filtro rápido por Club */}
-        <div className="flex flex-wrap gap-1.5">
-          <button
-            type="button"
-            onClick={() => setClubFiltro('TODOS')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-extrabold transition cursor-pointer ${
-              clubFiltro === 'TODOS'
-                ? 'bg-[var(--navbg)] text-[var(--navon)]'
-                : 'border border-[var(--bord)] bg-[var(--surf)] text-[var(--txt)]'
-            }`}
-          >
-            Todos los clubes ({atletas.length})
-          </button>
-          {clubes.map((club) => {
-            const cantidad = atletas.filter(
-              (a) => a.identificadorEquipoPerteneciente === club
-            ).length;
-            return (
-              <button
-                key={club}
-                type="button"
-                onClick={() => setClubFiltro(club)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-extrabold transition cursor-pointer ${
-                  clubFiltro === club
-                    ? 'bg-[var(--navbg)] text-[var(--navon)]'
-                    : 'border border-[var(--bord)] bg-[var(--surf)] text-[var(--txt)]'
-                }`}
-              >
-                {club} ({cantidad})
-              </button>
-            );
-          })}
-        </div>
       </div>
 
-      {/* Resumen de Evolución del Club Seleccionado */}
+      {/* Resumen de Evolución del Grupo / Club Seleccionado */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div className="rounded-2xl border border-[var(--bord)] bg-[var(--surf)] p-3.5">
           <span className="text-xs font-bold uppercase tracking-wider text-[var(--mut)]">
-            Plantel seleccionado
+            Grupo / Modalidad activa
           </span>
           <p className="text-lg font-extrabold text-[var(--txt)] mt-0.5 truncate">
-            {clubFiltro === 'TODOS' ? 'Todos los Clubes' : clubFiltro}
+            {clubFiltro === 'TODOS'
+              ? 'Todos (Clubes y 1 a 1)'
+              : clubFiltro === 'PERSONALIZADO'
+                ? 'Personalizados / Sin club'
+                : clubFiltro}
           </p>
           <span className="text-xs text-[var(--mut)]">
-            {atletasFiltrados.length} integrante(s) en seguimiento
+            {atletasFiltrados.length} integrante(s) en vista
           </span>
         </div>
 
@@ -143,14 +124,14 @@ export const CoachAthletesListView: React.FC<CoachAthletesListViewProps> = ({ on
               return `${prom} kg`;
             })()}
           </p>
-          <span className="text-xs text-[var(--mut)]">Promedio del grupo filtrado</span>
+          <span className="text-xs text-[var(--mut)]">Promedio del grupo seleccionado</span>
         </div>
       </div>
 
       <div className="flex flex-col lg:flex-row gap-4 items-start">
-        {/* Tabla de Evolución por Club y Persona */}
+        {/* Tabla de Evolución por Club / Personalizado y Persona */}
         <div className="flex-1 w-full bg-[var(--surf)] border border-[var(--bord)] rounded-2xl p-4 sm:p-5">
-          {/* Barra de Filtros */}
+          {/* Barra de Filtros con <select> escalable para >10 clubes */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
             <div>
               <label htmlFor="search-atleta" className="block text-xs font-bold text-[var(--mut)] mb-1">
@@ -168,20 +149,30 @@ export const CoachAthletesListView: React.FC<CoachAthletesListViewProps> = ({ on
 
             <div>
               <label htmlFor="filtro-club" className="block text-xs font-bold text-[var(--mut)] mb-1">
-                Club / Equipo
+                Modalidad / Club ({clubes.length} clubes)
               </label>
               <select
                 id="filtro-club"
                 value={clubFiltro}
                 onChange={(e) => setClubFiltro(e.target.value)}
-                className="w-full h-11 px-3 rounded-xl border-2 border-[var(--bord)] bg-[var(--bg)] text-[var(--txt)] text-sm outline-hidden"
+                className="w-full h-11 px-3 rounded-xl border-2 border-[var(--bord)] bg-[var(--bg)] text-[var(--txt)] text-sm font-bold outline-hidden"
               >
-                <option value="TODOS">Todos los clubes</option>
-                {clubes.map((c) => (
-                  <option key={c} value={c}>
-                    {c}
-                  </option>
-                ))}
+                <option value="TODOS">Todos (Clubes y Personalizados) ({atletas.length})</option>
+                <option value="PERSONALIZADO">
+                  Personalizados / Sin club (1 a 1) ({totalPersonalizados})
+                </option>
+                <optgroup label={`Clubes / Planteles (${clubes.length})`}>
+                  {clubes.map((c) => {
+                    const count = atletas.filter(
+                      (a) => a.identificadorEquipoPerteneciente === c
+                    ).length;
+                    return (
+                      <option key={c} value={c}>
+                        {c} ({count})
+                      </option>
+                    );
+                  })}
+                </optgroup>
               </select>
             </div>
 
@@ -202,13 +193,13 @@ export const CoachAthletesListView: React.FC<CoachAthletesListViewProps> = ({ on
             </div>
           </div>
 
-          {/* Tabla de Evolución Individual dentro del Club */}
+          {/* Tabla de Evolución Individual */}
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs sm:text-sm">
               <thead>
                 <tr className="border-b border-[var(--bord)] text-[var(--mut)] uppercase tracking-wider text-xs font-bold">
                   <th className="py-2.5 px-2">Atleta</th>
-                  <th className="py-2.5 px-2">Club</th>
+                  <th className="py-2.5 px-2">Modalidad / Club</th>
                   <th className="py-2.5 px-2">Sexo / Fase Lútea</th>
                   <th className="py-2.5 px-2">Evolución 1RM</th>
                   <th className="py-2.5 px-2">Carga / Peso</th>
@@ -258,8 +249,16 @@ export const CoachAthletesListView: React.FC<CoachAthletesListViewProps> = ({ on
                         </span>
                       </td>
 
-                      <td className="py-3 px-2 font-bold text-xs">
-                        {atleta.identificadorEquipoPerteneciente || 'Sin club'}
+                      <td className="py-3 px-2 text-xs">
+                        {atleta.identificadorEquipoPerteneciente ? (
+                          <span className="font-extrabold text-[var(--txt)]">
+                            {atleta.identificadorEquipoPerteneciente}
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold border border-[var(--bord)] bg-[var(--bg)] text-[var(--mut)]">
+                            Personalizado (1 a 1)
+                          </span>
+                        )}
                       </td>
 
                       <td className="py-3 px-2">
@@ -323,7 +322,7 @@ export const CoachAthletesListView: React.FC<CoachAthletesListViewProps> = ({ on
           </div>
         </div>
 
-        {/* Panel lateral: Registro de Nuevo Atleta con validación M/F y Club */}
+        {/* Panel lateral: Registro de Nuevo Atleta con validación M/F y Club / Personalizado */}
         <NewAthleteRegistrationCard
           totalAtletas={atletas.length}
           clubes={clubes}

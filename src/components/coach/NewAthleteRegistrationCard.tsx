@@ -72,7 +72,8 @@ export const NewAthleteRegistrationCard: React.FC<NewAthleteRegistrationCardProp
       return;
     }
 
-    let clubFinal = clubSeleccionado;
+    let clubFinal: string | undefined =
+      clubSeleccionado === 'PERSONALIZADO' ? undefined : clubSeleccionado;
     if (modoNuevoClub) {
       if (nuevoClubNombre.trim().length < 3) {
         setErrorValidacion('El nombre del nuevo club debe tener al menos 3 caracteres.');
@@ -130,7 +131,7 @@ export const NewAthleteRegistrationCard: React.FC<NewAthleteRegistrationCardProp
     setModoNuevoClub(false);
     setNuevoClubNombre('');
     setMensajeExito(
-      `${nombreLimpio} (${genero}) registrado en ${clubFinal}${
+      `${nombreLimpio} (${genero}) registrado como ${clubFinal || 'Atleta Personalizado (1 a 1)'}${
         genero === 'F' ? ` · ${previewCiclo?.nombreFaseLegible}` : ''
       }`
     );
@@ -255,18 +256,18 @@ export const NewAthleteRegistrationCard: React.FC<NewAthleteRegistrationCardProp
           </div>
         )}
 
-        {/* Club / Equipo */}
+        {/* Modalidad: Personalizado (1 a 1) o Club / Plantel */}
         <div>
           <div className="flex items-center justify-between mb-1">
             <label htmlFor="new-club" className="text-xs font-bold text-[var(--mut)]">
-              Club / Plantel *
+              Modalidad / Club *
             </label>
             <button
               type="button"
               onClick={() => setModoNuevoClub((prev) => !prev)}
               className="text-xs font-bold text-[var(--link)] underline cursor-pointer"
             >
-              {modoNuevoClub ? 'Elegir existente' : '+ Crear club'}
+              {modoNuevoClub ? 'Elegir de la lista' : '+ Crear club'}
             </button>
           </div>
           {modoNuevoClub ? (
@@ -285,11 +286,14 @@ export const NewAthleteRegistrationCard: React.FC<NewAthleteRegistrationCardProp
               onChange={(e) => setClubSeleccionado(e.target.value)}
               className="w-full h-10 px-3 rounded-xl border-2 border-[var(--bord)] bg-[var(--bg)] text-xs font-bold text-[var(--txt)] outline-hidden"
             >
-              {clubes.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
+              <option value="PERSONALIZADO">Personalizado / Sin club (1 a 1)</option>
+              <optgroup label="Clubes / Planteles">
+                {clubes.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </optgroup>
             </select>
           )}
         </div>
