@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">NEYIMA</string>
+    <string name="title_activity_main">NEYIMA</string>
+    <string name="package_name">com.neyima.performance</string>
+    <string name="custom_url_scheme">com.neyima.performance</string>
+</resources>
