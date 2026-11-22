@@ -1,0 +1,19 @@
+{
+  "appId": "com.neyima.performance",
+  "appName": "NEYIMA",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "backgroundColor": "#3C0016",
+    "allowMixedContent": false
+  },
+  "plugins": {
+    "StatusBar": {
+      "backgroundColor": "#3C0016",
+      "style": "DARK",
+      "overlaysWebView": false
+    }
+  }
+}

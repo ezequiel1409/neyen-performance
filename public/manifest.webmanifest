@@ -1,0 +1,28 @@
+{
+  "id": "com.neyima.performance",
+  "name": "NEYIMA Athletic Performance OS",
+  "short_name": "NEYIMA",
+  "description": "Sistema operativo de rendimiento atlético, control de carga ACWR, sRPE de Foster y autorregulación fisiológica.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F1EADD",
+  "theme_color": "#3C0016",
+  "lang": "es-AR",
+  "categories": ["fitness", "health", "sports"],
+  "icons": [
+    {
+      "src": "/assets/branding/neyima-claro-emblema.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/branding/neyima-oscuro-emblema.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
