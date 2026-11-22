@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTraining } from '../../context/TrainingContext';
+import { calcularFaseCicloActual } from '../../utils/trainingMath';
 import { IndicatorStatus } from '../ui/IndicatorStatus';
 import { Button } from '../ui/Button';
 import { IconInterface } from '../ui/icons/IconInterface';
@@ -23,16 +24,35 @@ export const AthleteTodayView: React.FC<AthleteTodayViewProps> = ({
     };
 
   const nombreAtleta = atletaActual.nombreCompleto.split(' ')[0] || 'Atleta';
-  const tieneCiclo = atletaActual.generoAtleta === 'F';
+  const esFemeninoConCiclo =
+    atletaActual.generoAtleta === 'F' && Boolean(atletaActual.datosCicloMenstrual?.activo);
+
+  const infoCiclo =
+    esFemeninoConCiclo && atletaActual.datosCicloMenstrual
+      ? calcularFaseCicloActual(
+          atletaActual.datosCicloMenstrual.fechaUltimaMenstruacion,
+          atletaActual.datosCicloMenstrual.duracionPromedioCicloDias,
+          atletaActual.datosCicloMenstrual.duracionPromedioMenstruacionDias
+        )
+      : null;
+
+  const enRetraso = Boolean(atletaActual.datosCicloMenstrual?.enRetrasoMenstrual);
 
   return (
     <div className="max-w-md mx-auto space-y-4 pb-20">
-      {/* Encabezado: Hoy / Hola, [Nombre] */}
-      <div className="pt-2 px-1">
-        <p className="text-xs font-bold uppercase tracking-wider text-[var(--mut)]">Hoy</p>
-        <h1 className="text-3xl font-extrabold text-[var(--txt)] tracking-tight">
-          Hola, {nombreAtleta}
-        </h1>
+      {/* Encabezado: Hoy / Hola, [Nombre] + Club */}
+      <div className="pt-2 px-1 flex items-start justify-between gap-2">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-wider text-[var(--mut)]">
+            Hoy · {atletaActual.identificadorEquipoPerteneciente || 'Atleta Individual'}
+          </p>
+          <h1 className="text-3xl font-extrabold text-[var(--txt)] tracking-tight">
+            Hola, {nombreAtleta}
+          </h1>
+        </div>
+        <span className="px-2.5 py-1 rounded-full text-xs font-extrabold border border-[var(--bord)] bg-[var(--surf)] text-[var(--txt)]">
+          Perfil {atletaActual.generoAtleta === 'F' ? 'Femenino (F)' : 'Masculino (M)'}
+        </span>
       </div>
 
       {/* Tarjeta 1: Check-in de hoy (1 minuto) */}
@@ -118,10 +138,18 @@ export const AthleteTodayView: React.FC<AthleteTodayViewProps> = ({
           icon="check"
         />
 
-        {tieneCiclo && (
+        {esFemeninoConCiclo && infoCiclo && (
           <IndicatorStatus
-            status="neu"
-            label="Día 23 · lútea tardía (−7,5 %)"
+            status={enRetraso ? 'warn' : infoCiclo.faseActual === 'LUTEA' ? 'neu' : 'ok'}
+            label={
+              enRetraso
+                ? 'Ciclo en pausa por retraso'
+                : infoCiclo.faseActual === 'LUTEA'
+                  ? `Día ${infoCiclo.diaActualDelCiclo} · Fase lútea (−7,5 %)`
+                  : infoCiclo.faseActual === 'MENSTRUACION'
+                    ? `Día ${infoCiclo.diaActualDelCiclo} · Menstrual (−5 %)`
+                    : `Día ${infoCiclo.diaActualDelCiclo} · ${infoCiclo.nombreFaseLegible} (100 %)`
+            }
             icon="drop"
           />
         )}

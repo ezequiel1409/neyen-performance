@@ -1,6 +1,7 @@
 import React from 'react';
 import { IconInterface, type IconInterfaceName } from './icons/IconInterface';
 import { triggerHaptic } from '../../utils/nativeBridge';
+import { useTraining } from '../../context/TrainingContext';
 
 export type VistaAlumno =
   | 'HOY'
@@ -19,11 +20,15 @@ interface BottomNavProps {
 }
 
 export const BottomNav: React.FC<BottomNavProps> = ({ vistaActual, onCambiarVista }) => {
-  const tabs: Array<{
+  const { atletaActual } = useTraining();
+  const esFemenino = atletaActual.generoAtleta === 'F';
+
+  const baseTabs: Array<{
     id: VistaAlumno;
     matches: VistaAlumno[];
     label: string;
     icon: IconInterfaceName;
+    soloFemenino?: boolean;
   }> = [
     {
       id: 'HOY',
@@ -54,8 +59,11 @@ export const BottomNav: React.FC<BottomNavProps> = ({ vistaActual, onCambiarVist
       matches: ['CICLO'],
       label: 'Ciclo',
       icon: 'drop',
+      soloFemenino: true,
     },
   ];
+
+  const tabs = baseTabs.filter((t) => !t.soloFemenino || esFemenino);
 
   return (
     <nav

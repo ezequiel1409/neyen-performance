@@ -1,18 +1,34 @@
 import React, { useState } from 'react';
 import { useTraining } from '../../context/TrainingContext';
+import { calcularFaseCicloActual } from '../../utils/trainingMath';
 import { Button } from '../ui/Button';
 import { IconInterface } from '../ui/icons/IconInterface';
 
 export const AthleteCycleView: React.FC = () => {
   const { atletaActual, reportarRetrasoMenstrual, resetearRetrasoMenstrual } = useTraining();
 
+  const [hoyStr] = useState<string>(() => new Date().toISOString().split('T')[0]);
+
   const [compartirCiclo, setCompartirCiclo] = useState<boolean>(true);
-  const [fechaUltimaMenstruacion, setFechaUltimaMenstruacion] = useState<string>('2026-10-24');
-  const [duracionCicloDias, setDuracionCicloDias] = useState<number>(28);
-  const [duracionMenstruacionDias, setDuracionMenstruacionDias] = useState<number>(5);
+  const [fechaUltimaMenstruacion, setFechaUltimaMenstruacion] = useState<string>(
+    () =>
+      atletaActual.datosCicloMenstrual?.fechaUltimaMenstruacion ||
+      new Date(Date.now() - 23 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+  );
+  const [duracionCicloDias, setDuracionCicloDias] = useState<number>(
+    () => atletaActual.datosCicloMenstrual?.duracionPromedioCicloDias || 28
+  );
+  const [duracionMenstruacionDias, setDuracionMenstruacionDias] = useState<number>(
+    () => atletaActual.datosCicloMenstrual?.duracionPromedioMenstruacionDias || 5
+  );
   const [mensajeExito, setMensajeExito] = useState<string | null>(null);
 
   const enRetraso = Boolean(atletaActual.datosCicloMenstrual?.enRetrasoMenstrual);
+  const infoCiclo = calcularFaseCicloActual(
+    fechaUltimaMenstruacion,
+    Math.min(40, Math.max(21, duracionCicloDias || 28)),
+    Math.min(10, Math.max(2, duracionMenstruacionDias || 5))
+  );
 
   const handleReportarRetraso = () => {
     reportarRetrasoMenstrual(atletaActual.identificadorAtleta);
@@ -71,12 +87,18 @@ export const AthleteCycleView: React.FC = () => {
       <div className="rounded-2xl bg-[var(--okbg)] text-[var(--oktx)] p-4 shadow-xs space-y-1">
         <p className="text-xs font-bold uppercase tracking-wider opacity-80">HOY</p>
         <p className="text-2xl font-extrabold leading-tight">
-          {enRetraso ? 'Ciclo en pausa por retraso' : 'Día 23 · fase lútea tardía'}
+          {enRetraso
+            ? 'Ciclo en pausa por retraso'
+            : `Día ${infoCiclo.diaActualDelCiclo} · ${infoCiclo.nombreFaseLegible}`}
         </p>
         <p className="text-xs font-medium">
           {enRetraso
             ? 'Cálculo de cargas pausado preventivamente.'
-            : 'Tus kilos se ajustan −7,5 % en esta fase para optimizar la recuperación.'}
+            : infoCiclo.faseActual === 'LUTEA'
+              ? 'Tus kilos se ajustan −7,5 % en fase lútea para optimizar la recuperación.'
+              : infoCiclo.faseActual === 'MENSTRUACION'
+                ? 'Ajuste preventivo del −5 % en inicio de ciclo menstrual.'
+                : `${infoCiclo.recomendacionDeportiva} (100 % de carga).`}
         </p>
       </div>
 
@@ -84,11 +106,12 @@ export const AthleteCycleView: React.FC = () => {
       <div className="rounded-2xl border border-[var(--bord)] bg-[var(--surf)] p-4 shadow-xs grid grid-cols-2 gap-3">
         <div className="col-span-2 space-y-1">
           <label htmlFor="fecha-ult-menst" className="text-xs font-bold text-[var(--txt)] block">
-            Última menstruación
+            Última menstruación (FUM)
           </label>
           <input
             id="fecha-ult-menst"
             type="date"
+            max={hoyStr}
             value={fechaUltimaMenstruacion}
             onChange={(e) => setFechaUltimaMenstruacion(e.target.value)}
             className="w-full h-12 rounded-xl border-2 border-[var(--field)] bg-[var(--surf)] text-[var(--txt)] px-3 text-sm font-semibold focus:outline-none focus:border-[var(--link)]"

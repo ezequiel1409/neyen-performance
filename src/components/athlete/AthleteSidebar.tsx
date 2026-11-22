@@ -17,22 +17,26 @@ export const AthleteSidebar: React.FC<AthleteSidebarProps> = ({
   vistaActual,
   onCambiarVista,
 }) => {
-  const { cerrarSesion } = useTraining();
+  const { cerrarSesion, atletaActual } = useTraining();
+  const esFemenino = atletaActual.generoAtleta === 'F';
 
-  const items: Array<{
+  const baseItems: Array<{
     id: VistaAlumno;
     matches: VistaAlumno[];
     label: string;
     icon: IconInterfaceName;
+    soloFemenino?: boolean;
   }> = [
     { id: 'HOY', matches: ['HOY', 'RUTINA'], label: 'Inicio (Hoy)', icon: 'home' },
     { id: 'PROGRESO', matches: ['PROGRESO', 'FOTOS'], label: 'Progreso y fotos', icon: 'trend' },
     { id: 'BIENESTAR', matches: ['BIENESTAR'], label: 'Bienestar diario', icon: 'heart' },
     { id: 'HISTORIAL', matches: ['HISTORIAL'], label: 'Historial', icon: 'history' },
-    { id: 'CICLO', matches: ['CICLO'], label: 'Mi ciclo', icon: 'drop' },
+    { id: 'CICLO', matches: ['CICLO'], label: 'Mi ciclo', icon: 'drop', soloFemenino: true },
     { id: 'SUENIO', matches: ['SUENIO'], label: 'Descanso y reloj', icon: 'moon' },
     { id: 'DASHBOARD', matches: ['DASHBOARD'], label: 'Panel expandido', icon: 'clipboard' },
   ];
+
+  const items = baseItems.filter((item) => !item.soloFemenino || esFemenino);
 
   return (
     <aside
