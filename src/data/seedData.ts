@@ -406,6 +406,24 @@ export const ATLETA_FEMENINA_2_DEMO: Atleta = {
   },
 };
 
+export const ATLETA_PERSONALIZADO_DEMO: Atleta = {
+  identificadorAtleta: 'AL0004',
+  nombreCompleto: 'Martín Benítez',
+  generoAtleta: 'M',
+  fechaNacimiento: '1997-11-04',
+  edadCronologicaAnios: 29,
+  alturaCentimetros: 179,
+  pesoCorporalKilogramos: 73.5,
+  deportePracticado: 'Running',
+  posicionEnElCampoDeJuego: 'Fondo 21K / 42K',
+  nivelRendimientoDeportivo: 'Avanzado',
+  objetivoPrincipalEntrenamiento: 'Economía de carrera, fuerza reactiva de tobillo y prevención de Aquiles',
+  diasDisponiblesParaEntrenarPorSemana: 4,
+  formulaCalculoRepeticionMaximaPreferida: 'EPLEY',
+  identificadorEquipoPerteneciente: undefined, // Atleta personalizado (sin club)
+  historialLesiones: [],
+};
+
 // Macrociclo NEYEN 2025-2026 (52 Semanas y 13 Mesociclos)
 export const MACROCICLO_NEYEN_DEMO: PlanMacrociclo = {
   identificadorMacrociclo: 'MACRO-2025-2026',

@@ -8,6 +8,7 @@ import {
   ATLETA_FEMENINA_DEMO,
   ATLETA_FEMENINA_2_DEMO,
   ATLETA_MASCULINO_DEMO,
+  ATLETA_PERSONALIZADO_DEMO,
   BANCO_EJERCICIOS_INICIAL,
   CATEGORIAS_INICIALES,
   EQUIPAMIENTOS_INICIALES,
@@ -98,7 +99,7 @@ interface TrainingContextType {
 
 const TrainingContext = createContext<TrainingContextType | null>(null);
 
-const STORAGE_KEY = 'neyen_performance_state_v2';
+const STORAGE_KEY = 'neyen_performance_state_v3';
 
 export const TrainingProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [estaAutenticado, setEstaAutenticado] = useState<boolean>(() => {
@@ -146,6 +147,7 @@ export const TrainingProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     ATLETA_FEMENINA_DEMO,
     ATLETA_MASCULINO_DEMO,
     ATLETA_FEMENINA_2_DEMO,
+    ATLETA_PERSONALIZADO_DEMO,
   ]);
 
   const [clubesBase, setClubesBase] = useState<string[]>([
