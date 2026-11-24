@@ -251,7 +251,7 @@
 
   /* Soporte de áreas seguras para pantallas Android edge-to-edge (cámara y barra gestual) */
   .safe-area-pt {
-    padding-top: env(safe-area-inset-top, 0px);
+    padding-top: max(0.625rem, env(safe-area-inset-top, 0px));
   }
 
   .safe-area-pb {

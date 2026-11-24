@@ -78,7 +78,7 @@ export const LoginView: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen w-full flex bg-[var(--bg)] text-[var(--txt)] transition-colors">
+    <div className="min-h-screen w-full flex bg-[var(--bg)] text-[var(--txt)] transition-colors safe-area-pt">
       {/* Columna Izquierda: Formulario de inicio de sesión */}
       <div className="w-full lg:w-[460px] xl:w-[520px] shrink-0 flex flex-col justify-between p-6 sm:p-10 lg:p-12 xl:p-16">
         <div className="w-full max-w-md mx-auto my-auto">
