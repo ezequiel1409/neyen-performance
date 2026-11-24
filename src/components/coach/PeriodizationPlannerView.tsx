@@ -5,6 +5,8 @@
 
 import React, { useState } from 'react';
 import { useTraining } from '../../context/TrainingContext';
+import { AlertBanner } from '../ui/AlertBanner';
+import type { StatusType } from '../ui/IndicatorStatus';
 import { BloquePrescripcionData } from './planner/PrescriptionBlockCard';
 import { SessionEditorView } from './planner/SessionEditorView';
 import { PlanStructureView } from './planner/PlanStructureView';
@@ -62,7 +64,7 @@ export const PeriodizationPlannerView: React.FC = () => {
   );
   const [duracionSemanas, setDuracionSemanas] = useState<number>(52);
   const [usarMesociclos, setUsarMesociclos] = useState<boolean>(true);
-  const [mensajeNotificacion, setMensajeNotificacion] = useState<string | null>(null);
+  const [alerta, setAlerta] = useState<{ status: StatusType; message: string } | null>(null);
 
   const handleActualizarEjercicioBloque = (
     bIdx: number,
@@ -98,13 +100,34 @@ export const PeriodizationPlannerView: React.FC = () => {
   };
 
   const handleGuardarSesion = () => {
-    setMensajeNotificacion('Sesión guardada con éxito en el planificador.');
-    setTimeout(() => setMensajeNotificacion(null), 3000);
+    if (nombreSesion.trim().length < 3) {
+      setAlerta({ status: 'bad', message: 'El nombre de la sesión debe tener al menos 3 caracteres.' });
+      return;
+    }
+    if (Number.isNaN(duracionMinutos) || duracionMinutos < 10 || duracionMinutos > 240) {
+      setAlerta({ status: 'bad', message: 'La duración de la sesión debe estar entre 10 y 240 minutos.' });
+      return;
+    }
+    if (Number.isNaN(rpeObjetivo) || rpeObjetivo < 1 || rpeObjetivo > 10) {
+      setAlerta({ status: 'bad', message: 'El RPE objetivo debe estar entre 1 y 10.' });
+      return;
+    }
+    setAlerta({ status: 'ok', message: 'Sesión guardada con éxito en el planificador.' });
   };
 
   const handleCrearPlan = () => {
-    setMensajeNotificacion('Estructura del plan de 52 semanas actualizada correctamente.');
-    setTimeout(() => setMensajeNotificacion(null), 3000);
+    if (nombreMacrociclo.trim().length < 3) {
+      setAlerta({ status: 'bad', message: 'El nombre del macrociclo debe tener al menos 3 caracteres.' });
+      return;
+    }
+    if (Number.isNaN(duracionSemanas) || duracionSemanas < 4 || duracionSemanas > 52) {
+      setAlerta({ status: 'bad', message: 'La duración del plan debe estar entre 4 y 52 semanas.' });
+      return;
+    }
+    setAlerta({
+      status: 'ok',
+      message: `Estructura del plan de ${duracionSemanas} semanas actualizada correctamente.`,
+    });
   };
 
   return (
@@ -141,10 +164,12 @@ export const PeriodizationPlannerView: React.FC = () => {
         </span>
       </div>
 
-      {mensajeNotificacion && (
-        <div className="rounded-2xl bg-emerald-600 text-white p-3 text-xs font-bold text-center animate-fade-in shadow-md">
-          {mensajeNotificacion}
-        </div>
+      {alerta && (
+        <AlertBanner
+          status={alerta.status}
+          message={alerta.message}
+          onClose={() => setAlerta(null)}
+        />
       )}
 
       {subVista === 'EDITOR_SESION' ? (

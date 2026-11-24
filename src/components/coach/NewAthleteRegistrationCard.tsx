@@ -6,6 +6,7 @@
 import React, { useState } from 'react';
 import { Atleta, GeneroAtleta } from '../../types';
 import { calcularFaseCicloActual } from '../../utils/trainingMath';
+import { AlertBanner } from '../ui/AlertBanner';
 
 interface NewAthleteRegistrationCardProps {
   totalAtletas: number;
@@ -58,6 +59,11 @@ export const NewAthleteRegistrationCard: React.FC<NewAthleteRegistrationCardProp
 
     if (genero !== 'F' && genero !== 'M') {
       setErrorValidacion('Debés indicar si el sexo biológico es Femenino (F) o Masculino (M).');
+      return;
+    }
+
+    if (email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      setErrorValidacion('Ingresá un correo electrónico válido o dejalo vacío.');
       return;
     }
 
@@ -149,24 +155,22 @@ export const NewAthleteRegistrationCard: React.FC<NewAthleteRegistrationCardProp
       </div>
 
       {errorValidacion && (
-        <div
-          role="alert"
-          className="rounded-xl bg-[var(--estado-bad-fondo)] text-[var(--estado-bad-texto)] p-3 text-xs font-bold"
-        >
-          {errorValidacion}
-        </div>
+        <AlertBanner
+          status="bad"
+          message={errorValidacion}
+          onClose={() => setErrorValidacion(null)}
+        />
       )}
 
       {mensajeExito && (
-        <div
-          role="status"
-          className="rounded-xl bg-[var(--estado-ok-fondo)] text-[var(--estado-ok-texto)] p-3 text-xs font-bold"
-        >
-          ✓ {mensajeExito}
-        </div>
+        <AlertBanner
+          status="ok"
+          message={mensajeExito}
+          onClose={() => setMensajeExito(null)}
+        />
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-3">
+      <form onSubmit={handleSubmit} noValidate className="space-y-3">
         {/* Sexo Biológico M / F obligatorio */}
         <div>
           <span className="block text-xs font-bold text-[var(--mut)] mb-1">

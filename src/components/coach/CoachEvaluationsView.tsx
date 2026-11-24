@@ -5,7 +5,8 @@
 
 import React, { useState } from 'react';
 import { useTraining } from '../../context/TrainingContext';
-import { IconInterface } from '../ui/icons/IconInterface';
+import { AlertBanner } from '../ui/AlertBanner';
+import type { StatusType } from '../ui/IndicatorStatus';
 
 export const CoachEvaluationsView: React.FC = () => {
   const { atletaActual, atletas, setAtletaSeleccionadoId, testsFuerza, agregarOActualizarTestFuerza, ejercicios } = useTraining();
@@ -14,9 +15,10 @@ export const CoachEvaluationsView: React.FC = () => {
 
   // Formulario nuevo test de fuerza 1RM
   const [ejercicioId, setEjercicioId] = useState(ejercicios[0]?.identificadorEjercicio || 'EX0001');
-  const [peso, setPeso] = useState(100);
-  const [reps, setReps] = useState(3);
+  const [peso, setPeso] = useState('100');
+  const [reps, setReps] = useState('3');
   const [fechaFuerza, setFechaFuerza] = useState(() => new Date().toISOString().split('T')[0]);
+  const [hoyStr] = useState(() => new Date().toISOString().split('T')[0]);
 
   // Formulario tests de movilidad articular
   const [dorsiflexion, setDorsiflexion] = useState('38');
@@ -25,29 +27,63 @@ export const CoachEvaluationsView: React.FC = () => {
   const [movHombro, setMovHombro] = useState('Simétrica 16 cm');
   const [overheadSquat, setOverheadSquat] = useState('3/3');
   const [sitAndReach, setSitAndReach] = useState('+8');
-  const [mensajeGuardado, setMensajeGuardado] = useState(false);
+  const [alerta, setAlerta] = useState<{ status: StatusType; message: string } | null>(null);
 
   const testsAtleta = testsFuerza.filter((t) => t.identificadorAtleta === atletaActual.identificadorAtleta);
 
   const handleGuardarTestFuerza = (e: React.FormEvent) => {
     e.preventDefault();
     const ej = ejercicios.find((item) => item.identificadorEjercicio === ejercicioId);
-    if (!ej) return;
+    if (!ej) {
+      setAlerta({ status: 'bad', message: 'Seleccioná un ejercicio válido del catálogo.' });
+      return;
+    }
+
+    const pesoNum = Number(peso);
+    const repsNum = Number(reps);
+
+    if (Number.isNaN(pesoNum) || pesoNum < 1 || pesoNum > 500) {
+      setAlerta({ status: 'bad', message: 'El peso debe estar entre 1 kg y 500 kg.' });
+      return;
+    }
+
+    if (!Number.isInteger(repsNum) || repsNum < 1 || repsNum > 20) {
+      setAlerta({
+        status: 'bad',
+        message: 'Las repeticiones deben ser un número entero entre 1 y 20 para estimar 1RM.',
+      });
+      return;
+    }
+
+    if (!fechaFuerza || fechaFuerza > hoyStr) {
+      setAlerta({ status: 'bad', message: 'Ingresá una fecha de evaluación válida (no futura).' });
+      return;
+    }
 
     agregarOActualizarTestFuerza({
       identificadorAtleta: atletaActual.identificadorAtleta,
       identificadorEjercicioBase: ejercicioId,
       nombreEjercicioEvaluado: ej.nombreEjercicio,
-      pesoLevantadoKilogramos: Number(peso),
-      repeticionesRealizadas: Number(reps),
+      pesoLevantadoKilogramos: pesoNum,
+      repeticionesRealizadas: repsNum,
       fechaEvaluacion: fechaFuerza,
+    });
+    setAlerta({
+      status: 'ok',
+      message: `Test de ${ej.nombreEjercicio} (${pesoNum} kg × ${repsNum} reps) guardado. El 1RM se actualizó.`,
     });
   };
 
   const handleGuardarMovilidad = (e: React.FormEvent) => {
     e.preventDefault();
-    setMensajeGuardado(true);
-    setTimeout(() => setMensajeGuardado(false), 2500);
+    if (!dorsiflexion.trim() || !movCadera.trim() || !rotCadera.trim() || !movHombro.trim()) {
+      setAlerta({
+        status: 'bad',
+        message: 'Completá los campos principales del protocolo de movilidad antes de guardar.',
+      });
+      return;
+    }
+    setAlerta({ status: 'ok', message: 'Evaluación de movilidad articular guardada correctamente.' });
   };
 
   return (
@@ -104,6 +140,14 @@ export const CoachEvaluationsView: React.FC = () => {
         </button>
       </div>
 
+      {alerta && (
+        <AlertBanner
+          status={alerta.status}
+          message={alerta.message}
+          onClose={() => setAlerta(null)}
+        />
+      )}
+
       {/* Tab Fuerza */}
       {tabActiva === 'FUERZA' ? (
         <div className="space-y-4">
@@ -141,7 +185,7 @@ export const CoachEvaluationsView: React.FC = () => {
           {/* Formulario nuevo test de fuerza */}
           <div className="bg-[var(--surf)] border border-[var(--bord)] rounded-2xl p-4 sm:p-5">
             <h2 className="text-base font-bold mb-3">Registrar nuevo test submáximo</h2>
-            <form onSubmit={handleGuardarTestFuerza} className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+            <form onSubmit={handleGuardarTestFuerza} noValidate className="grid grid-cols-1 sm:grid-cols-4 gap-3">
               <div>
                 <label htmlFor="eval-ej" className="block text-xs font-bold text-[var(--mut)] mb-1">
                   Ejercicio
@@ -167,21 +211,26 @@ export const CoachEvaluationsView: React.FC = () => {
                 <input
                   id="eval-peso"
                   type="number"
+                  min={1}
+                  max={500}
+                  step="0.5"
                   value={peso}
-                  onChange={(e) => setPeso(Number(e.target.value))}
+                  onChange={(e) => setPeso(e.target.value)}
                   className="w-full h-10 px-3 rounded-xl border border-[var(--bord)] bg-[var(--bg)] text-xs font-bold outline-hidden"
                 />
               </div>
 
               <div>
                 <label htmlFor="eval-reps" className="block text-xs font-bold text-[var(--mut)] mb-1">
-                  Repeticiones
+                  Repeticiones (1-20)
                 </label>
                 <input
                   id="eval-reps"
                   type="number"
+                  min={1}
+                  max={20}
                   value={reps}
-                  onChange={(e) => setReps(Number(e.target.value))}
+                  onChange={(e) => setReps(e.target.value)}
                   className="w-full h-10 px-3 rounded-xl border border-[var(--bord)] bg-[var(--bg)] text-xs font-bold outline-hidden"
                 />
               </div>
@@ -194,6 +243,7 @@ export const CoachEvaluationsView: React.FC = () => {
                   <input
                     id="eval-fecha"
                     type="date"
+                    max={hoyStr}
                     value={fechaFuerza}
                     onChange={(e) => setFechaFuerza(e.target.value)}
                     className="w-full h-10 px-2 rounded-xl border border-[var(--bord)] bg-[var(--bg)] text-xs outline-hidden"
@@ -303,12 +353,6 @@ export const CoachEvaluationsView: React.FC = () => {
               >
                 Guardar evaluación
               </button>
-              {mensajeGuardado && (
-                <span className="text-xs font-bold text-emerald-600 flex items-center gap-1">
-                  <IconInterface name="check" size={14} />
-                  Evaluación guardada correctamente
-                </span>
-              )}
             </div>
           </form>
         </div>
