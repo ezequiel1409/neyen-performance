@@ -7,65 +7,88 @@ import React, { useState } from 'react';
 import { useTraining } from '../../context/TrainingContext';
 import { NeyimaLogo } from '../ui/NeyimaLogo';
 import { Button } from '../ui/Button';
+import { AlertBanner } from '../ui/AlertBanner';
+import type { StatusType } from '../ui/IndicatorStatus';
+import { IconInterface } from '../ui/icons/IconInterface';
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const LoginView: React.FC = () => {
   const { iniciarSesion, atletas } = useTraining();
-  const [rolSeleccionado, setRolSeleccionado] = useState<'ALUMNO' | 'COACH'>('ALUMNO');
-  const [atletaLoginId, setAtletaLoginId] = useState<string>(atletas[0]?.identificadorAtleta || 'AL0001');
   const [email, setEmail] = useState<string>('sofia@neyima.com');
   const [password, setPassword] = useState<string>('password123');
+  const [errores, setErrores] = useState<{ email?: string; password?: string }>({});
+  const [alerta, setAlerta] = useState<{ status: StatusType; message: string } | null>(null);
 
-  const handleSeleccionarAtletaSesion = (idAtleta: string) => {
-    setAtletaLoginId(idAtleta);
-    const encontrado = atletas.find((a) => a.identificadorAtleta === idAtleta);
-    if (encontrado) {
-      const slug = encontrado.nombreCompleto
+  const resolverSesionPorCorreo = (correoIngresado: string) => {
+    const correoLimpio = correoIngresado.trim().toLowerCase();
+    if (correoLimpio.includes('coach')) {
+      return { rol: 'COACH' as const, atletaId: undefined };
+    }
+
+    const atletaEncontrado = atletas.find((a) => {
+      const primerNombre = a.nombreCompleto
         .split(' ')[0]
         .toLowerCase()
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '');
-      setEmail(`${slug}@neyima.com`);
-    }
-  };
+      return (
+        correoLimpio.includes(primerNombre) ||
+        correoLimpio.includes(a.identificadorAtleta.toLowerCase())
+      );
+    });
 
-  const handleCambiarRol = (nuevoRol: 'ALUMNO' | 'COACH') => {
-    setRolSeleccionado(nuevoRol);
-    if (nuevoRol === 'COACH') {
-      setEmail('coach@neyima.com');
-    } else {
-      handleSeleccionarAtletaSesion(atletaLoginId);
-    }
+    return {
+      rol: 'ALUMNO' as const,
+      atletaId: atletaEncontrado?.identificadorAtleta || atletas[0]?.identificadorAtleta || 'AL0001',
+    };
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    iniciarSesion(
-      rolSeleccionado,
-      email,
-      rolSeleccionado === 'ALUMNO' ? atletaLoginId : undefined
-    );
+    const nuevosErrores: { email?: string; password?: string } = {};
+
+    if (!email.trim()) {
+      nuevosErrores.email = 'Ingresá tu correo electrónico.';
+    } else if (!EMAIL_REGEX.test(email.trim())) {
+      nuevosErrores.email = 'Ingresá un correo electrónico válido.';
+    }
+
+    if (!password.trim()) {
+      nuevosErrores.password = 'Ingresá tu contraseña.';
+    } else if (password.trim().length < 4) {
+      nuevosErrores.password = 'La contraseña debe tener al menos 4 caracteres.';
+    }
+
+    setErrores(nuevosErrores);
+    if (Object.keys(nuevosErrores).length > 0) {
+      setAlerta({ status: 'bad', message: 'Revisá los datos de acceso marcados antes de ingresar.' });
+      return;
+    }
+
+    setAlerta(null);
+    const { rol, atletaId } = resolverSesionPorCorreo(email);
+    iniciarSesion(rol, email.trim(), atletaId);
   };
 
   const handleGoogleLogin = () => {
-    iniciarSesion(
-      rolSeleccionado,
-      email,
-      rolSeleccionado === 'ALUMNO' ? atletaLoginId : undefined
-    );
+    setAlerta(null);
+    const { rol, atletaId } = resolverSesionPorCorreo(email);
+    iniciarSesion(rol, email.trim() || 'sofia@neyima.com', atletaId);
   };
 
   return (
     <div className="min-h-screen w-full flex bg-[var(--bg)] text-[var(--txt)] transition-colors">
       {/* Columna Izquierda: Formulario de inicio de sesión */}
-      <div className="w-full lg:w-1/2 flex flex-col justify-between p-8 sm:p-12 lg:p-16 max-w-xl mx-auto lg:mx-0">
-        <div>
+      <div className="w-full lg:w-[460px] xl:w-[520px] shrink-0 flex flex-col justify-between p-6 sm:p-10 lg:p-12 xl:p-16">
+        <div className="w-full max-w-md mx-auto my-auto">
           {/* Logo NEYIMA con Emblema oficial */}
           <div className="mb-10 sm:mb-12">
             <NeyimaLogo size="md" variant="emblema" />
           </div>
 
           {/* Título de bienvenida */}
-          <div className="mb-6">
+          <div className="mb-7">
             <h1 className="text-3xl sm:text-4xl font-extrabold text-[var(--txt)] tracking-tight">
               Bienvenido de nuevo
             </h1>
@@ -73,58 +96,6 @@ export const LoginView: React.FC = () => {
               Ingresá para ver tu plan de entrenamiento.
             </p>
           </div>
-
-          {/* Selector de Rol: Alumno vs Coach */}
-          <div className="grid grid-cols-2 gap-3 mb-6">
-            <button
-              type="button"
-              onClick={() => handleCambiarRol('ALUMNO')}
-              aria-pressed={rolSeleccionado === 'ALUMNO'}
-              className={`py-3 px-4 rounded-xl font-bold text-base transition select-none min-h-[48px] cursor-pointer ${
-                rolSeleccionado === 'ALUMNO'
-                  ? 'bg-[var(--navbg)] text-[var(--navon)] shadow-xs'
-                  : 'border-2 border-[var(--link)] text-[var(--link)] bg-transparent hover:bg-[var(--surf)]'
-              }`}
-            >
-              Alumno
-            </button>
-            <button
-              type="button"
-              onClick={() => handleCambiarRol('COACH')}
-              aria-pressed={rolSeleccionado === 'COACH'}
-              className={`py-3 px-4 rounded-xl font-bold text-base transition select-none min-h-[48px] cursor-pointer ${
-                rolSeleccionado === 'COACH'
-                  ? 'bg-[var(--navbg)] text-[var(--navon)] shadow-xs'
-                  : 'border-2 border-[var(--link)] text-[var(--link)] bg-transparent hover:bg-[var(--surf)]'
-              }`}
-            >
-              Coach
-            </button>
-          </div>
-
-          {/* Selector de Sesión de Atleta (para probar perfiles F / M y Clubes mediante sesión real) */}
-          {rolSeleccionado === 'ALUMNO' && (
-            <div className="mb-5 p-3.5 rounded-2xl border border-[var(--bord)] bg-[var(--surf)] space-y-2">
-              <label
-                htmlFor="selector-sesion-atleta"
-                className="block text-xs font-bold uppercase tracking-wider text-[var(--mut)]"
-              >
-                Seleccionar cuenta de atleta (Sesión por perfil F / M y Club)
-              </label>
-              <select
-                id="selector-sesion-atleta"
-                value={atletaLoginId}
-                onChange={(e) => handleSeleccionarAtletaSesion(e.target.value)}
-                className="w-full h-11 px-3 rounded-xl border-2 border-[var(--bord)] bg-[var(--bg)] text-[var(--txt)] text-xs sm:text-sm font-bold outline-hidden"
-              >
-                {atletas.map((a) => (
-                  <option key={a.identificadorAtleta} value={a.identificadorAtleta}>
-                    {a.nombreCompleto} ({a.generoAtleta === 'F' ? 'Femenino · Ciclo activo' : 'Masculino · Estándar'}) — {a.identificadorEquipoPerteneciente || 'Personalizado (1 a 1)'}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
 
           {/* Botón de Google OAuth */}
           <div className="mb-5">
@@ -162,48 +133,87 @@ export const LoginView: React.FC = () => {
             </span>
           </div>
 
+          {alerta && (
+            <div className="mb-4">
+              <AlertBanner
+                status={alerta.status}
+                message={alerta.message}
+                onClose={() => setAlerta(null)}
+              />
+            </div>
+          )}
+
           {/* Formulario Tradicional */}
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
+          <form onSubmit={handleSubmit} noValidate className="space-y-4">
+            <div className="space-y-1">
               <label
                 htmlFor="correo"
-                className="block text-xs font-bold uppercase tracking-wider text-[var(--txt)] mb-1"
+                className="block text-xs font-bold uppercase tracking-wider text-[var(--txt)]"
               >
                 Correo electrónico
               </label>
               <input
                 id="correo"
                 type="email"
-                required
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                aria-invalid={Boolean(errores.email)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (errores.email) setErrores((prev) => ({ ...prev, email: undefined }));
+                }}
                 placeholder="nombre@correo.com"
-                className="w-full rounded-xl border-2 border-[var(--field)] bg-[var(--surf)] px-3.5 py-2.5 text-sm text-[var(--txt)] placeholder-[var(--mut)] focus:outline-none focus:border-[var(--link)] transition min-h-[48px]"
+                className={`w-full rounded-xl border-2 bg-[var(--surf)] px-3.5 py-2.5 text-sm text-[var(--txt)] placeholder-[var(--mut)] focus:outline-none transition min-h-[48px] ${
+                  errores.email
+                    ? 'border-[var(--estado-bad-texto)]'
+                    : 'border-[var(--field)] focus:border-[var(--link)]'
+                }`}
               />
+              {errores.email && (
+                <span role="alert" className="flex items-center gap-1.5 text-xs font-bold text-[var(--estado-bad-texto)]">
+                  <IconInterface name="alert" size={14} strokeWidth={2.2} aria-hidden="true" />
+                  <span>{errores.email}</span>
+                </span>
+              )}
             </div>
 
-            <div>
+            <div className="space-y-1">
               <label
                 htmlFor="password"
-                className="block text-xs font-bold uppercase tracking-wider text-[var(--txt)] mb-1"
+                className="block text-xs font-bold uppercase tracking-wider text-[var(--txt)]"
               >
                 Contraseña
               </label>
               <input
                 id="password"
                 type="password"
-                required
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                aria-invalid={Boolean(errores.password)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  if (errores.password) setErrores((prev) => ({ ...prev, password: undefined }));
+                }}
                 placeholder="Tu contraseña"
-                className="w-full rounded-xl border-2 border-[var(--field)] bg-[var(--surf)] px-3.5 py-2.5 text-sm text-[var(--txt)] placeholder-[var(--mut)] focus:outline-none focus:border-[var(--link)] transition min-h-[48px]"
+                className={`w-full rounded-xl border-2 bg-[var(--surf)] px-3.5 py-2.5 text-sm text-[var(--txt)] placeholder-[var(--mut)] focus:outline-none transition min-h-[48px] ${
+                  errores.password
+                    ? 'border-[var(--estado-bad-texto)]'
+                    : 'border-[var(--field)] focus:border-[var(--link)]'
+                }`}
               />
-              <div className="text-right mt-1.5">
+              {errores.password && (
+                <span role="alert" className="flex items-center gap-1.5 text-xs font-bold text-[var(--estado-bad-texto)]">
+                  <IconInterface name="alert" size={14} strokeWidth={2.2} aria-hidden="true" />
+                  <span>{errores.password}</span>
+                </span>
+              )}
+              <div className="text-right pt-0.5">
                 <a
                   href="#olvide-contrasena"
                   onClick={(e) => {
                     e.preventDefault();
-                    alert('Podés solicitar a tu Coach el restablecimiento de tu clave o enlace de acceso.');
+                    setAlerta({
+                      status: 'proc',
+                      message: 'Podés solicitar a tu Coach el restablecimiento de tu clave o enlace de acceso.',
+                    });
                   }}
                   className="text-xs font-bold text-[var(--link)] hover:underline"
                 >
@@ -230,7 +240,10 @@ export const LoginView: React.FC = () => {
               href="#pedir-acceso"
               onClick={(e) => {
                 e.preventDefault();
-                alert('Contactá a tu preparador físico para que active tu usuario y plan en NEYIMA.');
+                setAlerta({
+                  status: 'proc',
+                  message: 'Contactá a tu preparador físico para que active tu usuario y plan en NEYIMA.',
+                });
               }}
               className="font-bold text-[var(--txt)] underline"
             >
@@ -245,8 +258,8 @@ export const LoginView: React.FC = () => {
         </p>
       </div>
 
-      {/* Columna Derecha: Ilustración y composición geométrica de marca */}
-      <div className="hidden lg:flex lg:w-1/2 bg-[#3C0016] relative flex-col justify-end p-16 overflow-hidden select-none">
+      {/* Columna Derecha: Ilustración y composición geométrica de marca a ancho completo */}
+      <div className="hidden lg:flex lg:flex-1 bg-[#3C0016] relative flex-col justify-end p-12 xl:p-16 overflow-hidden select-none dark:border-l dark:border-[var(--bord)]">
         {/* Composición de círculos de marca según diseño NEYIMA */}
         <div
           className="absolute w-[520px] h-[520px] rounded-full bg-[#5A1830] right-[-140px] top-[-120px]"
