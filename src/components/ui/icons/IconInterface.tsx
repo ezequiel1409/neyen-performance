@@ -21,6 +21,7 @@ export type IconInterfaceName =
   | 'info'
   | 'logout'
   | 'moon'
+  | 'more'
   | 'plus'
   | 'star'
   | 'trend'
@@ -148,6 +149,14 @@ export const IconInterface: React.FC<IconInterfaceProps> = ({
         );
       case 'moon':
         return <path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" />;
+      case 'more':
+        return (
+          <>
+            <circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none" />
+            <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none" />
+            <circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none" />
+          </>
+        );
       case 'plus':
         return <path d="M12 5v14M5 12h14" />;
       case 'star':
