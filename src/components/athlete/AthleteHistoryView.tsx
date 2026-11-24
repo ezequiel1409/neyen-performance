@@ -46,24 +46,60 @@ export const AthleteHistoryView: React.FC = () => {
     (acc, s) => acc + (s.cargaInternaUnidadesArbitrarias || 0),
     0
   );
+  const promedioRpe =
+    sesionesAMostrar.length > 0
+      ? (
+          sesionesAMostrar.reduce(
+            (acc, s) => acc + (s.feedbackEntrenamiento.esfuerzoPercibidoSesion || 0),
+            0
+          ) / sesionesAMostrar.length
+        ).toFixed(1)
+      : '0';
 
   return (
-    <div className="max-w-md mx-auto space-y-4 pb-20">
+    <div className="w-full space-y-6 pb-8 md:pb-4">
       {/* Encabezado */}
-      <div className="pt-2 px-1">
-        <h1 className="text-3xl font-extrabold text-[var(--txt)] tracking-tight">Mi historial</h1>
+      <div className="pt-1">
+        <p className="text-xs font-bold uppercase tracking-wider text-[var(--mut)]">
+          Registro de entrenamientos
+        </p>
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-[var(--txt)] tracking-tight mt-0.5">
+          Mi historial
+        </h1>
       </div>
 
-      {/* Tarjeta de Carga Acumulada */}
-      <div className="rounded-2xl bg-[var(--okbg)] text-[var(--oktx)] p-4 flex items-center justify-between shadow-xs">
-        <span className="text-sm font-semibold max-w-[200px] leading-snug">
-          Carga interna de las últimas {sesionesAMostrar.length} sesiones
-        </span>
-        <b className="text-3xl font-extrabold tracking-tight">{totalUA} UA</b>
+      {/* Resumen de Carga Acumulada (adaptativo 1 a 3 columnas) */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="rounded-2xl bg-[var(--okbg)] text-[var(--oktx)] p-4 sm:p-5 flex items-center justify-between shadow-xs sm:col-span-1">
+          <div>
+            <span className="text-xs font-bold uppercase tracking-wider opacity-80 block">
+              Carga interna total
+            </span>
+            <b className="text-3xl font-extrabold tracking-tight mt-1 block">{totalUA} UA</b>
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-[var(--bord)] bg-[var(--surf)] p-4 sm:p-5 shadow-xs">
+          <span className="text-xs font-bold uppercase tracking-wider text-[var(--mut)] block">
+            Sesiones registradas
+          </span>
+          <b className="text-3xl font-extrabold text-[var(--txt)] tracking-tight mt-1 block">
+            {sesionesAMostrar.length}
+          </b>
+        </div>
+
+        <div className="rounded-2xl border border-[var(--bord)] bg-[var(--surf)] p-4 sm:p-5 shadow-xs">
+          <span className="text-xs font-bold uppercase tracking-wider text-[var(--mut)] block">
+            Esfuerzo promedio (sRPE)
+          </span>
+          <b className="text-3xl font-extrabold text-[var(--txt)] tracking-tight mt-1 block">
+            {promedioRpe} / 10
+          </b>
+        </div>
       </div>
 
-      {/* Lista de Sesiones */}
-      <div className="space-y-3">
+      {/* Lista de Sesiones en grilla responsiva */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {sesionesAMostrar.map((sesion, index) => {
           const feedback = sesion.feedbackEntrenamiento;
           const tieneDolor = feedback.presentaDolorOMolestia;

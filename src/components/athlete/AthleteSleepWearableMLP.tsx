@@ -5,6 +5,7 @@
 
 import React, { useState } from 'react';
 import { useTraining } from '../../context/TrainingContext';
+import { AlertBanner } from '../ui/AlertBanner';
 import { IconInterface } from '../ui/icons/IconInterface';
 
 export const AthleteSleepWearableMLP: React.FC = () => {
@@ -26,7 +27,7 @@ export const AthleteSleepWearableMLP: React.FC = () => {
   };
 
   return (
-    <div className="space-y-5 max-w-4xl mx-auto">
+    <div className="space-y-5 w-full">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
@@ -46,10 +47,11 @@ export const AthleteSleepWearableMLP: React.FC = () => {
       </div>
 
       {mensajeSync && (
-        <div className="rounded-xl border border-emerald-500/30 bg-emerald-50 dark:bg-emerald-950/30 p-3 text-xs font-bold text-emerald-800 dark:text-emerald-300 flex items-center gap-2">
-          <IconInterface name="check" size={14} />
-          <span>{mensajeSync}</span>
-        </div>
+        <AlertBanner
+          status="ok"
+          message={mensajeSync.replace(/^✓\s*/, '')}
+          onClose={() => setMensajeSync(null)}
+        />
       )}
 
       {/* Tarjetas Principales de la Última Noche */}

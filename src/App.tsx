@@ -27,11 +27,12 @@ import { LoginView } from './components/auth/LoginView';
 import { OnboardingView } from './components/auth/OnboardingView';
 import { NeyimaLogo } from './components/ui/NeyimaLogo';
 import { IconInterface } from './components/ui/icons/IconInterface';
+import { UserAccountMenu } from './components/ui/UserAccountMenu';
 import { TrainingProvider, useTraining } from './context/TrainingContext';
 import { useAndroidBackNavigation } from './utils/nativeBridge';
 
 const MainLayout: React.FC = () => {
-  const { estaAutenticado, perfilCompletado, rolActivo, atletaActual, cerrarSesion, macrociclo } = useTraining();
+  const { estaAutenticado, perfilCompletado, rolActivo, atletaActual, macrociclo } = useTraining();
 
   const [seccionCoach, setSeccionCoach] = useState<CoachNavSection>('RESUMEN');
   const [atletaDetalleAbierto, setAtletaDetalleAbierto] = useState<boolean>(false);
@@ -116,39 +117,11 @@ const MainLayout: React.FC = () => {
       <header className="md:hidden flex items-center justify-between px-4 py-2.5 bg-[var(--surf)] border-b border-[var(--bord)] sticky top-0 z-30 safe-area-pt">
         <NeyimaLogo size="sm" variant="emblema" roleTag={rolActivo === 'COACH' ? 'COACH' : 'ALUMNO'} />
 
-        <div className="flex items-center gap-1.5">
-          {/* Indicador de Sesión Activa */}
-          <span className="px-2.5 py-1 rounded-xl border border-[var(--bord)] bg-[var(--bg)] text-[var(--txt)] text-xs font-bold truncate max-w-[155px]">
-            {rolActivo === 'COACH'
-              ? 'Coach'
-              : `${atletaActual.nombreCompleto.split(' ')[0]} (${atletaActual.generoAtleta})`}
-          </span>
-
-          {/* Toggle de tema */}
-          <button
-            type="button"
-            onClick={alternarTema}
-            aria-label={esModoOscuro ? 'Activar tema claro' : 'Activar tema oscuro'}
-            className="p-2 rounded-xl border border-[var(--bord)] text-[var(--txt)] hover:bg-[var(--bg)] cursor-pointer"
-          >
-            {esModoOscuro ? (
-              <IconInterface name="star" size={16} strokeWidth={2.2} />
-            ) : (
-              <IconInterface name="moon" size={16} strokeWidth={2.2} />
-            )}
-          </button>
-
-          {/* Cerrar sesión para cambiar de cuenta */}
-          <button
-            type="button"
-            onClick={cerrarSesion}
-            aria-label="Cerrar sesión"
-            title="Cerrar sesión"
-            className="p-2 rounded-xl border border-[var(--bord)] text-[var(--acc)] hover:bg-[var(--bg)] cursor-pointer"
-          >
-            <IconInterface name="logout" size={16} strokeWidth={2.2} />
-          </button>
-        </div>
+        <UserAccountMenu
+          esModoOscuro={esModoOscuro}
+          onAlternarTema={alternarTema}
+          variant="compact"
+        />
       </header>
 
       {/* Selector móvil de secciones para Coach (sólo en móviles < md) */}
@@ -179,11 +152,11 @@ const MainLayout: React.FC = () => {
       )}
 
       {/* =====================================================================
-          CONTENIDO PRINCIPAL (DESKTOP / TABLET CON SIDEBAR LATERAL NATIVO)
+          CONTENIDO PRINCIPAL (DESKTOP / TABLET CON SIDEBAR ANCLADA A IZQUIERDA)
           ===================================================================== */}
-      <div className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 flex">
-        {/* SIDEBAR LATERAL: COACH VS ALUMNO (Con Sesión Actual y Tema integrados) */}
-        <div className="hidden md:block">
+      <div className="flex-1 w-full flex">
+        {/* SIDEBAR LATERAL: COACH VS ALUMNO (Con dropdown de cuenta y configuración) */}
+        <div className="hidden md:block shrink-0">
           {rolActivo === 'COACH' ? (
             <CoachSidebar
               seccionActiva={seccionCoach}
@@ -201,12 +174,13 @@ const MainLayout: React.FC = () => {
           )}
         </div>
 
-        {/* ÁREA DE CONTENIDO DE LA PANTALLA */}
+        {/* ÁREA DE CONTENIDO ADAPTATIVA (MOBILE, TABLET Y DESKTOP) */}
         <main
-          className={`flex-1 min-w-0 py-6 md:pl-6 ${
-            rolActivo === 'ALUMNO' ? 'pb-24 md:pb-6' : ''
+          className={`flex-1 min-w-0 px-4 sm:px-6 lg:px-10 py-6 lg:py-8 ${
+            rolActivo === 'ALUMNO' ? 'pb-24 md:pb-8' : ''
           }`}
         >
+          <div className="w-full max-w-6xl mx-auto">
           {/* VISTAS DE COACH (CATÁLOGO NEYIMA COACH) */}
           {rolActivo === 'COACH' && (
             <>
@@ -313,6 +287,7 @@ const MainLayout: React.FC = () => {
               {vistaAlumnoActual === 'DASHBOARD' && <AthleteAnnualProgressView />}
             </>
           )}
+          </div>
         </main>
       </div>
 

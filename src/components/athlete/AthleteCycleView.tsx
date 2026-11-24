@@ -43,148 +43,161 @@ export const AthleteCycleView: React.FC = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto space-y-3.5 pb-20">
+    <div className="w-full space-y-6 pb-8 md:pb-4">
       {/* Encabezado */}
-      <div className="pt-2 px-1">
-        <h1 className="text-3xl font-extrabold text-[var(--txt)] tracking-tight">Mi ciclo</h1>
-      </div>
-
-      {/* Tarjeta 1: Switch compartir ciclo */}
-      <div className="rounded-2xl border border-[var(--bord)] bg-[var(--surf)] p-4 shadow-xs space-y-2">
-        <div className="flex items-center justify-between gap-3">
-          <span className="text-sm font-bold text-[var(--txt)]">
-            Compartir mi ciclo ({compartirCiclo ? 'activo' : 'inactivo'})
-          </span>
-
-          <button
-            type="button"
-            role="switch"
-            aria-checked={compartirCiclo}
-            aria-label="Compartir mi ciclo con el coach"
-            onClick={() => setCompartirCiclo(!compartirCiclo)}
-            className={`w-14 h-8 rounded-full border-2 transition-colors relative cursor-pointer select-none ${
-              compartirCiclo
-                ? 'border-[var(--navbg)] bg-[var(--navbg)]'
-                : 'border-[var(--bord)] bg-[var(--bg)]'
-            }`}
-          >
-            <span
-              className={`absolute top-0.5 w-6 h-6 rounded-full transition-transform ${
-                compartirCiclo
-                  ? 'right-0.5 bg-[var(--navon)]'
-                  : 'left-0.5 bg-[var(--field)]'
-              }`}
-            />
-          </button>
-        </div>
-
-        <p className="text-xs text-[var(--mut)] leading-relaxed">
-          Tu coach lo usa para cuidar tu carga. Podés dejar de compartirlo cuando quieras.
+      <div className="pt-1">
+        <p className="text-xs font-bold uppercase tracking-wider text-[var(--mut)]">
+          Fisiología y autorregulación de carga
         </p>
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-[var(--txt)] tracking-tight mt-0.5">
+          Mi ciclo
+        </h1>
       </div>
 
-      {/* Tarjeta 2: Fase actual del ciclo */}
-      <div className="rounded-2xl bg-[var(--okbg)] text-[var(--oktx)] p-4 shadow-xs space-y-1">
-        <p className="text-xs font-bold uppercase tracking-wider opacity-80">HOY</p>
-        <p className="text-2xl font-extrabold leading-tight">
-          {enRetraso
-            ? 'Ciclo en pausa por retraso'
-            : `Día ${infoCiclo.diaActualDelCiclo} · ${infoCiclo.nombreFaseLegible}`}
-        </p>
-        <p className="text-xs font-medium">
-          {enRetraso
-            ? 'Cálculo de cargas pausado preventivamente.'
-            : infoCiclo.faseActual === 'LUTEA'
-              ? 'Tus kilos se ajustan −7,5 % en fase lútea para optimizar la recuperación.'
-              : infoCiclo.faseActual === 'MENSTRUACION'
-                ? 'Ajuste preventivo del −5 % en inicio de ciclo menstrual.'
-                : `${infoCiclo.recomendacionDeportiva} (100 % de carga).`}
-        </p>
-      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 items-start">
+        {/* Columna izquierda: Fase actual y configuración de fechas */}
+        <div className="lg:col-span-7 space-y-4">
+          {/* Tarjeta: Fase actual del ciclo */}
+          <div className="rounded-2xl bg-[var(--okbg)] text-[var(--oktx)] p-5 shadow-xs space-y-1.5">
+            <p className="text-xs font-bold uppercase tracking-wider opacity-80">HOY</p>
+            <p className="text-2xl sm:text-3xl font-extrabold leading-tight">
+              {enRetraso
+                ? 'Ciclo en pausa por retraso'
+                : `Día ${infoCiclo.diaActualDelCiclo} · ${infoCiclo.nombreFaseLegible}`}
+            </p>
+            <p className="text-xs sm:text-sm font-medium leading-relaxed">
+              {enRetraso
+                ? 'Cálculo de cargas pausado preventivamente.'
+                : infoCiclo.faseActual === 'LUTEA'
+                  ? 'Tus kilos se ajustan −7,5 % en fase lútea para optimizar la recuperación.'
+                  : infoCiclo.faseActual === 'MENSTRUACION'
+                    ? 'Ajuste preventivo del −5 % en inicio de ciclo menstrual.'
+                    : `${infoCiclo.recomendacionDeportiva} (100 % de carga).`}
+            </p>
+          </div>
 
-      {/* Tarjeta 3: Configuración de fechas */}
-      <div className="rounded-2xl border border-[var(--bord)] bg-[var(--surf)] p-4 shadow-xs grid grid-cols-2 gap-3">
-        <div className="col-span-2 space-y-1">
-          <label htmlFor="fecha-ult-menst" className="text-xs font-bold text-[var(--txt)] block">
-            Última menstruación (FUM)
-          </label>
-          <input
-            id="fecha-ult-menst"
-            type="date"
-            max={hoyStr}
-            value={fechaUltimaMenstruacion}
-            onChange={(e) => setFechaUltimaMenstruacion(e.target.value)}
-            className="w-full h-12 rounded-xl border-2 border-[var(--field)] bg-[var(--surf)] text-[var(--txt)] px-3 text-sm font-semibold focus:outline-none focus:border-[var(--link)]"
-          />
+          {/* Tarjeta: Configuración de fechas */}
+          <div className="rounded-2xl border border-[var(--bord)] bg-[var(--surf)] p-5 shadow-xs grid grid-cols-2 gap-4">
+            <div className="col-span-2 space-y-1">
+              <label htmlFor="fecha-ult-menst" className="text-xs font-bold text-[var(--txt)] block">
+                Última menstruación (FUM)
+              </label>
+              <input
+                id="fecha-ult-menst"
+                type="date"
+                max={hoyStr}
+                value={fechaUltimaMenstruacion}
+                onChange={(e) => setFechaUltimaMenstruacion(e.target.value)}
+                className="w-full h-12 rounded-xl border-2 border-[var(--field)] bg-[var(--surf)] text-[var(--txt)] px-3 text-sm font-semibold focus:outline-none focus:border-[var(--link)]"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label htmlFor="dur-ciclo" className="text-xs font-bold text-[var(--txt)] block">
+                Ciclo (días)
+              </label>
+              <input
+                id="dur-ciclo"
+                type="number"
+                min={21}
+                max={40}
+                value={duracionCicloDias}
+                onChange={(e) => setDuracionCicloDias(Number(e.target.value))}
+                className="w-full h-12 rounded-xl border-2 border-[var(--field)] bg-[var(--surf)] text-[var(--txt)] px-3 text-sm font-semibold focus:outline-none focus:border-[var(--link)]"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label htmlFor="dur-menst" className="text-xs font-bold text-[var(--txt)] block">
+                Menstruación (días)
+              </label>
+              <input
+                id="dur-menst"
+                type="number"
+                min={2}
+                max={10}
+                value={duracionMenstruacionDias}
+                onChange={(e) => setDuracionMenstruacionDias(Number(e.target.value))}
+                className="w-full h-12 rounded-xl border-2 border-[var(--field)] bg-[var(--surf)] text-[var(--txt)] px-3 text-sm font-semibold focus:outline-none focus:border-[var(--link)]"
+              />
+            </div>
+          </div>
         </div>
 
-        <div className="space-y-1">
-          <label htmlFor="dur-ciclo" className="text-xs font-bold text-[var(--txt)] block">
-            Ciclo (días)
-          </label>
-          <input
-            id="dur-ciclo"
-            type="number"
-            min={21}
-            max={40}
-            value={duracionCicloDias}
-            onChange={(e) => setDuracionCicloDias(Number(e.target.value))}
-            className="w-full h-12 rounded-xl border-2 border-[var(--field)] bg-[var(--surf)] text-[var(--txt)] px-3 text-sm font-semibold focus:outline-none focus:border-[var(--link)]"
-          />
-        </div>
+        {/* Columna derecha: Privacidad, alertas y acciones */}
+        <aside className="lg:col-span-5 space-y-4">
+          {/* Tarjeta: Switch compartir ciclo */}
+          <div className="rounded-2xl border border-[var(--bord)] bg-[var(--surf)] p-5 shadow-xs space-y-2.5">
+            <div className="flex items-center justify-between gap-3">
+              <span className="text-sm font-bold text-[var(--txt)]">
+                Compartir mi ciclo ({compartirCiclo ? 'activo' : 'inactivo'})
+              </span>
 
-        <div className="space-y-1">
-          <label htmlFor="dur-menst" className="text-xs font-bold text-[var(--txt)] block">
-            Menstruación (días)
-          </label>
-          <input
-            id="dur-menst"
-            type="number"
-            min={2}
-            max={10}
-            value={duracionMenstruacionDias}
-            onChange={(e) => setDuracionMenstruacionDias(Number(e.target.value))}
-            className="w-full h-12 rounded-xl border-2 border-[var(--field)] bg-[var(--surf)] text-[var(--txt)] px-3 text-sm font-semibold focus:outline-none focus:border-[var(--link)]"
-          />
-        </div>
-      </div>
+              <button
+                type="button"
+                role="switch"
+                aria-checked={compartirCiclo}
+                aria-label="Compartir mi ciclo con el coach"
+                onClick={() => setCompartirCiclo(!compartirCiclo)}
+                className={`w-14 h-8 rounded-full border-2 transition-colors relative cursor-pointer select-none shrink-0 ${
+                  compartirCiclo
+                    ? 'border-[var(--navbg)] bg-[var(--navbg)]'
+                    : 'border-[var(--bord)] bg-[var(--bg)]'
+                }`}
+              >
+                <span
+                  className={`absolute top-0.5 w-6 h-6 rounded-full transition-transform ${
+                    compartirCiclo
+                      ? 'right-0.5 bg-[var(--navon)]'
+                      : 'left-0.5 bg-[var(--field)]'
+                  }`}
+                />
+              </button>
+            </div>
 
-      {/* Tarjeta 4: Alerta y retrasos */}
-      <div className="rounded-2xl bg-[var(--estado-warn-fondo)] text-[var(--estado-warn-texto)] p-3.5 flex items-start gap-3 shadow-xs">
-        <IconInterface name="calclock" size={20} className="mt-0.5 shrink-0" strokeWidth={2.2} />
-        <div className="text-xs leading-relaxed">
-          <b>¿Hay retraso?</b> Se pausa el cálculo automático y se avisa a tu coach para adaptar
-          el estímulo. Historial de retrasos: ninguno.
-        </div>
-      </div>
+            <p className="text-xs text-[var(--mut)] leading-relaxed">
+              Tu coach lo usa para cuidar tu carga. Podés dejar de compartirlo cuando quieras.
+            </p>
+          </div>
 
-      {mensajeExito && (
-        <div className="rounded-xl bg-[var(--estado-ok-fondo)] text-[var(--estado-ok-texto)] p-3 text-xs font-bold animate-fade-in">
-          {mensajeExito}
-        </div>
-      )}
+          {/* Tarjeta: Alerta y retrasos */}
+          <div className="rounded-2xl bg-[var(--estado-warn-fondo)] text-[var(--estado-warn-texto)] p-4 flex items-start gap-3 shadow-xs">
+            <IconInterface name="calclock" size={20} className="mt-0.5 shrink-0" strokeWidth={2.2} />
+            <div className="text-xs leading-relaxed">
+              <b>¿Hay retraso?</b> Se pausa el cálculo automático y se avisa a tu coach para adaptar
+              el estímulo. Historial de retrasos: ninguno.
+            </div>
+          </div>
 
-      {/* Botones de acción */}
-      <div className="space-y-2 pt-1">
-        <Button
-          variant="primary"
-          size="lg"
-          fullWidth
-          onClick={handleReportarRetraso}
-          className="text-base font-extrabold min-h-[52px]"
-        >
-          Reportar retraso
-        </Button>
+          {mensajeExito && (
+            <div className="rounded-xl bg-[var(--estado-ok-fondo)] text-[var(--estado-ok-texto)] p-3 text-xs font-bold animate-fade-in">
+              {mensajeExito}
+            </div>
+          )}
 
-        <Button
-          variant="secondary"
-          size="lg"
-          fullWidth
-          onClick={handlePeriodoLlego}
-          className="text-base font-bold min-h-[52px]"
-        >
-          Mi período llegó
-        </Button>
+          {/* Botones de acción */}
+          <div className="space-y-2.5 pt-1">
+            <Button
+              variant="primary"
+              size="lg"
+              fullWidth
+              onClick={handleReportarRetraso}
+              className="text-base font-extrabold min-h-[52px]"
+            >
+              Reportar retraso
+            </Button>
+
+            <Button
+              variant="secondary"
+              size="lg"
+              fullWidth
+              onClick={handlePeriodoLlego}
+              className="text-base font-bold min-h-[52px]"
+            >
+              Mi período llegó
+            </Button>
+          </div>
+        </aside>
       </div>
     </div>
   );

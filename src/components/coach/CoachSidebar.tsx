@@ -5,8 +5,8 @@
 
 import React from 'react';
 import { NeyimaLogo } from '../ui/NeyimaLogo';
-import { useTraining } from '../../context/TrainingContext';
 import { IconInterface, type IconInterfaceName } from '../ui/icons/IconInterface';
+import { UserAccountMenu } from '../ui/UserAccountMenu';
 
 export type CoachNavSection =
   | 'RESUMEN'
@@ -20,18 +20,16 @@ export type CoachNavSection =
 interface CoachSidebarProps {
   seccionActiva: CoachNavSection;
   onCambiarSeccion: (seccion: CoachNavSection) => void;
-  esModoOscuro?: boolean;
-  onAlternarTema?: () => void;
+  esModoOscuro: boolean;
+  onAlternarTema: () => void;
 }
 
 export const CoachSidebar: React.FC<CoachSidebarProps> = ({
   seccionActiva,
   onCambiarSeccion,
-  esModoOscuro = false,
+  esModoOscuro,
   onAlternarTema,
 }) => {
-  const { cerrarSesion, usuarioEmail, atletas, clubes } = useTraining();
-
   const items: Array<{ id: CoachNavSection; label: string; icon: IconInterfaceName }> = [
     { id: 'RESUMEN', label: 'Resumen', icon: 'home' },
     { id: 'ATLETAS', label: 'Atletas', icon: 'users' },
@@ -45,11 +43,11 @@ export const CoachSidebar: React.FC<CoachSidebarProps> = ({
   return (
     <aside
       aria-label="Navegación del Coach"
-      className="w-64 shrink-0 py-6 pr-6 flex flex-col justify-between min-h-[calc(100vh-2rem)] select-none border-r border-[var(--bord)]"
+      className="w-64 lg:w-72 shrink-0 px-4 py-6 flex flex-col justify-between sticky top-0 h-screen select-none border-r border-[var(--bord)] bg-[var(--bg)]"
     >
-      <div className="space-y-6">
+      <div className="space-y-6 overflow-y-auto">
         {/* Logo NEYIMA COACH con Isotipo oficial */}
-        <div className="px-2">
+        <div className="px-2.5">
           <NeyimaLogo size="md" variant="emblema" roleTag="COACH" />
         </div>
 
@@ -81,50 +79,13 @@ export const CoachSidebar: React.FC<CoachSidebarProps> = ({
         </nav>
       </div>
 
-      {/* Pie de navegación: Sesión actual, Tema y Cerrar sesión */}
-      <div className="pt-4 border-t border-[var(--bord)] space-y-2">
-        <div className="rounded-xl border border-[var(--bord)] bg-[var(--surf)] p-3 space-y-1">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-full bg-[var(--navbg)] text-[var(--navon)] flex items-center justify-center font-extrabold text-xs shrink-0">
-              FC
-            </div>
-            <div className="min-w-0">
-              <p className="text-xs font-extrabold text-[var(--txt)] truncate">Sesión Coach</p>
-              <p className="text-xs text-[var(--mut)] truncate">{usuarioEmail}</p>
-            </div>
-          </div>
-          <p className="text-xs text-[var(--mut)] pt-1 border-t border-[var(--bord)]">
-            {clubes.length} clubes · {atletas.length} atletas
-          </p>
-        </div>
-
-        {onAlternarTema && (
-          <button
-            type="button"
-            onClick={onAlternarTema}
-            aria-label={esModoOscuro ? 'Activar tema claro' : 'Activar tema oscuro'}
-            className="w-full text-left text-xs font-bold text-[var(--txt)] hover:bg-[var(--surf)] transition flex items-center justify-between px-3.5 py-2.5 rounded-xl min-h-[42px] border border-[var(--bord)] cursor-pointer"
-          >
-            <span className="flex items-center gap-2.5">
-              {esModoOscuro ? (
-                <IconInterface name="star" size={16} className="text-amber-400" />
-              ) : (
-                <IconInterface name="moon" size={16} />
-              )}
-              <span>{esModoOscuro ? 'Modo claro' : 'Modo oscuro'}</span>
-            </span>
-            <span className="text-xs text-[var(--mut)]">Tema</span>
-          </button>
-        )}
-
-        <button
-          type="button"
-          onClick={cerrarSesion}
-          className="w-full text-left text-sm font-bold text-[var(--txt)] hover:text-[var(--acc)] hover:bg-[var(--surf)] transition flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl min-h-[44px] cursor-pointer"
-        >
-          <IconInterface name="logout" size={18} aria-hidden="true" />
-          <span>Cerrar sesión</span>
-        </button>
+      {/* Pie de navegación: Dropdown de perfil, configuraciones y sesión (estilo Twitter/X) */}
+      <div className="pt-4 border-t border-[var(--bord)]">
+        <UserAccountMenu
+          esModoOscuro={esModoOscuro}
+          onAlternarTema={onAlternarTema}
+          variant="sidebar"
+        />
       </div>
     </aside>
   );

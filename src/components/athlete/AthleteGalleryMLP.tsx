@@ -5,6 +5,7 @@
 
 import React, { useState } from 'react';
 import { useTraining } from '../../context/TrainingContext';
+import { AlertBanner } from '../ui/AlertBanner';
 import { IconInterface } from '../ui/icons/IconInterface';
 
 export const AthleteGalleryMLP: React.FC = () => {
@@ -47,7 +48,7 @@ export const AthleteGalleryMLP: React.FC = () => {
   };
 
   return (
-    <div className="space-y-5 max-w-4xl mx-auto">
+    <div className="space-y-5 w-full">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
@@ -213,7 +214,13 @@ export const AthleteGalleryMLP: React.FC = () => {
                 </div>
               )}
 
-              {errorCarga && <p className="text-rose-500 font-bold">{errorCarga}</p>}
+              {errorCarga && (
+                <AlertBanner
+                  status="bad"
+                  message={errorCarga}
+                  onClose={() => setErrorCarga('')}
+                />
+              )}
 
               <div className="pt-2 flex justify-end gap-2">
                 <button
